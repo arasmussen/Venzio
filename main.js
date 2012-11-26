@@ -1,10 +1,14 @@
 window.onload = init;
+document.onkeydown = onKeyDown;
+document.onkeyup = onKeyUp;
 
 var gl;
 var shaderProgram;
 var pMatrix = mat4.create();
 var mvMatrix = mat4.create();
 var terrainVBO;
+var keys = [];
+var cameraPosition = [0, 0, -5.0];
 
 function getShader(id) {
   var shaderElement = document.getElementById(id);
@@ -121,7 +125,7 @@ function init() {
   gl.viewportHeight = canvas.height;
 
   initShaders();
-  initBuffer(gl);
+  initBuffer();
 
   var framerate = new Framerate('framerate');
 
@@ -151,10 +155,23 @@ function render() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
+  if (isKeyPressed(37)) {
+    cameraPosition[0] += 0.1;
+  }
+  if (isKeyPressed(39)) {
+    cameraPosition[0] -= 0.1;
+  }
+  if (isKeyPressed(38)) {
+    cameraPosition[2] += 0.1;
+  }
+  if (isKeyPressed(40)) {
+    cameraPosition[2] -= 0.1;
+  }
+
   mat4.perspective(45.0, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
 
   mat4.identity(mvMatrix);
-  mat4.translate(mvMatrix, [0.0, 0.0, -5.0]);
+  mat4.translate(mvMatrix, cameraPosition);
 
   gl.bindBuffer(gl.ARRAY_BUFFER, terrainVBO.position);
   gl.vertexAttribPointer(
@@ -178,4 +195,19 @@ function render() {
 
   setMatrixUniforms();
   gl.drawArrays(gl.TRIANGLES, 0, terrainVBO.numItems);
+}
+
+function isKeyPressed(keyCode) {
+  if (keys[keyCode] == undefined) {
+    return false;
+  }
+  return keys[keyCode];
+}
+
+function onKeyDown(e) {
+  keys[e.keyCode] = true;
+}
+
+function onKeyUp(e) {
+  keys[e.keyCode] = false;
 }
