@@ -1,12 +1,9 @@
 var input = {
-  canvas: null,
   keys: [],
-  mouseDelta: [0, 0],
+  mouseDelta: {x: 0, y: 0},
   pointerLocked: false,
 
-  initialize: function(canvas) {
-    this.canvas = canvas;
-
+  initialize: function() {
     this.initializeKeyInput();
     this.initializeMouseInput();
     this.initializePointerLock();
@@ -28,19 +25,19 @@ var input = {
           x: e.movementX || e.mozMovementX || e.webkitMovementX,
           y: e.movementY || e.mozMovementY || e.webkitMovementY
         };
-        this.mouseDelta[0] += movement.x;
-        this.mouseDelta[1] += movement.y;
+        this.mouseDelta.x += movement.x;
+        this.mouseDelta.y += movement.y;
       }
     }.bind(this);
   },
 
   initializePointerLock: function() {
-    this.canvas.requestPointerLock =
-      this.canvas.requestPointerLock ||
-      this.canvas.mozRequestPointerLock ||
-      this.canvas.webkitRequestPointerLock;
-    this.canvas.onclick = function() {
-      this.canvas.requestPointerLock();
+    canvas.requestPointerLock =
+      canvas.requestPointerLock ||
+      canvas.mozRequestPointerLock ||
+      canvas.webkitRequestPointerLock;
+    canvas.onclick = function() {
+      canvas.requestPointerLock();
     }.bind(this);
 
     var pointerLockChangeHandler = function() {
@@ -49,7 +46,7 @@ var input = {
         document.mozPointerLockElement ||
         document.webkitPointerLockElement;
 
-      if (lockElement === this.canvas) {
+      if (lockElement === canvas) {
         this.pointerLocked = true;
       } else {
         this.pointerLocked = false;
@@ -61,10 +58,9 @@ var input = {
   },
 
   getMouseDelta: function() {
-    var temp = this.mouseDelta.slice(0);
-    this.mouseDelta[0] = 0;
-    this.mouseDelta[1] = 0;
-    return temp;
+    var delta = {x: this.mouseDelta.x, y: this.mouseDelta.y};
+    this.mouseDelta = {x: 0, y: 0};
+    return delta;
   },
 
   isKeyPressed: function(keyCode) {
