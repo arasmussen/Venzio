@@ -1,13 +1,10 @@
 window.onload = init;
-document.onkeydown = onKeyDown;
-document.onkeyup = onKeyUp;
 
 var gl;
 var shaderProgram;
 var pMatrix = mat4.create();
 var mvMatrix = mat4.create();
 var terrainVBO;
-var keys = [];
 var cameraPosition = [0, 0, -5.0];
 
 function getShader(id) {
@@ -116,6 +113,8 @@ function init() {
   // get handle to the canvas
   var canvas = document.getElementById('canvas');
 
+  input.initialize(canvas);
+
   // create our gl context
   gl = WebGLUtils.setupWebGL(canvas);
   if (!gl) {
@@ -155,16 +154,16 @@ function render() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  if (isKeyPressed(37)) {
+  if (input.isKeyPressed(37) || input.isKeyPressed(65)) {
     cameraPosition[0] += 0.1;
   }
-  if (isKeyPressed(39)) {
+  if (input.isKeyPressed(39) || input.isKeyPressed(68)) {
     cameraPosition[0] -= 0.1;
   }
-  if (isKeyPressed(38)) {
+  if (input.isKeyPressed(38) || input.isKeyPressed(87)) {
     cameraPosition[2] += 0.1;
   }
-  if (isKeyPressed(40)) {
+  if (input.isKeyPressed(40) || input.isKeyPressed(83)) {
     cameraPosition[2] -= 0.1;
   }
 
@@ -195,19 +194,4 @@ function render() {
 
   setMatrixUniforms();
   gl.drawArrays(gl.TRIANGLES, 0, terrainVBO.numItems);
-}
-
-function isKeyPressed(keyCode) {
-  if (keys[keyCode] == undefined) {
-    return false;
-  }
-  return keys[keyCode];
-}
-
-function onKeyDown(e) {
-  keys[e.keyCode] = true;
-}
-
-function onKeyUp(e) {
-  keys[e.keyCode] = false;
 }
