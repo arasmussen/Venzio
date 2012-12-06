@@ -2,8 +2,14 @@ var terrain = {
   shader: null,
   vbo: {},
 
+  heights: [],
+
+  width: 64,
+  length: 64,
+
   initialize: function() {
     this.initializeShaders();
+    this.initializeHeights();
     this.initializeBuffers();
   },
 
@@ -13,31 +19,56 @@ var terrain = {
     this.shader.addUniforms(['uMVMatrix', 'uPMatrix']);
   },
 
+  initializeHeights: function() {
+    // make a random cool height function
+    for (var x = 0; x < this.width + 1; x++) {
+      this.heights[x] = [];
+      for (var z = 0; z < this.length + 1; z++) {
+        this.heights[x][z] =
+          (x - this.width / 2) * (x - this.width / 2) / this.width +
+          (z - this.length / 2) / 2;
+      }
+    }
+  },
+
   initializeBuffers: function() {
     this.vbo.position = gl.createBuffer();
     this.vbo.color = gl.createBuffer();
 
     // fill the position buffer
+
+    var vertices = [];
+    var colors = [];
+    for (var x = 0; x < this.width; x++) {
+      for (var z = 0; z < this.length; z++) {
+        vertices.push(
+          x - this.width / 2, this.heights[x][z], z - this.length / 2,
+          x + 1 - this.width / 2, this.heights[x + 1][z], z - this.length / 2,
+          x - this.width / 2, this.heights[x][z + 1], z + 1 - this.length / 2,
+          x - this.width / 2, this.heights[x][z + 1], z + 1 - this.length / 2,
+          x + 1 - this.width / 2, this.heights[x + 1][z], z - this.length / 2,
+          x + 1 - this.width / 2, this.heights[x + 1][z + 1], z + 1 - this.length / 2
+        );
+        colors.push(
+          x % 2, x / this.width, z % 2, 1.0,
+          x % 2, x / this.width, (z + 1) % 2, 1.0,
+          (x + 1) % 2, x / this.width, z % 2, 1.0,
+          x % 2, x / this.width, (z + 1) % 2, 1.0,
+          (x + 1) % 2, x / this.width, z % 2, 1.0,
+          x % 2, x / this.width, z % 2, 1.0
+        );
+      }
+    }
+
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo.position);
-    var vertices = [
-      0.0, 2.0, 0.0,
-      -1.0, -1.0, 0.0,
-      1.0, -1.0, 0.0
-    ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
     this.vbo.position.itemSize = 3;
 
-    // fill the color buffer
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo.color);
-    var colors = [
-        1.0, 0.0, 0.0, 1.0,
-        0.0, 1.0, 0.0, 1.0,
-        0.0, 0.0, 1.0, 1.0
-    ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
     this.vbo.color.itemSize = 4;
 
-    this.vbo.numItems = 3;
+    this.vbo.numItems = 6 * x * z;
   },
 
   draw: function() {
