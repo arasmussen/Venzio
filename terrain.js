@@ -1,7 +1,7 @@
 var terrain = {
   shader: null,
   vbo: {},
-  
+
   initialize: function() {
     this.initializeShaders();
     this.initializeBuffers();
