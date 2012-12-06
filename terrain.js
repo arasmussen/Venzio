@@ -51,11 +51,11 @@ var terrain = {
         );
         colors.push(
           x % 2, x / this.width, z % 2, 1.0,
-          x % 2, x / this.width, (z + 1) % 2, 1.0,
           (x + 1) % 2, x / this.width, z % 2, 1.0,
           x % 2, x / this.width, (z + 1) % 2, 1.0,
+          x % 2, x / this.width, (z + 1) % 2, 1.0,
           (x + 1) % 2, x / this.width, z % 2, 1.0,
-          x % 2, x / this.width, z % 2, 1.0
+          (x + 1) % 2, x / this.width, (z + 1) % 2, 1.0
         );
       }
     }

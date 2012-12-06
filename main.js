@@ -21,7 +21,7 @@ function init() {
   input.initialize();
   terrain.initialize();
 
-  camera = new Camera({x: 0.0, y: 0.0, z: -5.0});
+  camera = new Camera({x: 0.0, y: -0.2, z: 0.0});
   framerate = new Framerate('framerate');
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
