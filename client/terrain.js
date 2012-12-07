@@ -4,8 +4,8 @@ var terrain = {
 
   heights: [],
 
-  width: 64,
-  length: 64,
+  width: 128,
+  length: 128,
 
   initialize: function() {
     this.initializeShaders();
@@ -25,7 +25,7 @@ var terrain = {
       this.heights[x] = [];
       for (var z = 0; z < this.length + 1; z++) {
         this.heights[x][z] =
-          (x - this.width / 2) * (x - this.width / 2) / this.width +
+          (x - this.width / 2) * (x - this.width / 2) / this.width -
           (z - this.length / 2) / 2;
       }
     }
