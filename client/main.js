@@ -4,6 +4,7 @@ var camera;
 var canvas;
 var framerate;
 var gl;
+var socket;
 
 var pMatrix = mat4.create();
 var mvMatrix = mat4.create();
@@ -23,6 +24,8 @@ function init() {
 
   camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
   framerate = new Framerate('framerate');
+
+  socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
