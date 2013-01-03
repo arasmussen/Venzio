@@ -27,6 +27,9 @@ function init() {
   framerate = new Framerate('fps');
 
   socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
+  socket.on('updateClient', updateClient);
+  socket.on('setID', setID);
+
   socket.on('setID', function(data) {
     socket_id = data.id;
   });
