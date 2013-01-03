@@ -1,26 +1,77 @@
+require('util.js');
+
 var io = require('socket.io').listen(8080);
-var sockets = [];
-var id = 0;
+var sockets = {};
+var multiplayer = false;
+var interval;
+var updateData = [];
 
 io.sockets.on('connection', function(socket) {
   connect(socket);
   socket.on('disconnect', disconnect.bind(socket));
+  socket.on('updateServer', updateServer.bind(socket));
 });
 
-// add socket to array when they connect
-function connect(socket) {
-  console.log('socket ' + id + ' connected');
-  sockets.push({id: id, socket: socket});
-  socket.emit('setID', {id: id});
-  id = id + 1;
+function enableMultiplayer() {
+  if (!multiplayer) {
+    updateData = [{message: 'enabled multiplayer'}];
+
+    multiplayer = true;
+    interval = setInterval(updateClients, 30);
+  }
 }
 
-// remove socket when they disconnect
-function disconnect() {
-  for (var i = 0; i < sockets.length; i++) {
-    if (this == sockets[i].socket) {
-      console.log('socket ' + sockets[i].id + ' disconnected');
-      sockets.splice(i, 1);
-    }
+function disableMultiplayer() {
+  if (multiplayer) {
+    multiplayer = false;
+    clearInterval(interval);
+
+    // flush updateData
+    updateData.push({message: 'disabled multiplayer'});
+    updateClients();
   }
+}
+
+function connect(socket) {
+  var id = Math.randomInteger(0, 1000000000);
+  sockets[socket] = {id: id};
+
+  socket.emit('setID', {id: id});
+
+  if (!multiplayer && sockets.length > 1) {
+    enableMultiplayer();
+  }
+
+  if (multiplayer) {
+    updateData.push({id: id, message: 'connect'});
+  }
+}
+
+function disconnect() {
+  var id = sockets[socket].id;
+  delete sockets[socket];
+
+  if (multiplayer && sockets.length < 2) {
+    disableMultiplayer();
+  }
+
+  if (multiplayer) {
+    updateData.push({id: id, message: 'disconnect'});
+  }
+}
+
+function updateServer(data) {
+  sockets[this].position = data.position;
+  updateData.push({
+    id: sockets[this].id,
+    message: 'position',
+    position: data.position
+  });
+}
+
+function updateClients() {
+  for (var socket in sockets) {
+    socket.emit('updateClient', updateData);
+  }
+  updateData.length = 0;
 }
