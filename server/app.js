@@ -1,7 +1,5 @@
-require('util.js');
-
 var io = require('socket.io').listen(8080);
-var sockets = {};
+var clients = {};
 var multiplayer = false;
 var interval;
 var updateData = [];
@@ -33,25 +31,23 @@ function disableMultiplayer() {
 }
 
 function connect(socket) {
-  var id = Math.randomInteger(0, 1000000000);
-  sockets[socket] = {id: id};
+  clients[socket.id] = {socket: socket};
+  socket.emit('setID', {id: socket.id});
 
-  socket.emit('setID', {id: id});
-
-  if (!multiplayer && sockets.length > 1) {
+  if (!multiplayer && Object.keys(clients).length > 1) {
     enableMultiplayer();
   }
 
   if (multiplayer) {
-    updateData.push({id: id, message: 'connect'});
+    updateData.push({id: socket.id, message: 'connect'});
   }
 }
 
 function disconnect() {
-  var id = sockets[socket].id;
-  delete sockets[socket];
+  var id = this.id;
+  delete clients[id];
 
-  if (multiplayer && sockets.length < 2) {
+  if (multiplayer && Object.keys(clients).length < 2) {
     disableMultiplayer();
   }
 
@@ -61,17 +57,21 @@ function disconnect() {
 }
 
 function updateServer(data) {
-  sockets[this].position = data.position;
+  clients[this.id].position = data.position;
   updateData.push({
-    id: sockets[this].id,
+    id: this.id,
     message: 'position',
     position: data.position
   });
 }
 
 function updateClients() {
-  for (var socket in sockets) {
-    socket.emit('updateClient', updateData);
+  for (var id in clients) {
+    clients[id].socket.emit('updateClient', {queue: updateData});
   }
   updateData.length = 0;
 }
+
+Math.randomInteger = function(low, high) {
+  return Math.floor(Math.random() * (high - low + 1)) + low;
+};

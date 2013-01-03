@@ -2,10 +2,11 @@ window.onload = init;
 
 var camera;
 var canvas;
+var client_id;
 var framerate;
 var gl;
+var players = {};
 var socket;
-var socket_id;
 
 var pMatrix = mat4.create();
 var mvMatrix = mat4.create();
@@ -24,20 +25,42 @@ function init() {
   terrain.initialize();
 
   camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
-  framerate = new Framerate('fps');
+  framerate = new Framerate('framerate');
 
   socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
-  socket.on('updateClient', updateClient);
   socket.on('setID', setID);
-
-  socket.on('setID', function(data) {
-    socket_id = data.id;
-  });
+  socket.on('updateClient', updateClient);
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.enable(gl.DEPTH_TEST);
 
   render();
+}
+
+function setID(data) {
+  client_id = data.id;
+}
+
+function updateClient(data) {
+  while (data.queue.length > 0) {
+    var node = data.queue.shift();
+    if (node.message == 'connect') {
+      players[node.id] = {};
+    } else if (node.message == 'disconnect') {
+      if (players.hasOwnProperty(node.id)) {
+        delete players[node.id];
+      }
+    } else if (node.message == 'enabled multiplayer') {
+    } else if (node.message == 'disabled multiplayer') {
+    } else if (node.message == 'position') {
+      if (node.id != client_id) {
+        if (!players.hasOwnProperty(node.id)) {
+          players[node.id] = {};
+        }
+        players[node.id]['position'] = node.position;
+      }
+    }
+  }
 }
 
 function render() {
@@ -55,7 +78,7 @@ function handleInput() {
 }
 
 function updateWorld() {
-  socket.emit('updateServer', camera.position);
+  socket.emit('updateServer', {position: camera.position});
 }
 
 function drawWorld() {
@@ -67,4 +90,12 @@ function drawWorld() {
 
   camera.transform();
   terrain.draw();
+
+  for (id in players) {
+    if (players[id].hasOwnProperty('position')) {
+      var cube = new Cube(players[id].position);
+      cube.initialize();
+      cube.draw();
+    }
+  }
 }
