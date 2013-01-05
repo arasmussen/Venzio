@@ -1,4 +1,4 @@
 This is a research project to see how a 3d multiplayer game written using
-node.js and webgl performs on a relatively cheap VPS or on an ec2 small
+socket.io and webgl performs on a relatively cheap VPS or on an ec2 small
 server. The purpose of this research is to determine if a massively multiplayer
 game is at all feasible in terms of playability and cost.
