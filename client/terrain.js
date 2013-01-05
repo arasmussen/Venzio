@@ -14,7 +14,7 @@ var terrain = {
   },
 
   initializeShaders: function() {
-    this.shader = new Shader('terrain-vs', 'terrain-fs');
+    this.shader = new Shader('terrain');
     this.shader.addAttributes(['Position', 'Color']);
     this.shader.addUniforms(['uMVMatrix', 'uPMatrix']);
   },
@@ -72,6 +72,8 @@ var terrain = {
   },
 
   draw: function() {
+    this.shader.use();
+
     gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo.position);
     gl.vertexAttribPointer(
       this.shader.getAttribute('Position'),

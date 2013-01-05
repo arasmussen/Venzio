@@ -1,12 +1,26 @@
-function Shader(vertId, fragId) {
-  var vertexShader = this.getShader(vertId);
-  var fragmentShader = this.getShader(fragId);
+function Shader(name) {
+  var vSource = this.getShaderSource('/shaders/' + name + '-vs.glsl');
+  var vShader = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vShader, vSource);
+  gl.compileShader(vShader);
+  if (!gl.getShaderParameter(vShader, gl.COMPILE_STATUS)) {
+    console.log('Compile failed: ' + name + ' [vertex]');
+    return null;
+  }
+
+  var fSource = this.getShaderSource('/shaders/' + name + '-fs.glsl');
+  var fShader = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(fShader, fSource);
+  gl.compileShader(fShader);
+  if (!gl.getShaderParameter(fShader, gl.COMPILE_STATUS)) {
+    console.log('Compile failed: ' + name + ' [fragment]');
+    return null;
+  }
 
   this.program = gl.createProgram();
-  gl.attachShader(this.program, vertexShader);
-  gl.attachShader(this.program, fragmentShader);
+  gl.attachShader(this.program, vShader);
+  gl.attachShader(this.program, fShader);
   gl.linkProgram(this.program);
-
   if (!gl.getProgramParameter(this.program, gl.LINK_STATUS)) {
     alert('Could not initialize shaders');
   }
@@ -39,37 +53,14 @@ Shader.prototype.addUniforms = function(unis) {
   }, this);
 };
 
-Shader.prototype.getShader = function(id) {
-  var element = document.getElementById(id);
-  if (!element) {
-    return null;
-  }
-
-  var source = "";
-  var child = element.firstChild;
-  while (child) {
-    if (child.nodeType == 3) {
-      source += child.textContent;
+Shader.prototype.getShaderSource = function(url) {
+  var source;
+  $.ajax({
+    async: false,
+    url: url,
+    success: function(data) {
+      source = data;
     }
-    child = child.nextSibling;
-  }
-
-  var shader;
-  if (element.type == 'x-shader/x-fragment') {
-    shader = gl.createShader(gl.FRAGMENT_SHADER);
-  } else if (element.type == 'x-shader/x-vertex') {
-    shader = gl.createShader(gl.VERTEX_SHADER);
-  } else {
-    return null;
-  }
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    console.log('shader compile failed');
-    return null;
-  }
-
-  return shader;
+  });
+  return source;
 };

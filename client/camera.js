@@ -1,27 +1,26 @@
 function Camera(position) {
   this.rotateSpeed = 1/200;
   this.position = position;
-  this.pitch = 0;
-  this.yaw = 0;
+  this.rotation = {pitch: 0, yaw: 0};
 }
 
 Camera.prototype.handleInput = function() {
   this.updateRotation();
   this.updatePosition();
-}
+};
 
 Camera.prototype.updateRotation = function() {
   var mouseDelta = input.getMouseDelta();
-  var prevPitch = this.pitch;
-  var prevYaw = this.yaw;
-  if (this.pitch + mouseDelta.y * this.rotateSpeed > Math.PI / 2) {
-    this.pitch = Math.PI / 2;
-  } else if (this.pitch + mouseDelta.y * this.rotateSpeed < - Math.PI / 2) {
-    this.pitch = -Math.PI / 2;
+  var prevPitch = this.rotation.pitch;
+  var prevYaw = this.rotation.yaw;
+  if (this.rotation.pitch + mouseDelta.y * this.rotateSpeed > Math.PI / 2) {
+    this.rotation.pitch = Math.PI / 2;
+  } else if (this.rotation.pitch + mouseDelta.y * this.rotateSpeed < - Math.PI / 2) {
+    this.rotation.pitch = -Math.PI / 2;
   } else {
-    this.pitch += mouseDelta.y * this.rotateSpeed;
+    this.rotation.pitch += mouseDelta.y * this.rotateSpeed;
   }
-  this.yaw += mouseDelta.x * this.rotateSpeed;
+  this.rotation.yaw += mouseDelta.x * this.rotateSpeed;
 };
 
 Camera.prototype.updatePosition = function() {
@@ -40,10 +39,10 @@ Camera.prototype.updatePosition = function() {
     walk -= 0.1;
   }
 
-  this.position.x += strafe * Math.cos(this.yaw) - walk * Math.sin(this.yaw);
-  this.position.y += walk * Math.sin(this.pitch);
-  this.position.z += Math.cos(this.pitch) * (
-    walk * Math.cos(this.yaw) + strafe * Math.sin(this.yaw)
+  this.position.x += strafe * Math.cos(this.rotation.yaw) - walk * Math.sin(this.rotation.yaw);
+  this.position.y += walk * Math.sin(this.rotation.pitch);
+  this.position.z += Math.cos(this.rotation.pitch) * (
+    walk * Math.cos(this.rotation.yaw) + strafe * Math.sin(this.rotation.yaw)
   );
 };
 
@@ -53,7 +52,7 @@ Camera.prototype.transform = function() {
     this.position.y,
     this.position.z
   ];
-  mat4.rotate(mvMatrix, this.pitch, [1, 0, 0]);
-  mat4.rotate(mvMatrix, this.yaw, [0, 1, 0]);
+  mat4.rotate(mvMatrix, this.rotation.pitch, [1, 0, 0]);
+  mat4.rotate(mvMatrix, this.rotation.yaw, [0, 1, 0]);
   mat4.translate(mvMatrix, translate);
 };

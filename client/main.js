@@ -5,7 +5,7 @@ var canvas;
 var client_id;
 var framerate;
 var gl;
-var players = {};
+var peers = {};
 var socket;
 
 var pMatrix = mat4.create();
@@ -45,20 +45,27 @@ function updateClient(data) {
   while (data.queue.length > 0) {
     var node = data.queue.shift();
     if (node.message == 'connect') {
-      players[node.id] = {};
+      if (!peers.hasOwnProperty(node.id)) {
+        var peer = new Peer(node.id);
+        peers[node.id] = peer;
+      }
     } else if (node.message == 'disconnect') {
-      if (players.hasOwnProperty(node.id)) {
-        delete players[node.id];
+      if (peers.hasOwnProperty(node.id)) {
+        delete peers[node.id];
       }
     } else if (node.message == 'enabled multiplayer') {
     } else if (node.message == 'disabled multiplayer') {
-    } else if (node.message == 'position') {
-      if (node.id != client_id) {
-        if (!players.hasOwnProperty(node.id)) {
-          players[node.id] = {};
-        }
-        players[node.id]['position'] = node.position;
+    } else if (node.message == 'update peer') {
+      if (node.id == client_id) {
+        continue;
       }
+
+      if (!peers.hasOwnProperty(node.id)) {
+        var peer = new Peer(node.id);
+        peers[node.id] = peer;
+      }
+
+      peers[node.id].updateTransform(node.position, node.rotation);
     }
   }
 }
@@ -78,7 +85,10 @@ function handleInput() {
 }
 
 function updateWorld() {
-  socket.emit('updateServer', {position: camera.position});
+  socket.emit('updateServer', {
+    position: camera.position,
+    rotation: camera.rotation
+  });
 }
 
 function drawWorld() {
@@ -91,11 +101,11 @@ function drawWorld() {
   camera.transform();
   terrain.draw();
 
-  for (id in players) {
-    if (players[id].hasOwnProperty('position')) {
-      var cube = new Cube(players[id].position);
-      cube.initialize();
-      cube.draw();
+  for (id in peers) {
+    if (id == client_id) {
+      continue;
     }
+    peers[id].draw();
   }
+
 }

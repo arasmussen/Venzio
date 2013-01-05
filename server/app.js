@@ -15,7 +15,7 @@ function enableMultiplayer() {
     updateData = [{message: 'enabled multiplayer'}];
 
     multiplayer = true;
-    interval = setInterval(updateClients, 30);
+    interval = setInterval(updateClients, 20);
   }
 }
 
@@ -58,10 +58,12 @@ function disconnect() {
 
 function updateServer(data) {
   clients[this.id].position = data.position;
+  clients[this.id].rotation = data.rotation;
   updateData.push({
     id: this.id,
-    message: 'position',
-    position: data.position
+    message: 'update peer',
+    position: data.position,
+    rotation: data.rotation
   });
 }
 

@@ -5,29 +5,7 @@
     <link rel="stylesheet" href="/styles.css" />
     <script type="text/javascript" src="/socket.io.js"></script>
     <script type="text/javascript" src="/glMatrix-0.9.5.min.js"></script>
-    <script id="terrain-vs" type="x-shader/x-vertex">
-      attribute vec3 Position;
-      attribute vec4 Color;
-
-      uniform mat4 uMVMatrix;
-      uniform mat4 uPMatrix;
-
-      varying vec4 vColor;
-
-      void main(void) {
-        gl_Position = uPMatrix * uMVMatrix * vec4(Position, 1.0);
-        vColor = Color;
-      }
-    </script>
-    <script id="terrain-fs" type="x-shader/x-fragment">
-      precision mediump float;
-
-      varying vec4 vColor;
-
-      void main(void) {
-        gl_FragColor = vColor;
-      }
-    </script>
+    <script type="text/javascript" src="/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="/framerate.js"></script>
     <script type="text/javascript" src="/webgl-utils.js"></script>
     <script type="text/javascript" src="/shader.js"></script>
@@ -35,6 +13,7 @@
     <script type="text/javascript" src="/camera.js"></script>
     <script type="text/javascript" src="/terrain.js"></script>
     <script type="text/javascript" src="/cube.js"></script>
+    <script type="text/javascript" src="/peer.js"></script>
     <script type="text/javascript" src="/main.js"></script>
     <script type="text/javascript" src="/analytics.js"></script>
   </head>
