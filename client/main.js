@@ -12,7 +12,7 @@ function init() {
 
   input.initialize();
 
-  camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
+  camera = new Camera({x: 0.0, y: 10.0, z: 0.0});
   framerate = new Framerate('framerate');
   terrainManager = new TerrainManager();
 
