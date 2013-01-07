@@ -39,11 +39,11 @@ Camera.prototype.updatePosition = function() {
     walk += 0.1;
   }
 
-  this.position.x += strafe * Math.cos(this.rotation.yaw) - walk * Math.sin(this.rotation.yaw);
+  this.position.x += strafe * Math.cos(this.rotation.yaw) -
+    Math.cos(this.rotation.pitch) * walk * Math.sin(this.rotation.yaw);
   this.position.y += walk * Math.sin(this.rotation.pitch);
-  this.position.z += Math.cos(this.rotation.pitch) * (
-    walk * Math.cos(this.rotation.yaw) + strafe * Math.sin(this.rotation.yaw)
-  );
+  this.position.z += strafe * Math.sin(this.rotation.yaw) +
+    Math.cos(this.rotation.pitch) * walk * Math.cos(this.rotation.yaw);
 };
 
 Camera.prototype.transform = function() {
