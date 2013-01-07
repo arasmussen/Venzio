@@ -14,7 +14,7 @@ function init() {
 
   camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
   framerate = new Framerate('framerate');
-  terrain = new Terrain();
+  terrainManager = new TerrainManager();
 
   socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
   socket.on('setID', setID);
@@ -78,17 +78,19 @@ function updateWorld() {
     position: camera.position,
     rotation: camera.rotation
   });
+
+  terrainManager.update(camera.position);
 }
 
 function drawWorld() {
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-  mat4.perspective(45.0, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+  mat4.perspective(45.0, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
   mat4.identity(mvMatrix);
 
   camera.transform();
-  terrain.draw();
+  terrainManager.draw(camera.position);
 
   for (id in peers) {
     if (id == client_id) {

@@ -1,10 +1,13 @@
 Terrain.prototype = new Drawable('terrain', ['Position', 'Color'], false);
 Terrain.prototype.constructor = Terrain;
 
-function Terrain() {
+function Terrain(position) {
+  this.position = position;
+
+  this.width = terrainLength;
+  this.length = terrainLength;
+
   this.heights = [];
-  this.width = 128;
-  this.length = 128;
   this.initializeHeights();
 
   // Drawable
@@ -12,13 +15,13 @@ function Terrain() {
 }
 
 Terrain.prototype.initializeHeights = function() {
-  // make a random cool height function
   for (var x = 0; x < this.width + 1; x++) {
     this.heights[x] = [];
     for (var z = 0; z < this.length + 1; z++) {
       this.heights[x][z] =
         (x - this.width / 2) * (x - this.width / 2) / this.width -
         (z - this.length / 2) / 2;
+      this.heights[x][z] = 0;
     }
   }
 };
