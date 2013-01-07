@@ -73,5 +73,5 @@ Terrain.prototype.getItemSize = function(attrib) {
 };
 
 Terrain.prototype.getNumItems = function() {
-  return 6 * (this.width - 1) * (this.length - 1);
+  return 6 * (this.width) * (this.length);
 };
