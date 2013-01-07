@@ -5,6 +5,8 @@ function Terrain(position) {
   this.heights = [];
   this.width = 128;
   this.length = 128;
+
+  this.initialize();
 }
 
 Terrain.prototype.initialize = function() {
@@ -73,6 +75,7 @@ Terrain.prototype.initializeBuffers = function() {
 
 Terrain.prototype.draw = function() {
   this.shader.use();
+  this.setMatrixUniforms();
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo.position);
   gl.vertexAttribPointer(
@@ -94,7 +97,6 @@ Terrain.prototype.draw = function() {
     0
   );
 
-  this.setMatrixUniforms();
   gl.drawArrays(gl.TRIANGLES, 0, this.vbo.numItems);
 };
 

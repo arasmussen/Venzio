@@ -69,6 +69,7 @@ Cube.prototype.draw = function() {
   this.transform();
 
   this.shader.use();
+  this.setMatrixUniforms();
 
   gl.bindBuffer(gl.ARRAY_BUFFER, this.vbo.position);
   gl.vertexAttribPointer(
@@ -90,7 +91,6 @@ Cube.prototype.draw = function() {
     0
   );
 
-  this.setMatrixUniforms();
   gl.drawElements(gl.TRIANGLES, this.ibo.numItems, gl.UNSIGNED_SHORT, 0);
 
   this.untransform();
