@@ -58,6 +58,7 @@ Drawable.prototype.draw = function() {
   }
 
   if (this.usingIndices) {
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers['index']);
     gl.drawElements(
       gl.TRIANGLES,
       this.getNumItems(),
