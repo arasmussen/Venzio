@@ -98,5 +98,4 @@ function drawWorld() {
     }
     peers[id].draw();
   }
-
 }

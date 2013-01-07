@@ -11,16 +11,16 @@ Camera.prototype.handleInput = function() {
 
 Camera.prototype.updateRotation = function() {
   var mouseDelta = input.getMouseDelta();
-  var prevPitch = this.rotation.pitch;
-  var prevYaw = this.rotation.yaw;
-  if (this.rotation.pitch + mouseDelta.y * this.rotateSpeed > Math.PI / 2) {
+  var newPitch = this.rotation.pitch - mouseDelta.y * this.rotateSpeed;
+  if (newPitch > Math.PI / 2) {
     this.rotation.pitch = Math.PI / 2;
-  } else if (this.rotation.pitch + mouseDelta.y * this.rotateSpeed < - Math.PI / 2) {
+  } else if (newPitch < -Math.PI / 2) {
     this.rotation.pitch = -Math.PI / 2;
   } else {
-    this.rotation.pitch += mouseDelta.y * this.rotateSpeed;
+    this.rotation.pitch = newPitch;
   }
-  this.rotation.yaw += mouseDelta.x * this.rotateSpeed;
+  this.rotation.yaw -= mouseDelta.x * this.rotateSpeed;
+  this.rotation.yaw %= 2 * Math.PI;
 };
 
 Camera.prototype.updatePosition = function() {
@@ -52,7 +52,7 @@ Camera.prototype.transform = function() {
     -this.position.y,
     -this.position.z
   ];
-  mat4.rotate(mvMatrix, this.rotation.pitch, [1, 0, 0]);
-  mat4.rotate(mvMatrix, this.rotation.yaw, [0, 1, 0]);
+  mat4.rotate(mvMatrix, -this.rotation.pitch, [1, 0, 0]);
+  mat4.rotate(mvMatrix, -this.rotation.yaw, [0, 1, 0]);
   mat4.translate(mvMatrix, translate);
 };
