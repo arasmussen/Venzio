@@ -1,16 +1,5 @@
 window.onload = init;
 
-var camera;
-var canvas;
-var client_id;
-var framerate;
-var gl;
-var peers = {};
-var socket;
-
-var pMatrix = mat4.create();
-var mvMatrix = mat4.create();
-
 function init() {
   canvas = document.getElementById('canvas');
 
@@ -25,7 +14,7 @@ function init() {
 
   camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
   framerate = new Framerate('framerate');
-  terrain = new Terrain({x: 0.0, y: 0.0, z: 0.0});
+  terrain = new Terrain();
 
   socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
   socket.on('setID', setID);

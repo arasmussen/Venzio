@@ -3,20 +3,25 @@ function Drawable(shaderName, attributes, usingIndices) {
   this.rotation = {pitch: 0.0, yaw: 0.0};
   this.attributes = attributes;
   this.usingIndices = usingIndices;
-  this.data = {};
-
-  this.initializeShaders(shaderName);
-  this.initializeBuffers();
+  this.buffers = {};
+  this.shaderName = shaderName;
 }
 
-Drawable.prototype.initializeShaders = function(shaderName) {
+Drawable.prototype.initialize = function() {
+  this.initializeShaders();
+  this.initializeBuffers();
+};
+
+Drawable.prototype.initializeShaders = function() {
   this.shader = new Shader(this.shaderName);
   this.shader.addAttributes(this.attributes);
   this.shader.addUniforms(['uMVMatrix', 'uPMatrix']);
 };
 
 Drawable.prototype.initializeBuffers = function() {
-  for (var attrib in this.attributes) {
+  for (var i in this.attributes) {
+    var attrib = this.attributes[i];
+
     // create buffer
     this.buffers[attrib] = gl.createBuffer();
 
@@ -36,10 +41,12 @@ Drawable.prototype.initializeBuffers = function() {
 };
 
 Drawable.prototype.draw = function() {
-  this.predraw();
+  this.preDraw();
 
-  for (var attrib in this.attributes) {
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.data[attrib].buffer);
+  for (var i in this.attributes) {
+    var attrib = this.attributes[i];
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
     gl.vertexAttribPointer(
       this.shader.getAttribute(attrib),
       this.getItemSize(attrib),
@@ -61,10 +68,10 @@ Drawable.prototype.draw = function() {
     gl.drawArrays(gl.TRIANGLES, 0, this.getNumItems());
   }
 
-  this.postdraw();
+  this.postDraw();
 };
 
-Drawable.prototype.predraw = function() {
+Drawable.prototype.preDraw = function() {
   this.transform();
   this.shader.use();
   this.setMatrixUniforms();
