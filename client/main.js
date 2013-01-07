@@ -22,10 +22,10 @@ function init() {
   gl.viewportHeight = canvas.height;
 
   input.initialize();
-  terrain.initialize();
 
   camera = new Camera({x: 0.0, y: -10.0, z: -10.0});
   framerate = new Framerate('framerate');
+  terrain = new Terrain({x: 0.0, y: 0.0, z: 0.0});
 
   socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
   socket.on('setID', setID);
