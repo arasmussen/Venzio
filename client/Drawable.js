@@ -86,14 +86,14 @@ var Drawable = Base.extend({
   transform: function() {
     var translate = [this.position.x, this.position.y, this.position.z];
     mat4.translate(mvMatrix, translate);
+    mat4.rotate(mvMatrix, this.rotation.yaw, [0, 1, 0]);
     mat4.rotate(mvMatrix, this.rotation.pitch, [1, 0, 0]);
-    mat4.rotate(mvMatrix, -this.rotation.yaw, [0, 1, 0]);
   },
 
   untransform: function() {
     var translate = [-this.position.x, -this.position.y, -this.position.z];
+    mat4.rotate(mvMatrix, this.rotation.pitch, [1, 0, 0]);
     mat4.rotate(mvMatrix, this.rotation.yaw, [0, 1, 0]);
-    mat4.rotate(mvMatrix, -this.rotation.pitch, [1, 0, 0]);
     mat4.translate(mvMatrix, translate);
   },
 

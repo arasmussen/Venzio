@@ -6,8 +6,8 @@ var Game = Base.extend({
     this.peers = {};
 
     this.socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
-    this.socket.on('setID', this.setID);
-    this.socket.on('updateClient', this.updateClient);
+    this.socket.on('setID', this.setID.bind(this));
+    this.socket.on('updateClient', this.updateClient.bind(this));
   },
 
   mainLoop: function() {
@@ -44,7 +44,7 @@ var Game = Base.extend({
       if (id == this.client_id) {
         continue;
       }
-      peers[id].draw();
+      this.peers[id].draw();
     }
   },
 

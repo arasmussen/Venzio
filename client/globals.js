@@ -4,4 +4,4 @@ var gl;
 var pMatrix = mat4.create();
 var mvMatrix = mat4.create();
 
-var terrainLength = 32;
+var terrainLength = 64;
