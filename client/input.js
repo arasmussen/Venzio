@@ -1,9 +1,11 @@
 var input = {
+  canvas: null,
   keys: [],
   mouseDelta: {x: 0, y: 0},
   pointerLocked: false,
 
-  initialize: function() {
+  initialize: function(canvas) {
+    this.canvas = canvas;
     this.initializeKeyInput();
     this.initializeMouseInput();
     this.initializePointerLock();
@@ -32,12 +34,12 @@ var input = {
   },
 
   initializePointerLock: function() {
-    canvas.requestPointerLock =
-      canvas.requestPointerLock ||
-      canvas.mozRequestPointerLock ||
-      canvas.webkitRequestPointerLock;
-    canvas.onclick = function() {
-      canvas.requestPointerLock();
+    this.canvas.requestPointerLock =
+      this.canvas.requestPointerLock ||
+      this.canvas.mozRequestPointerLock ||
+      this.canvas.webkitRequestPointerLock;
+    this.canvas.onclick = function() {
+      this.canvas.requestPointerLock();
     }.bind(this);
 
     var pointerLockChangeHandler = function() {
@@ -46,7 +48,7 @@ var input = {
         document.mozPointerLockElement ||
         document.webkitPointerLockElement;
 
-      if (lockElement === canvas) {
+      if (lockElement === this.canvas) {
         this.pointerLocked = true;
       } else {
         this.pointerLocked = false;
