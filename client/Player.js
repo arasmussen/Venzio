@@ -80,5 +80,6 @@ var Player = Base.extend({
            this.strafe * Math.sin(this.rotation.yaw)
       };
     }
+    Math.normalize(this.desiredVelocity);
   }
 });

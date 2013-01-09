@@ -16,10 +16,18 @@ function main() {
 
   var game = new Game();
   var framerate = new Framerate('framerate');
+  var lastFrameTime = new Date();
 
   var baseLoop = function() {
+    var currentTime = new Date();
+    var tslf = (currentTime.getTime() - lastFrameTime.getTime()) / 1000;
+    if (tslf > 0.1) {
+      tslf = 0.1;
+    }
+    lastFrameTime = currentTime;
+    
     framerate.snapshot();
-    game.mainLoop();
+    game.mainLoop(tslf);
     window.requestAnimFrame(baseLoop, canvas);
   };
   baseLoop();

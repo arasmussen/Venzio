@@ -88,8 +88,8 @@ var Terrain = Drawable.extend({
         zDiff * (this.heights[x][z + 1] - this.heights[x][z]);
     } else {
       return this.heights[x + 1][z + 1] +
-        xDiff * (this.heights[x + 1][z + 1] - this.heights[x][z + 1]) +
-        zDiff * (this.heights[x + 1][z + 1] - this.heights[x + 1][z]);
+        (1 - xDiff) * (this.heights[x][z + 1] - this.heights[x + 1][z + 1]) +
+        (1 - zDiff) * (this.heights[x + 1][z] - this.heights[x + 1][z + 1]);
     }
   }
 });

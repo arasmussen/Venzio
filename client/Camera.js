@@ -1,13 +1,21 @@
 var Camera = Base.extend({
   constructor: function(attachee) {
     this.attachee = attachee;
-    this.position = attachee.position;
+    this.position = {
+      x: this.attachee.position.x,
+      y: this.attachee.position.y + 2.0,
+      z: this.attachee.position.z
+    };
     this.rotation = attachee.rotation;
     this.rotateSpeed = 1/200;
   },
 
   update: function() {
-    this.position = this.attachee.position;
+    this.position = {
+      x: this.attachee.position.x,
+      y: this.attachee.position.y + 2.0,
+      z: this.attachee.position.z
+    };
     this.rotation = this.attachee.rotation;
   },
 

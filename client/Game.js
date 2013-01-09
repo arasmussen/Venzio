@@ -11,9 +11,9 @@ var Game = Base.extend({
     this.socket.on('updateClient', this.updateClient.bind(this));
   },
 
-  mainLoop: function() {
+  mainLoop: function(tslf) {
     this.handleInput();
-    this.updateWorld();
+    this.updateWorld(tslf);
     this.drawWorld();
   },
 
@@ -25,7 +25,10 @@ var Game = Base.extend({
     this.player.update();
     this.camera.update();
     TerrainManager.update(this.player.position);
-    PhysicsManager.movePlayer(this.player, tslf);
+
+    if (!this.player.freeFloat) {
+      PhysicsManager.movePlayer(this.player, tslf);
+    }
 
     this.socket.emit('updateServer', {
       position: this.player.position,
