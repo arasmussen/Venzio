@@ -3,7 +3,7 @@ var Terrain = Drawable.extend({
     this.width = terrainLength;
     this.length = terrainLength;
     this.initializeHeights();
-    this.base('terrain', ['Position', 'Color'], false);
+    this.base('default', ['Position', 'Color'], false);
 
     this.position = position;
     this.initialize();
@@ -56,10 +56,6 @@ var Terrain = Drawable.extend({
       }
       return new Float32Array(colors);
     }
-  },
-
-  getAttribType: function(attrib) {
-    return gl.FLOAT;
   },
 
   getItemSize: function(attrib) {

@@ -51,7 +51,7 @@ var Drawable = Base.extend({
       gl.vertexAttribPointer(
         this.shader.getAttribute(attrib),
         this.getItemSize(attrib),
-        this.getAttribType(attrib),
+        gl.FLOAT,
         false,
         0,
         0
@@ -61,13 +61,13 @@ var Drawable = Base.extend({
     if (this.usingIndices) {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers['index']);
       gl.drawElements(
-        gl.TRIANGLES,
+        this.getDrawMode(),
         this.getNumItems(),
         gl.UNSIGNED_SHORT,
         0
       );
     } else {
-      gl.drawArrays(gl.TRIANGLES, 0, this.getNumItems());
+      gl.drawArrays(this.getDrawMode(), 0, this.getNumItems());
     }
 
     this.postDraw();
@@ -100,5 +100,9 @@ var Drawable = Base.extend({
   setMatrixUniforms: function() {
     gl.uniformMatrix4fv(this.shader.getUniform('uPMatrix'), false, pMatrix);
     gl.uniformMatrix4fv(this.shader.getUniform('uMVMatrix'), false, mvMatrix);
+  },
+
+  getDrawMode: function() {
+    return gl.TRIANGLES;
   }
 });

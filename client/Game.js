@@ -17,6 +17,7 @@ var Game = Base.extend({
   },
 
   handleInput: function() {
+    this.player.handleInput();
   },
 
   updateWorld: function() {

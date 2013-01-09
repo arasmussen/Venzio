@@ -1,6 +1,6 @@
 var Cube = Drawable.extend({
   constructor: function(position, rotation) {
-    this.base('cube', ['Position', 'Color'], true);
+    this.base('default', ['Position', 'Color'], true);
     this.position = position;
     this.rotation = rotation;
     this.initialize();
@@ -51,11 +51,5 @@ var Cube = Drawable.extend({
 
   getNumItems: function() {
     return 36;
-  },
-
-  getAttribType: function(attrib) {
-    if (attrib == 'Position' || attrib == 'Color') {
-      return gl.FLOAT;
-    }
   }
 });
