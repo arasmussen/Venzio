@@ -11,7 +11,9 @@ var Capsule = Base.extend({
     this.topSphere = new Sphere(cylinderTop, radius);
 
     this.radius = radius;
-    this.height = height;
+    this.height = cylinderHeight;
+
+    this.initialize();
   },
 
   initialize: function() {
@@ -24,5 +26,25 @@ var Capsule = Base.extend({
     this.cylinder.draw();
     this.bottomSphere.draw();
     this.topSphere.draw();
+  },
+
+  updatePosRot: function(pos, rot) {
+    var bottom = {
+      x: pos.x,
+      y: pos.y + this.radius,
+      z: pos.z
+    };
+    var top = {
+      x: pos.x,
+      y: pos.y + this.radius + this.height,
+      z: pos.z
+    };
+    this.cylinder.position = bottom;
+    this.bottomSphere.position = bottom;
+    this.topSphere.position = top;
+
+    this.cylinder.rotation.yaw = rot.yaw;
+    this.bottomSphere.rotation.yaw = rot.yaw;
+    this.topSphere.rotation.yaw = rot.yaw;
   }
 });

@@ -69,27 +69,33 @@ var Terrain = Drawable.extend({
     return 6 * (this.width) * (this.length);
   },
 
-  // world[XZ] = world coordinates
-  // [xz] = index of square within this terrain
-  // [xz]Diff = distance from front-left corner of square (between 0 and 1)
-  getHeight: function(worldX, worldZ) {
-    // get square
-    var x = Math.floor(worldX - this.position.x) + this.width / 2;
-    var z = Math.floor(worldZ - this.position.z) + this.length / 2;
+  getHeight: function(position) {
+    var offsetWithinTerrain = {
+      x: position.x - (this.position.x - this.width / 2),
+      z: position.z - (this.position.z - this.width / 2)
+    };
+    var indexOfTriangles = {
+      x: Math.floor(offsetWithinTerrain.x),
+      z: Math.floor(offsetWithinTerrain.z)
+    };
+    var difference = {
+      x: offsetWithinTerrain.x - indexOfTriangles.x,
+      z: offsetWithinTerrain.z - indexOfTriangles.z
+    };
+    var isFirstTriangle = ((difference.x + difference.z) < 1.0);
 
-    // which triangle (front left or back right)
-    var xDiff = worldX - this.position.x + this.width / 2 - x;
-    var zDiff = worldZ - this.position.z + this.width / 2 - z;
-    var frontTriangle = ((xDiff + zDiff) < 1.0);
-
-    if (frontTriangle) {
+    var x = indexOfTriangles.x;
+    var z = indexOfTriangles.z;
+    if (isFirstTriangle) {
       return this.heights[x][z] +
-        xDiff * (this.heights[x + 1][z] - this.heights[x][z]) +
-        zDiff * (this.heights[x][z + 1] - this.heights[x][z]);
+        difference.x * (this.heights[x + 1][z] - this.heights[x][z]) +
+        difference.z * (this.heights[x][z + 1] - this.heights[x][z]);
     } else {
+      difference.x = 1.0 - difference.x;
+      difference.z = 1.0 - difference.z;
       return this.heights[x + 1][z + 1] +
-        (1 - xDiff) * (this.heights[x][z + 1] - this.heights[x + 1][z + 1]) +
-        (1 - zDiff) * (this.heights[x + 1][z] - this.heights[x + 1][z + 1]);
+        difference.x * (this.heights[x][z + 1] - this.heights[x + 1][z + 1]) +
+        difference.z * (this.heights[x + 1][z] - this.heights[x + 1][z + 1]);
     }
   }
 });

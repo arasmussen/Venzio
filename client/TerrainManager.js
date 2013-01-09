@@ -48,5 +48,11 @@ var TerrainManager = {
       x: Math.floor((worldPos.x + terrainLength / 2) / terrainLength),
       z: Math.floor((worldPos.z + terrainLength / 2) / terrainLength)
     };
+  },
+
+  getTerrainHeight: function(position) {
+    var section = this.worldToSectionCoords(position);
+    var terrain = this.terrains[section.x][section.z];
+    return terrain.getHeight(position);
   }
 };

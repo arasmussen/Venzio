@@ -1,19 +1,25 @@
 function Peer(id) {
   this.id = id;
-  this.cube = null;
+  this.capsule = null;
 }
 
 Peer.prototype.draw = function() {
-  if (this.cube == null) {
+  if (this.capsule == null) {
     return;
   }
-  this.cube.draw();
+  this.capsule.draw();
 };
 
 Peer.prototype.updateTransform = function(pos, rot) {
-  if (this.cube == null) {
-    this.cube = new Cube(pos, rot);
+  if (this.capsule == null) {
+    var radius = 3.0;
+    var height = 5.0;
+    var bottom = {
+      x: pos.x,
+      y: pos.y + radius,
+      z: pos.z
+    };
+    this.capsule = new Capsule(bottom, radius, height);
   }
-  this.cube.position = pos;
-  this.cube.rotation = rot;
+  this.capsule.updatePosRot(pos, rot);
 };
