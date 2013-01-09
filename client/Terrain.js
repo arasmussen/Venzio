@@ -15,9 +15,8 @@ var Terrain = Drawable.extend({
       this.heights[x] = [];
       for (var z = 0; z < this.length + 1; z++) {
         this.heights[x][z] =
-          (x - this.width / 2) * (x - this.width / 2) / this.width -
-          (z - this.length / 2) / 2;
-        this.heights[x][z] = 0;
+          2 * Math.sin(2 * Math.PI * x / (this.width)) +
+          3 * Math.cos(2 * Math.PI * z / (this.length));
       }
     }
   },
@@ -68,5 +67,29 @@ var Terrain = Drawable.extend({
 
   getNumItems: function() {
     return 6 * (this.width) * (this.length);
+  },
+
+  // world[XZ] = world coordinates
+  // [xz] = index of square within this terrain
+  // [xz]Diff = distance from front-left corner of square (between 0 and 1)
+  getHeight: function(worldX, worldZ) {
+    // get square
+    var x = Math.floor(worldX - this.position.x) + this.width / 2;
+    var z = Math.floor(worldZ - this.position.z) + this.length / 2;
+
+    // which triangle (front left or back right)
+    var xDiff = worldX - this.position.x + this.width / 2 - x;
+    var zDiff = worldZ - this.position.z + this.width / 2 - z;
+    var frontTriangle = ((xDiff + zDiff) < 1.0);
+
+    if (frontTriangle) {
+      return this.heights[x][z] +
+        xDiff * (this.heights[x + 1][z] - this.heights[x][z]) +
+        zDiff * (this.heights[x][z + 1] - this.heights[x][z]);
+    } else {
+      return this.heights[x + 1][z + 1] +
+        xDiff * (this.heights[x + 1][z + 1] - this.heights[x][z + 1]) +
+        zDiff * (this.heights[x + 1][z + 1] - this.heights[x + 1][z]);
+    }
   }
 });

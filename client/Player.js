@@ -2,7 +2,10 @@ var Player = Base.extend({
   constructor: function() {
     this.rotateSpeed = 1/250;
     this.position = {x: 0.0, y: 10.0, z: 0.0};
+    this.velocity = {x: 0.0, y: 0.0, z: 0.0};
     this.rotation = {pitch: 0.0, yaw: 0.0};
+
+    this.desiredVelocity = {x: 0.0, y: 0.0, z: 0.0};
 
     this.freeFloat = false;
 
@@ -63,16 +66,19 @@ var Player = Base.extend({
       this.position.y -= this.walk * Math.sin(this.rotation.pitch);
       this.position.z += - this.strafe * Math.sin(this.rotation.yaw) +
         Math.cos(this.rotation.pitch) * this.walk * Math.cos(this.rotation.yaw);
+      this.desiredVelocity = {
+        x: 0,
+        y: 0,
+        z: 0
+      };
     } else {
-      var desiredVelocity = {
+      this.desiredVelocity = {
         x: this.strafe * Math.cos(this.rotation.yaw) +
            this.walk * Math.sin(this.rotation.yaw),
         y: 0,
         z: this.walk * Math.cos(this.rotation.yaw) -
            this.strafe * Math.sin(this.rotation.yaw)
       };
-      this.position.x += desiredVelocity.x;
-      this.position.z += desiredVelocity.z;
     }
   }
 });

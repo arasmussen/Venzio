@@ -1,6 +1,7 @@
 var Game = Base.extend({
   constructor: function() {
-    this.terrainManager = new TerrainManager();
+    TerrainManager.initialize();
+
     this.player = new Player();
     this.camera = new Camera(this.player);
     this.peers = {};
@@ -20,10 +21,11 @@ var Game = Base.extend({
     this.player.handleInput();
   },
 
-  updateWorld: function() {
+  updateWorld: function(tslf) {
     this.player.update();
     this.camera.update();
-    this.terrainManager.update(this.player.position);
+    TerrainManager.update(this.player.position);
+    PhysicsManager.movePlayer(this.player, tslf);
 
     this.socket.emit('updateServer', {
       position: this.player.position,
@@ -39,7 +41,7 @@ var Game = Base.extend({
     mat4.identity(mvMatrix);
 
     this.camera.transform();
-    this.terrainManager.draw(this.player.position);
+    TerrainManager.draw(this.player.position);
 
     for (id in this.peers) {
       if (id == this.client_id) {
