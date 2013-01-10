@@ -104,5 +104,13 @@ var Drawable = Base.extend({
 
   getDrawMode: function() {
     return gl.TRIANGLES;
+  },
+
+  getItemSize: function(attrib) {
+    if (attrib == 'Position') {
+      return 3;
+    } else if (attrib == 'Color') {
+      return 4;
+    }
   }
 });

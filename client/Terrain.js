@@ -57,14 +57,6 @@ var Terrain = Drawable.extend({
     }
   },
 
-  getItemSize: function(attrib) {
-    if (attrib == 'Position') {
-      return 3;
-    } else if (attrib == 'Color') {
-      return 4;
-    }
-  },
-
   getNumItems: function() {
     return 6 * (this.width) * (this.length);
   },

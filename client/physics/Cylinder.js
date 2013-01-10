@@ -59,18 +59,6 @@ var Cylinder = Shape.extend({
     }
   },
 
-  getItemSize: function(attrib) {
-    if (attrib == 'Position') {
-      return 3;
-    } else if (attrib == 'Color') {
-      return 4;
-    }
-  },
-
-  getAttribType: function(attrib) {
-    return gl.FLOAT;
-  },
-
   getNumItems: function() {
     return 2 * this.columns * (2 * this.rows + 1);
   },
