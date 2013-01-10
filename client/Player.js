@@ -64,7 +64,6 @@ var Player = Base.extend({
 
   handleJumpInput: function() {
     if (this.onGround && !this.freeFloat && input.isKeyPressed(32)) {
-      debugger;
       this.jump = true;
     }
   },
