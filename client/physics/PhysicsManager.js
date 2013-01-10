@@ -56,7 +56,7 @@ var PhysicsManager = {
       testPosition.y = TerrainManager.getTerrainHeight(testPosition) + 0.0005
 
       var distance = Math.distance(testPosition, player.position);
-      if (Math.floatEquals(distance, this.moveSpeed * tslf, 0.002)) {
+      if (Math.floatEquals(distance, this.moveSpeed * tslf, 0.001)) {
         break;
       }
 
@@ -90,29 +90,42 @@ var PhysicsManager = {
     player.onGround = false;
     player.velocity.y -= 32.17 * tslf;
 
-    var testPosition = {};
-    testPosition.x = player.position.x + player.velocity.x * tslf;
-    testPosition.y = player.position.y + player.velocity.y * tslf;
-    testPosition.z = player.position.z + player.velocity.z * tslf;
+    var testPosition = {
+      x: player.position.x + player.velocity.x * tslf,
+      y: player.position.y + player.velocity.y * tslf,
+      z: player.position.z + player.velocity.z * tslf
+    };
     var terrainHeight = TerrainManager.getTerrainHeight(testPosition) + 0.0005;
 
     // if hit ground
     if (testPosition.y < terrainHeight) {
       player.onGround = true;
+
+      // do a binary search to see where they hit
+      var lower = 0;
+      var upper = 1;
+      var current = 0.5;
+      var testVelocity = {};
       for (var i = 0; i < 10; i++) {
-        var ratio = (player.position.y - terrainHeight) /
-          (player.position.y - testPosition.y);
-        player.velocity.x *= ratio;
-        player.velocity.y *= ratio;
-        player.velocity.z *= ratio;
+        testVelocity.x = player.velocity.x * current;
+        testVelocity.y = player.velocity.y * current;
+        testVelocity.z = player.velocity.z * current;
+        testPosition.x = player.position.x + testVelocity.x * tslf;
+        testPosition.y = player.position.y + testVelocity.y * tslf;
+        testPosition.z = player.position.z + testVelocity.z * tslf;
+        terrainHeight = TerrainManager.getTerrainHeight(testPosition);
 
-        testPosition.x = player.position.x + player.velocity.x * tslf,
-        testPosition.y = player.position.y + player.velocity.y * tslf,
-        testPosition.z = player.position.z + player.velocity.z * tslf
-        terrainHeight = TerrainManager.getTerrainHeight(testPosition) + 0.0005;
-
-        if (Math.floatEquals(testPosition.y, terrainHeight, 0.00025)) {
-          break;
+        if (Math.floatEquals(testPosition.y, terrainHeight + 0.0005, 0.00025)) {
+          player.velocity.x = testVelocity.x;
+          player.velocity.y = testVelocity.y;
+          player.velocity.z = testVelocity.z;
+          return;
+        } else if (testPosition.y < terrainHeight + 0.00025) {
+          lower = current;
+          current = (current + upper) / 2;
+        } else {
+          upper = current;
+          current = (current + lower) / 2;
         }
       }
     }
