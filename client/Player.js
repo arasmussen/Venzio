@@ -8,6 +8,8 @@ var Player = Base.extend({
     this.desiredVelocity = {x: 0.0, y: 0.0, z: 0.0};
 
     this.freeFloat = false;
+    this.onGround = false;
+    this.jump = false;
 
     this.strafe = 0;
     this.walk = 0;
@@ -17,6 +19,7 @@ var Player = Base.extend({
     this.handlePositionInput();
     this.handleRotationInput();
     this.handleFreeFloatInput();
+    this.handleJumpInput();
   },
 
   handlePositionInput: function() {
@@ -59,6 +62,13 @@ var Player = Base.extend({
     }
   },
 
+  handleJumpInput: function() {
+    if (this.onGround && !this.freeFloat && input.isKeyPressed(32)) {
+      debugger;
+      this.jump = true;
+    }
+  },
+
   update: function(tslf) {
     if (this.freeFloat) {
       this.position.x += this.strafe * Math.cos(this.rotation.yaw) +
@@ -66,20 +76,20 @@ var Player = Base.extend({
       this.position.y -= this.walk * Math.sin(this.rotation.pitch);
       this.position.z += - this.strafe * Math.sin(this.rotation.yaw) +
         Math.cos(this.rotation.pitch) * this.walk * Math.cos(this.rotation.yaw);
-      this.desiredVelocity = {
-        x: 0,
-        y: 0,
-        z: 0
-      };
+      this.desiredVelocity.x = 0.0;
+      this.desiredVelocity.y = 0.0;
+      this.desiredVelocity.z = 0.0;
     } else {
-      this.desiredVelocity = {
-        x: this.strafe * Math.cos(this.rotation.yaw) +
-           this.walk * Math.sin(this.rotation.yaw),
-        y: 0,
-        z: this.walk * Math.cos(this.rotation.yaw) -
-           this.strafe * Math.sin(this.rotation.yaw)
-      };
+      this.desiredVelocity.x = this.strafe * Math.cos(this.rotation.yaw) +
+           this.walk * Math.sin(this.rotation.yaw);
+      this.desiredVelocity.y = 0.0;
+      this.desiredVelocity.z = this.walk * Math.cos(this.rotation.yaw) -
+           this.strafe * Math.sin(this.rotation.yaw);
+      this.desiredVelocity = Math.normalize(this.desiredVelocity);
+      if (this.jump) {
+        this.jump = false;
+        this.desiredVelocity.y = 12.0;
+      }
     }
-    Math.normalize(this.desiredVelocity);
   }
 });

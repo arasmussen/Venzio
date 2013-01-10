@@ -15,9 +15,6 @@ Math.normalize = function(vec3) {
   var factor = 1.0 / Math.sqrt(
     Math.pow(vec3.x, 2) + Math.pow(vec3.y, 2) + Math.pow(vec3.z, 2)
   );
-  if (isNaN(vec3.x) || isNaN(vec3.y) || isNaN(vec3.z) || isNaN(factor)) {
-  debugger;
-  }
   return {
     x: vec3.x * factor,
     y: vec3.y * factor,

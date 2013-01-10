@@ -25,7 +25,7 @@ function main() {
       tslf = 0.1;
     }
     lastFrameTime = currentTime;
-    
+
     framerate.snapshot();
     game.mainLoop(tslf);
     window.requestAnimFrame(baseLoop, canvas);

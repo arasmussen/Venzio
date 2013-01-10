@@ -1,9 +1,8 @@
 // a singleton until i figure out something better to do with it
 
 var PhysicsManager = {
-  moveSpeed: 20.0,
+  moveSpeed: 5.0,
 
-  // holy shit break this up into multiple functions PLEASE
   movePlayer: function(player, tslf) {
     var terrainHeight = TerrainManager.getTerrainHeight(player.position);
 
@@ -13,8 +12,15 @@ var PhysicsManager = {
       player.position.y = terrainHeight + 0.0005;
     }
 
-    if (player.position.y - 0.001 <= terrainHeight) {
-      this.movePlayerOnGround(player, tslf);
+    if (player.onGround && player.position.y - 0.001 <= terrainHeight) {
+      if (player.desiredVelocity.y > 0.0) {
+        player.velocity.x = this.moveSpeed * player.desiredVelocity.x;
+        player.velocity.y = player.desiredVelocity.y;
+        player.velocity.z = this.moveSpeed * player.desiredVelocity.z;
+        this.movePlayerInAir(player, tslf);
+      } else {
+        this.movePlayerOnGround(player, tslf);
+      }
     } else {
       this.movePlayerInAir(player, tslf);
     }
@@ -22,12 +28,17 @@ var PhysicsManager = {
     player.position.x += player.velocity.x * tslf;
     player.position.y += player.velocity.y * tslf;
     player.position.z += player.velocity.z * tslf;
+
+    console.log({z: player.velocity.z});
+  },
+
+  jumpPlayer: function(player, tslf) {
   },
 
   movePlayerOnGround: function(player, tslf) {
+    player.onGround = true;
     if (player.desiredVelocity.x == 0.0 && player.desiredVelocity.z == 0.0) {
       player.velocity.x = 0.0;
-      player.velocity.y = 0.0;
       player.velocity.z = 0.0;
       return;
     }
@@ -76,15 +87,18 @@ var PhysicsManager = {
   },
 
   movePlayerInAir: function(player, tslf) {
-    player.velocity.y -= 2;
+    player.onGround = false;
+    player.velocity.y -= 32.17 * tslf;
 
-    var testPosition = {}
-    testPosition.x = player.position.x + player.velocity.x * tslf,
-    testPosition.y = player.position.y + player.velocity.y * tslf,
-    testPosition.z = player.position.z + player.velocity.z * tslf
+    var testPosition = {};
+    testPosition.x = player.position.x + player.velocity.x * tslf;
+    testPosition.y = player.position.y + player.velocity.y * tslf;
+    testPosition.z = player.position.z + player.velocity.z * tslf;
     var terrainHeight = TerrainManager.getTerrainHeight(testPosition) + 0.0005;
 
+    // if hit ground
     if (testPosition.y < terrainHeight) {
+      player.onGround = true;
       for (var i = 0; i < 10; i++) {
         var ratio = (player.position.y - terrainHeight) /
           (player.position.y - testPosition.y);
