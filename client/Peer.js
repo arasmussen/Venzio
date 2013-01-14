@@ -12,7 +12,7 @@ Peer.prototype.draw = function() {
 
 Peer.prototype.updateTransform = function(pos, rot) {
   if (this.capsule == null) {
-    var radius = 3.0;
+    var radius = 1.0;
     var height = 5.0;
     var bottom = {
       x: pos.x,
