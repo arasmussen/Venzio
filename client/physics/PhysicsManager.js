@@ -28,8 +28,6 @@ var PhysicsManager = {
     player.position.x += player.velocity.x * tslf;
     player.position.y += player.velocity.y * tslf;
     player.position.z += player.velocity.z * tslf;
-
-    console.log({z: player.velocity.z});
   },
 
   jumpPlayer: function(player, tslf) {
