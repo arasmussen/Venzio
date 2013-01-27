@@ -6,7 +6,6 @@ var PhysicsManager = {
   movePlayer: function(player, tslf) {
     var terrainHeight = TerrainManager.getTerrainHeight(player.position);
 
-    // you fucked up somewhere last frame and are now below ground level
     if (player.position.y <= terrainHeight) {
       player.velocity.y = 0;
       player.position.y = terrainHeight + 0.0005;
@@ -37,6 +36,7 @@ var PhysicsManager = {
     player.onGround = true;
     if (player.desiredVelocity.x == 0.0 && player.desiredVelocity.z == 0.0) {
       player.velocity.x = 0.0;
+      player.velocity.y = 0.0;
       player.velocity.z = 0.0;
       return;
     }
