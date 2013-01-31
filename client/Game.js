@@ -18,6 +18,7 @@ var Game = Base.extend({
   },
 
   handleInput: function() {
+    input.processCallbackQueue();
     this.player.handleInput();
   },
 
@@ -44,6 +45,7 @@ var Game = Base.extend({
     mat4.identity(mvMatrix);
 
     this.camera.transform();
+    this.player.draw();
     TerrainManager.draw(this.player.position);
 
     for (id in this.peers) {

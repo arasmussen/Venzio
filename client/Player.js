@@ -13,6 +13,11 @@ var Player = Base.extend({
 
     this.strafe = 0;
     this.walk = 0;
+
+    this.buildMode = false;
+    this.buildObject = new Wall(this);
+
+    input.subscribe(66, this.toggleBuildMode.bind(this));
   },
 
   handleInput: function() {
@@ -68,6 +73,10 @@ var Player = Base.extend({
     }
   },
 
+  toggleBuildMode: function() {
+    this.buildMode = !this.buildMode;
+  },
+
   update: function(tslf) {
     if (this.freeFloat) {
       this.position.x += this.strafe * Math.cos(this.rotation.yaw) +
@@ -89,6 +98,16 @@ var Player = Base.extend({
         this.jump = false;
         this.desiredVelocity.y = 12.0;
       }
+    }
+
+    if (this.buildMode) {
+      this.buildObject.update();
+    }
+  },
+
+  draw: function() {
+    if (this.buildMode) {
+      this.buildObject.draw();
     }
   }
 });

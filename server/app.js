@@ -1,8 +1,12 @@
 var io = require('socket.io').listen(8080);
+var db = require('./db.js');
 var clients = {};
 var multiplayer = false;
 var interval;
 var updateData = [];
+
+var my_db = new db();
+my_db.connect();
 
 io.sockets.on('connection', function(socket) {
   connect(socket);
@@ -46,6 +50,7 @@ function connect(socket) {
 function disconnect() {
   var id = this.id;
   delete clients[id];
+  console.log(clients);
 
   if (multiplayer && Object.keys(clients).length < 2) {
     disableMultiplayer();
