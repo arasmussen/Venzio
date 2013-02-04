@@ -1,5 +1,5 @@
 var Drawable = Base.extend({
-  constructor: function(attributes, usingIndices) {
+  constructor: function(usingIndices) {
     this.position = {x: 0.0, y: 0.0, z: 0.0};
     this.rotation = {pitch: 0.0, yaw: 0.0};
     this.usingIndices = usingIndices;
