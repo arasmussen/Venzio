@@ -3,7 +3,7 @@ var Terrain = Drawable.extend({
     this.width = terrainLength;
     this.length = terrainLength;
     this.initializeHeights();
-    this.base('default', ['Position', 'Color'], false);
+    this.base(false);
 
     this.position = position;
     this.initialize();
@@ -19,6 +19,10 @@ var Terrain = Drawable.extend({
           3 * Math.cos(2 * Math.PI * z / (this.length));
       }
     }
+  },
+
+  getAttributes: function() {
+    return ['Position', 'TextureCoord'];
   },
 
   getData: function(attrib) {
@@ -54,6 +58,54 @@ var Terrain = Drawable.extend({
         }
       }
       return new Float32Array(colors);
+    } else if (attrib == 'TextureCoord') {
+      var texCoords = [];
+      for (var i = 0; i < this.width; i++) {
+        for (var j = 0; j < this.length; j++) {
+          var inverse = {
+            x: i % 2 == 1,
+            z: j % 2 == 1
+          };
+          if (!inverse.x && !inverse.z) {
+            texCoords.push(
+              0.0, 0.0,
+              1.0, 0.0,
+              0.0, 1.0,
+              0.0, 1.0,
+              1.0, 0.0,
+              1.0, 1.0
+            );
+          } else if (!inverse.x && inverse.z) {
+            texCoords.push(
+              0.0, 1.0,
+              1.0, 1.0,
+              0.0, 0.0,
+              0.0, 0.0,
+              1.0, 1.0,
+              1.0, 0.0
+            );
+          } else if (inverse.x && !inverse.z) {
+            texCoords.push(
+              1.0, 0.0,
+              0.0, 0.0,
+              1.0, 1.0,
+              1.0, 1.0,
+              0.0, 0.0,
+              0.0, 1.0
+            );
+          } else if (inverse.x && inverse.z) {
+            texCoords.push(
+              1.0, 1.0,
+              0.0, 1.0,
+              1.0, 0.0,
+              1.0, 0.0,
+              0.0, 1.0,
+              0.0, 0.0
+            );
+          }
+        }
+      }
+      return new Float32Array(texCoords);
     }
   },
 
@@ -89,5 +141,17 @@ var Terrain = Drawable.extend({
         difference.x * (this.heights[x][z + 1] - this.heights[x + 1][z + 1]) +
         difference.z * (this.heights[x + 1][z] - this.heights[x + 1][z + 1]);
     }
+  },
+
+  getShaderName: function() {
+    return 'terrain';
+  },
+
+  getTextures: function() {
+    return [
+      {name: 'dirt', filetype: 'jpg'},
+      {name: 'grass', filetype: 'jpg'},
+      {name: 'stone', filetype: 'jpg'}
+    ];
   }
 });

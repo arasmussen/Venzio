@@ -1,9 +1,13 @@
 var Cube = Drawable.extend({
   constructor: function(position, rotation) {
-    this.base('default', ['Position', 'Color'], true);
+    this.base(true);
     this.position = position;
     this.rotation = rotation;
     this.initialize();
+  },
+
+  getAttributes: function() {
+    return ['Position', 'Color'];
   },
 
   getData: function(attrib) {

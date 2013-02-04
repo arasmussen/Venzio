@@ -1,5 +1,9 @@
 var Shape = Drawable.extend({
   constructor: function() {
-    this.base('default', ['Position', 'Color'], true);
+    this.base(true);
+  },
+
+  getAttributes: function() {
+    return ['Position', 'Color'];
   }
 });

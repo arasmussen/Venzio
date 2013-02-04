@@ -1,6 +1,6 @@
 var Wall = Drawable.extend({
   constructor: function(attachee) {
-    this.base('default', ['Position', 'Color'], true);
+    this.base(true);
     this.attachee = attachee;
     this.initialize();
   },
@@ -15,6 +15,10 @@ var Wall = Drawable.extend({
     this.position.y = this.attachee.position.y;
     this.position.z = this.attachee.position.z - 5.0 * yawComponents.z;
     this.rotation.yaw = yaw;
+  },
+
+  getAttributes: function() {
+    return ['Position', 'Color'];
   },
 
   getData: function(attrib) {
