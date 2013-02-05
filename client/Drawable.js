@@ -8,21 +8,19 @@ var Drawable = Base.extend({
   },
 
   initialize: function() {
-    this.attributes = this.getAttributes();
     this.initializeShaders();
     this.initializeBuffers();
     this.initializeTextures();
   },
 
   initializeShaders: function() {
-    this.shader = new Shader(this.getShaderName());
-    this.shader.addAttributes(this.attributes);
-    this.shader.addUniforms(['uMVMatrix', 'uPMatrix']);
+    this.shader = ShaderManager.getShader(this.getShaderName());
   },
 
   initializeBuffers: function() {
-    for (var i in this.attributes) {
-      var attrib = this.attributes[i];
+    var attributes = this.shader.getAttributes();
+    for (var i in attributes) {
+      var attrib = attributes[i];
 
       // create buffer
       this.buffers[attrib] = gl.createBuffer();
@@ -34,11 +32,15 @@ var Drawable = Base.extend({
 
     if (this.usingIndices) {
       // create the buffer
-      this.buffers['index'] = gl.createBuffer();
+      this.indexBuffer = gl.createBuffer();
 
       // pass data to gl context
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers['index']);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.getData('index'), gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
+      gl.bufferData(
+        gl.ELEMENT_ARRAY_BUFFER,
+        this.getIndexData(),
+        gl.STATIC_DRAW
+      );
     }
   },
 
@@ -47,7 +49,6 @@ var Drawable = Base.extend({
     var offset = 0;
     for (var i in textures) {
       var name = textures[i].name;
-      this.shader.addUniforms([name + '_texture']);
       this.textures[name] = {};
       this.textures[name].texture = gl.createTexture();
       this.textures[name].offset = offset++;
@@ -82,8 +83,9 @@ var Drawable = Base.extend({
   },
 
   bindAttributes: function() {
-    for (var i in this.attributes) {
-      var attrib = this.attributes[i];
+    var attributes = this.shader.getAttributes();
+    for (var i in attributes) {
+      var attrib = attributes[i];
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
       gl.vertexAttribPointer(
@@ -97,7 +99,7 @@ var Drawable = Base.extend({
     }
 
     if (this.usingIndices) {
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.buffers['index']);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
     }
   },
 
@@ -160,10 +162,6 @@ var Drawable = Base.extend({
     gl.uniformMatrix4fv(this.shader.getUniform('uMVMatrix'), false, mvMatrix);
   },
 
-  getAttributes: function() {
-    return [];
-  },
-
   getDrawMode: function() {
     return gl.TRIANGLES;
   },
@@ -179,7 +177,8 @@ var Drawable = Base.extend({
   },
 
   getShaderName: function() {
-    return 'default';
+    console.log('forgot to implement getShaderName in child');
+    return 'color';
   },
 
   getTextures: function() {

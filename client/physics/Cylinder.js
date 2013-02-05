@@ -34,29 +34,31 @@ var Cylinder = Shape.extend({
       colors.push(1.0, 0.0, 0.0, 1.0);
       colors.push(1.0, 0.0, 0.0, 1.0);
       return new Float32Array(colors);
-    } else if (attrib == 'index') {
-      var indices = [];
-      var centerBottom = this.columns * this.rows;
-      var centerTop = this.columns * this.rows + 1;
-      for (var i = 0; i < this.columns; i++) {
-        for (var j = 0; j < this.rows; j++) {
-          var current = i * this.rows + j;
-          var side = ((i + 1) % this.columns) * this.rows + j;
-          indices.push(current, side);
+    }
+  },
+  
+  getIndexData: function() {
+    var indices = [];
+    var centerBottom = this.columns * this.rows;
+    var centerTop = this.columns * this.rows + 1;
+    for (var i = 0; i < this.columns; i++) {
+      for (var j = 0; j < this.rows; j++) {
+        var current = i * this.rows + j;
+        var side = ((i + 1) % this.columns) * this.rows + j;
+        indices.push(current, side);
 
-          var above = i * this.rows + j + 1;
-          if (j == this.rows - 1) {
-            indices.push(current, centerTop);
-          } else if (j == 0) {
-            indices.push(current, above);
-            indices.push(current, centerBottom);
-          } else {
-            indices.push(current, above);
-          }
+        var above = i * this.rows + j + 1;
+        if (j == this.rows - 1) {
+          indices.push(current, centerTop);
+        } else if (j == 0) {
+          indices.push(current, above);
+          indices.push(current, centerBottom);
+        } else {
+          indices.push(current, above);
         }
       }
-      return new Uint16Array(indices);
     }
+    return new Uint16Array(indices);
   },
 
   getNumItems: function() {

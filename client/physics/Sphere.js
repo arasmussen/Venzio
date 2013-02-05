@@ -34,29 +34,31 @@ var Sphere = Shape.extend({
       colors.push(1.0, 0.0, 0.0, 1.0);
       colors.push(1.0, 0.0, 0.0, 1.0);
       return new Float32Array(colors);
-    } else if (attrib == 'index') {
-      var indices = [];
-      var centerBottom = this.columns * (this.rows - 2);
-      var centerTop = this.columns * (this.rows - 2) + 1;
-      for (var i = 0; i < this.rows - 2; i++) {
-        for (var j = 0; j < this.columns; j++) {
-          var current = i * this.columns + j;
-          var side = i * this.columns + (j + 1) % this.columns;
-          indices.push(current, side);
+    }
+  },
+  
+  getIndexData: function() {
+    var indices = [];
+    var centerBottom = this.columns * (this.rows - 2);
+    var centerTop = this.columns * (this.rows - 2) + 1;
+    for (var i = 0; i < this.rows - 2; i++) {
+      for (var j = 0; j < this.columns; j++) {
+        var current = i * this.columns + j;
+        var side = i * this.columns + (j + 1) % this.columns;
+        indices.push(current, side);
 
-          var above = (i + 1) * this.columns + j;
-          if (i == this.rows - 3) {
-            indices.push(current, centerTop);
-          } else if (i == 0) {
-            indices.push(current, centerBottom);
-            indices.push(current, above);
-          } else {
-            indices.push(current, above);
-          }
+        var above = (i + 1) * this.columns + j;
+        if (i == this.rows - 3) {
+          indices.push(current, centerTop);
+        } else if (i == 0) {
+          indices.push(current, centerBottom);
+          indices.push(current, above);
+        } else {
+          indices.push(current, above);
         }
       }
-      return new Uint16Array(indices);
     }
+    return new Uint16Array(indices);
   },
 
   getNumItems: function() {

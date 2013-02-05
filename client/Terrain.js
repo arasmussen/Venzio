@@ -21,10 +21,6 @@ var Terrain = Drawable.extend({
     }
   },
 
-  getAttributes: function() {
-    return ['Position', 'TextureCoord'];
-  },
-
   getData: function(attrib) {
     if (attrib == 'Position') {
       var vertices = [];
@@ -151,7 +147,7 @@ var Terrain = Drawable.extend({
     return [
       {name: 'dirt', filetype: 'jpg'},
       {name: 'grass', filetype: 'jpg'},
-      {name: 'stone', filetype: 'jpg'}
+      {name: 'snow', filetype: 'png'}
     ];
   }
 });
