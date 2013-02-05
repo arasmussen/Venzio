@@ -49,35 +49,18 @@ var Drawable = Base.extend({
     var offset = 0;
     for (var i in textures) {
       var name = textures[i].name;
+      var filetype = textures[i].filetype;
       this.textures[name] = {};
-      this.textures[name].texture = gl.createTexture();
+      this.textures[name].data = TextureManager.getTexture(name, filetype);
       this.textures[name].offset = offset++;
       this.textures[name].location = this.shader.getUniform(name + '_texture');
-      this.textures[name].loaded = false;
-      this.textures[name].image = new Image();
-      this.textures[name].image.onload = function(name) {
-        this.onTextureLoaded(this.textures[name]);
-      }.bind(this, name);
-      this.textures[name].image.src =
-        '/textures/' + name + '.' + textures[i].filetype;
     }
-  },
-
-  onTextureLoaded: function(texture) {
-    gl.bindTexture(gl.TEXTURE_2D, texture.texture);
-    gl.texImage2D(
-      gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, texture.image
-    );
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    texture.loaded = true;
   },
 
   bindTextures: function() {
     for (var name in this.textures) {
       gl.activeTexture(gl.TEXTURE0 + this.textures[name].offset);
-      gl.bindTexture(gl.TEXTURE_2D, this.textures[name].texture);
+      gl.bindTexture(gl.TEXTURE_2D, this.textures[name].data.texture);
       gl.uniform1i(this.textures[name].location, this.textures[name].offset);
     }
   },
@@ -105,7 +88,7 @@ var Drawable = Base.extend({
 
   areTexturesLoaded: function() {
     for (var name in this.textures) {
-      if (!this.textures[name].loaded) {
+      if (!this.textures[name].data.loaded) {
         return false;
       }
     }

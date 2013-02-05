@@ -82,7 +82,7 @@ var Player = Base.extend({
       this.position.x += this.strafe * Math.cos(this.rotation.yaw) +
         Math.cos(this.rotation.pitch) * this.walk * Math.sin(this.rotation.yaw);
       this.position.y -= this.walk * Math.sin(this.rotation.pitch);
-      this.position.z += - this.strafe * Math.sin(this.rotation.yaw) +
+      this.position.z += -this.strafe * Math.sin(this.rotation.yaw) +
         Math.cos(this.rotation.pitch) * this.walk * Math.cos(this.rotation.yaw);
       this.desiredVelocity.x = 0.0;
       this.desiredVelocity.y = 0.0;
