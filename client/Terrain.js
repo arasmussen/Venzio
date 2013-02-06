@@ -15,8 +15,8 @@ var Terrain = Drawable.extend({
       this.heights[x] = [];
       for (var z = 0; z < this.length + 1; z++) {
         this.heights[x][z] =
-          2 * Math.sin(2 * Math.PI * x / (this.width)) +
-          3 * Math.cos(2 * Math.PI * z / (this.length));
+          3 * Math.sin(2 * Math.PI * x / (this.width)) +
+          2 * Math.cos(2 * Math.PI * z / (this.length));
       }
     }
   },

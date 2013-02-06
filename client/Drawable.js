@@ -25,9 +25,13 @@ var Drawable = Base.extend({
       // create buffer
       this.buffers[attrib] = gl.createBuffer();
 
+      var buffer_usage = (
+        this.isDynamic(attrib) ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW
+      );
+
       // pass data to gl context
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
-      gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), buffer_usage);
     }
 
     if (this.usingIndices) {
@@ -71,6 +75,9 @@ var Drawable = Base.extend({
       var attrib = attributes[i];
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
+      if (this.isDynamic(attrib)) {
+        gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), gl.DYNAMIC_DRAW);
+      }
       gl.vertexAttribPointer(
         this.shader.getAttribute(attrib),
         this.getItemSize(attrib),
@@ -147,6 +154,10 @@ var Drawable = Base.extend({
 
   getDrawMode: function() {
     return gl.TRIANGLES;
+  },
+
+  isDynamic: function(attrib) {
+    return false;
   },
 
   getItemSize: function(attrib) {

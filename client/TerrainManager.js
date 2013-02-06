@@ -1,11 +1,10 @@
-// a singleton until i figure out something better to do with it
-
 var TerrainManager = {
   initialize: function() {
+    this.offset = 5;
     this.terrains = {};
 
-    for (var x = -2; x <= 2; x++) {
-      for (var z = -2; z <= 2; z++) {
+    for (var x = -this.offset; x <= this.offset; x++) {
+      for (var z = -this.offset; z <= this.offset; z++) {
         this.createTerrain(x, z);
       }
     }
@@ -23,8 +22,16 @@ var TerrainManager = {
 
   update: function(playerPos) {
     this.section = this.worldToSectionCoords(playerPos);
-    for (var x = this.section.x - 2; x <= this.section.x + 2; x++) {
-      for (var z = this.section.z - 2; z <= this.section.z + 2; z++) {
+    var min = {
+      x: this.section.x - this.offset,
+      z: this.section.z - this.offset
+    };
+    var max = {
+      x: this.section.x + this.offset,
+      z: this.section.z + this.offset
+    };
+    for (var x = min.x; x <= max.x; x++) {
+      for (var z = min.z; z <= max.z; z++) {
         if (this.terrains[x] == null) {
           this.terrains[x] = {};
         }
@@ -36,8 +43,16 @@ var TerrainManager = {
   },
 
   draw: function() {
-    for (var x = this.section.x - 2; x <= this.section.x + 2; x++) {
-      for (var z = this.section.z - 2; z <= this.section.z + 2; z++) {
+    var min = {
+      x: this.section.x - this.offset,
+      z: this.section.z - this.offset
+    };
+    var max = {
+      x: this.section.x + this.offset,
+      z: this.section.z + this.offset
+    };
+    for (var x = min.x; x <= max.x; x++) {
+      for (var z = min.z; z <= max.z; z++) {
         this.terrains[x][z].draw();
       }
     }
