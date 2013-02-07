@@ -1,19 +1,18 @@
 window.onload = main;
 
 function main() {
-  canvas = document.getElementById('canvas');
-
-  gl = WebGLUtils.setupWebGL(canvas);
-  if (!gl) {
-    return;
+  // connect to the server
+  if (!NetworkManager.initialize()) {
+    console.log('Could not connect to server');
   }
-  gl.viewportWidth = canvas.width;
-  gl.viewportHeight = canvas.height;
-  gl.clearColor(0.5, 0.6, 1.0, 1.0);
-  gl.enable(gl.DEPTH_TEST);
-  gl.depthFunc(gl.LESS);
 
-  input.initialize(canvas);
+  // set up WebGL context
+  var canvas = document.getElementById('canvas');
+  if (!GraphicsManager.initialize(canvas)) {
+    console.log('Could not initialize WebGL');
+  }
+
+  InputManager.initialize(canvas);
 
   var game = new Game();
   var framerate = new Framerate('framerate');

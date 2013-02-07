@@ -5,10 +5,6 @@ var Game = Base.extend({
     this.player = new Player();
     this.camera = new Camera(this.player);
     this.peers = {};
-
-    this.socket = new io.connect('http://gfx.rasmuzen.com', {port: 8080});
-    this.socket.on('setID', this.setID.bind(this));
-    this.socket.on('updateClient', this.updateClient.bind(this));
   },
 
   mainLoop: function(tslf) {
@@ -18,7 +14,7 @@ var Game = Base.extend({
   },
 
   handleInput: function() {
-    input.processCallbackQueue();
+    InputManager.processCallbackQueue();
     this.player.handleInput();
   },
 
@@ -31,10 +27,10 @@ var Game = Base.extend({
       PhysicsManager.movePlayer(this.player, tslf);
     }
 
-    this.socket.emit('updateServer', {
-      position: this.player.position,
-      rotation: this.player.rotation,
-    });
+    // this.socket.emit('updateServer', {
+    //   position: this.player.position,
+    //   rotation: this.player.rotation,
+    // });
   },
 
   drawWorld: function() {

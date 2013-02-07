@@ -17,7 +17,7 @@ var Player = Base.extend({
     this.buildMode = false;
     this.buildObject = new Wall(this);
 
-    input.subscribe(66, this.toggleBuildMode.bind(this));
+    InputManager.subscribe(66, this.toggleBuildMode.bind(this));
   },
 
   handleInput: function() {
@@ -32,22 +32,22 @@ var Player = Base.extend({
     this.walk = 0;
 
     // i swear i don't just use obscure numbers....
-    if (input.isKeyPressed(37) || input.isKeyPressed(65)) {
+    if (InputManager.isKeyPressed(37) || InputManager.isKeyPressed(65)) {
       this.strafe -= 0.5;
     }
-    if (input.isKeyPressed(39) || input.isKeyPressed(68)) {
+    if (InputManager.isKeyPressed(39) || InputManager.isKeyPressed(68)) {
       this.strafe += 0.5;
     }
-    if (input.isKeyPressed(38) || input.isKeyPressed(87)) {
+    if (InputManager.isKeyPressed(38) || InputManager.isKeyPressed(87)) {
       this.walk -= 0.5;
     }
-    if (input.isKeyPressed(40) || input.isKeyPressed(83)) {
+    if (InputManager.isKeyPressed(40) || InputManager.isKeyPressed(83)) {
       this.walk += 0.5;
     }
   },
 
   handleRotationInput: function() {
-    var mouseDelta = input.getMouseDelta();
+    var mouseDelta = InputManager.getMouseDelta();
     var newPitch = this.rotation.pitch - mouseDelta.y * this.rotateSpeed;
     if (newPitch > Math.PI / 2) {
       this.rotation.pitch = Math.PI / 2;
@@ -60,15 +60,15 @@ var Player = Base.extend({
   },
 
   handleFreeFloatInput: function() {
-    if (!this.freeFloat && input.isKeyPressed(50)) {
+    if (!this.freeFloat && InputManager.isKeyPressed(50)) {
       this.freeFloat = true;
-    } else if (this.freeFloat && input.isKeyPressed(49)) {
+    } else if (this.freeFloat && InputManager.isKeyPressed(49)) {
       this.freeFloat = false;
     }
   },
 
   handleJumpInput: function() {
-    if (this.onGround && !this.freeFloat && input.isKeyPressed(32)) {
+    if (this.onGround && !this.freeFloat && InputManager.isKeyPressed(32)) {
       this.jump = true;
     }
   },

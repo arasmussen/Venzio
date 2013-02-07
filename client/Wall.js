@@ -7,14 +7,14 @@ var Wall = Drawable.extend({
     this.distance = 5.0;
     this.height = 1.0;
     this.positionData = new Float32Array([
-      -this.width, 0.0, -this.depth,
-      -this.width, 0.0, this.depth,
-      -this.width, this.height, -this.depth,
-      -this.width, this.height, this.depth,
-      this.width, 0.0, -this.depth,
-      this.width, 0.0, this.depth,
-      this.width, this.height, -this.depth,
-      this.width, this.height, this.depth
+      -this.width / 2, 0.0, -this.depth / 2,
+      -this.width / 2, 0.0, this.depth / 2,
+      -this.width / 2, this.height, -this.depth / 2,
+      -this.width / 2, this.height, this.depth / 2,
+      this.width / 2, 0.0, -this.depth / 2,
+      this.width / 2, 0.0, this.depth / 2,
+      this.width / 2, this.height, -this.depth / 2,
+      this.width / 2, this.height, this.depth / 2
     ]);
     this.initialize();
   },
@@ -32,11 +32,11 @@ var Wall = Drawable.extend({
       var j = ((i < 2) ? (i * 3) : ((i + 2) * 3));
       this.positionData[j + 1] = TerrainManager.getTerrainHeight({
         x: this.position.x +
-           (i < 2 ? -1.0 : 1.0) * this.width * yawComponent.z +
-           (i % 2 == 0 ? -1.0 : 1.0) * this.depth * yawComponent.x,
+           (i < 2 ? -1.0 : 1.0) * (this.width / 2) * yawComponent.z +
+           (i % 2 == 0 ? -1.0 : 1.0) * (this.depth / 2) * yawComponent.x,
         z: this.position.z +
-           (i % 2 == 0 ? -1.0 : 1.0) * this.depth * yawComponent.z -
-           (i < 2 ? -1.0 : 1.0) * this.width * yawComponent.x
+           (i % 2 == 0 ? -1.0 : 1.0) * (this.depth / 2) * yawComponent.z -
+           (i < 2 ? -1.0 : 1.0) * (this.width / 2) * yawComponent.x
       }) - this.position.y;
       this.positionData[j + 7] = this.positionData[j + 1] + 1.0;
     }

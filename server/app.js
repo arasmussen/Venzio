@@ -36,7 +36,7 @@ function disableMultiplayer() {
 
 function connect(socket) {
   clients[socket.id] = {socket: socket};
-  socket.emit('setID', {id: socket.id});
+  socket.send({message: 'setID', data: {id: socket.id}});
 
   if (!multiplayer && Object.keys(clients).length > 1) {
     enableMultiplayer();

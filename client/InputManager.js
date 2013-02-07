@@ -1,4 +1,4 @@
-var input = {
+var InputManager = {
   canvas: null,
   keys: [],
   mouseDelta: {x: 0, y: 0},

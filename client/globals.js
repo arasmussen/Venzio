@@ -1,4 +1,3 @@
-var canvas;
 var gl;
 
 var pMatrix = mat4.create();
@@ -6,6 +5,7 @@ var mvMatrix = mat4.create();
 
 // must be even!
 var terrainLength = 32;
+var terrainOffset = 4;
 
 Math.normalize = function(vec3) {
   if (vec3.x == 0.0 && vec3.y == 0.0 && vec3.z == 0.0) {

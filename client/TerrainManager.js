@@ -1,6 +1,6 @@
 var TerrainManager = {
   initialize: function() {
-    this.offset = 5;
+    this.offset = terrainOffset;;
     this.terrains = {};
 
     for (var x = -this.offset; x <= this.offset; x++) {
