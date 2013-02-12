@@ -1,6 +1,7 @@
 var TerrainManager = {
   initialize: function() {
-    this.offset = terrainOffset;;
+    this.length = globals.terrainLength;
+    this.offset = globals.terrainOffset;
     this.terrains = {};
 
     for (var x = -this.offset; x <= this.offset; x++) {
@@ -15,7 +16,7 @@ var TerrainManager = {
       this.terrains[x] = {};
     }
     if (this.terrains[x][z] == null) {
-      var position = {x: x * terrainLength, y: 0, z: z * terrainLength};
+      var position = {x: x * this.length, y: 0, z: z * this.length};
       this.terrains[x][z] = new Terrain(position);
     }
   },
@@ -60,8 +61,8 @@ var TerrainManager = {
 
   worldToSectionCoords: function(worldPos) {
     return {
-      x: Math.floor((worldPos.x + terrainLength / 2) / terrainLength),
-      z: Math.floor((worldPos.z + terrainLength / 2) / terrainLength)
+      x: Math.floor((worldPos.x + this.length / 2) / this.length),
+      z: Math.floor((worldPos.z + this.length / 2) / this.length)
     };
   },
 

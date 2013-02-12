@@ -1,7 +1,7 @@
 var Terrain = Drawable.extend({
   constructor: function(position) {
-    this.width = terrainLength;
-    this.length = terrainLength;
+    this.width = globals.terrainLength;
+    this.length = globals.terrainLength;
     this.initializeHeights();
     this.base(false);
 

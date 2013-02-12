@@ -3,14 +3,14 @@ var InputManager = {
   keys: [],
   mouseDelta: {x: 0, y: 0},
   pointerLocked: false,
+  processQueue: [],
   subscriptions: [],
-  callbackQueue: [],
 
   onKeyDown: function(e) {
     this.keys[e.keyCode] = true;
     if (this.subscriptions[e.keyCode] != undefined) {
-      for (var i in this.subscriptions[e.keyCode]) {
-        this.callbackQueue.push(this.subscriptions[e.keyCode][i]);
+      if (this.processQueue.indexOf(e.keyCode) == -1) {
+        this.processQueue.push(e.keyCode);
       }
     }
   },
@@ -47,11 +47,31 @@ var InputManager = {
     }
   },
 
-  processCallbackQueue: function() {
-    for (var i in this.callbackQueue) {
-      this.callbackQueue[i]();
+  update: function() {
+    this.sendServerMessage();
+    this.processSubscriptionQueue();
+  },
+
+  sendServerMessage: function() {
+    var input_bitmap =
+      1 * (this.isKeyPressed(40) || this.isKeyPressed(83)) +
+      2 * (this.isKeyPressed(37) || this.isKeyPressed(65)) +
+      4 * (this.isKeyPressed(38) || this.isKeyPressed(87)) +
+      8 * (this.isKeyPressed(39) || this.isKeyPressed(68)) +
+      16 * (this.isKeyPressed(32)) +
+      32 * (this.processQueue.indexOf(66) != -1) +
+      64 * (this.processQueue.indexOf(67) != -1);
+    NetworkManager.sendMessage({inputBitmap: input_bitmap});
+  },
+
+  processSubscriptionQueue: function() {
+    for (var i in this.processQueue) {
+      var keyPressed = this.processQueue[i];
+      for (var i in this.subscriptions[keyPressed]) {
+        this.subscriptions[keyPressed][i]();
+      }
     }
-    this.callbackQueue = [];
+    this.processQueue = [];
   },
 
   initialize: function(canvas) {

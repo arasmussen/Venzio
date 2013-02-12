@@ -18,12 +18,12 @@ var Player = Base.extend({
     this.buildObject = new Wall(this);
 
     InputManager.subscribe(66, this.toggleBuildMode.bind(this));
+    InputManager.subscribe(67, this.toggleFreeFloatMode.bind(this));
   },
 
   handleInput: function() {
     this.handlePositionInput();
     this.handleRotationInput();
-    this.handleFreeFloatInput();
     this.handleJumpInput();
   },
 
@@ -59,12 +59,8 @@ var Player = Base.extend({
     this.rotation.yaw -= mouseDelta.x * this.rotateSpeed;
   },
 
-  handleFreeFloatInput: function() {
-    if (!this.freeFloat && InputManager.isKeyPressed(50)) {
-      this.freeFloat = true;
-    } else if (this.freeFloat && InputManager.isKeyPressed(49)) {
-      this.freeFloat = false;
-    }
+  toggleFreeFloatMode: function() {
+    this.freeFloat = !this.freeFloat;
   },
 
   handleJumpInput: function() {

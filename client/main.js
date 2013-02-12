@@ -2,14 +2,13 @@ window.onload = main;
 
 function main() {
   // connect to the server
-  if (!NetworkManager.initialize()) {
-    console.log('Could not connect to server');
-  }
+  NetworkManager.initialize();
 
   // set up WebGL context
   var canvas = document.getElementById('canvas');
   if (!GraphicsManager.initialize(canvas)) {
     console.log('Could not initialize WebGL');
+    return;
   }
 
   InputManager.initialize(canvas);

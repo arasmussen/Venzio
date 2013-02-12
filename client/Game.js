@@ -14,7 +14,7 @@ var Game = Base.extend({
   },
 
   handleInput: function() {
-    InputManager.processCallbackQueue();
+    InputManager.update();
     this.player.handleInput();
   },
 
