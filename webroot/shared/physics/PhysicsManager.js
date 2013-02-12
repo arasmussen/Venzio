@@ -29,9 +29,6 @@ var PhysicsManager = {
     player.position.z += player.velocity.z * tslf;
   },
 
-  jumpPlayer: function(player, tslf) {
-  },
-
   movePlayerOnGround: function(player, tslf) {
     player.onGround = true;
     if (player.desiredVelocity.x == 0.0 && player.desiredVelocity.z == 0.0) {

@@ -5,7 +5,7 @@ var mvMatrix = mat4.create();
 
 // must be even!
 var globals = {
-  address: 'http://venz.io',
+  address: 'localhost',
   port: 8080,
 
   terrainLength: 32,

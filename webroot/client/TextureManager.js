@@ -8,7 +8,7 @@ var TextureManager = {
       this.textures[name].loaded = false;
       this.textures[name].image = new Image();
       this.textures[name].image.onload = this.onTextureLoaded.bind(this, name);
-      this.textures[name].image.src = '/textures/' + name + '.' + filetype;
+      this.textures[name].image.src = '/client/textures/' + name + '.' + filetype;
     }
     return this.textures[name];
   },

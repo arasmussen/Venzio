@@ -10,11 +10,11 @@ var ShaderManager = {
 
   load: function(name) {
     var vertexShader = this.createShader(
-      this.getSource('/shaders/' + name + '-vs.glsl'),
+      this.getSource('/client/shaders/' + name + '-vs.glsl'),
       gl.VERTEX_SHADER
     );
     var fragmentShader = this.createShader(
-      this.getSource('/shaders/' + name + '-fs.glsl'),
+      this.getSource('/client/shaders/' + name + '-fs.glsl'),
       gl.FRAGMENT_SHADER
     );
     var program = this.createProgram(vertexShader, fragmentShader);
