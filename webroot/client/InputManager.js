@@ -54,13 +54,13 @@ var InputManager = {
 
   sendServerMessage: function() {
     var input_bitmap =
-      1 * (this.isKeyPressed(40) || this.isKeyPressed(83)) +
-      2 * (this.isKeyPressed(37) || this.isKeyPressed(65)) +
-      4 * (this.isKeyPressed(38) || this.isKeyPressed(87)) +
-      8 * (this.isKeyPressed(39) || this.isKeyPressed(68)) +
-      16 * (this.isKeyPressed(32)) +
-      32 * (this.processQueue.indexOf(66) != -1) +
-      64 * (this.processQueue.indexOf(67) != -1);
+      1 * (this.isKeyPressed(40) || this.isKeyPressed(83)) + // W/up
+      2 * (this.isKeyPressed(37) || this.isKeyPressed(65)) + // A/left
+      4 * (this.isKeyPressed(38) || this.isKeyPressed(87)) + // S/down
+      8 * (this.isKeyPressed(39) || this.isKeyPressed(68)) + // D/right
+      16 * (this.isKeyPressed(32)) +                         // space
+      32 * (this.processQueue.indexOf(66) != -1) +           // B/build
+      64 * (this.processQueue.indexOf(67) != -1);            // C/camera
     NetworkManager.sendMessage({inputBitmap: input_bitmap});
   },
 
