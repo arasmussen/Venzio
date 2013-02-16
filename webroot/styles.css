@@ -5,6 +5,11 @@ body, html {
   overflow: hidden;
 }
 
+#center {
+  width: 800px;
+  margin: 0 auto;
+}
+
 #canvas {
   width: 800px;
   height: 600px;
@@ -15,4 +20,13 @@ body, html {
   top: 10px;
   left: 10px;
   color: #fff;
+}
+
+#instructions {
+  width: 800px;
+  text-align: center;
+}
+
+#instructions ul {
+  list-style: none;
 }
