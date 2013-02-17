@@ -1,12 +1,10 @@
-var io = require('socket.io').listen(8080);
-var db = require('./db.js');
-var clients = {};
-var multiplayer = false;
+var server = require('./server.js');
+
+var server_instance = new server();
+server_instance.initialize();
+
 var interval;
 var updateData = [];
-
-var my_db = new db();
-my_db.connect();
 
 io.sockets.on('connection', function(socket) {
   connect(socket);

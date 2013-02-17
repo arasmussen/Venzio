@@ -61,7 +61,7 @@ var InputManager = {
       16 * (this.isKeyPressed(32)) +                         // space
       32 * (this.processQueue.indexOf(66) != -1) +           // B/build
       64 * (this.processQueue.indexOf(67) != -1);            // C/camera
-    NetworkManager.sendMessage({inputBitmap: input_bitmap});
+    NetworkManager.sendMessage({input: input_bitmap});
   },
 
   processSubscriptionQueue: function() {
