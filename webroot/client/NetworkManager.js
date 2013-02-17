@@ -26,7 +26,8 @@ var NetworkManager = {
       return;
     }
 
-    this.socket.send({
+    console.log(msg);
+    this.socket.emit('input', {
       id: this.id,
       msg: msg
     });

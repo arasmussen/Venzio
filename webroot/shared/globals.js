@@ -5,7 +5,7 @@ var mvMatrix = mat4.create();
 
 // must be even!
 var globals = {
-  address: 'localhost',
+  address: 'http://gfx.rasmuzen.com',
   port: 8080,
 
   terrainLength: 32,

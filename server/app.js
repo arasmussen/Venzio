@@ -1,63 +1,10 @@
 var server = require('./server.js');
 
 var server_instance = new server();
-server_instance.initialize();
+server_instance.init();
 
 var interval;
 var updateData = [];
-
-io.sockets.on('connection', function(socket) {
-  connect(socket);
-  socket.on('disconnect', disconnect.bind(socket));
-  socket.on('updateServer', updateServer.bind(socket));
-});
-
-function enableMultiplayer() {
-  if (!multiplayer) {
-    updateData = [{message: 'enabled multiplayer'}];
-
-    multiplayer = true;
-    interval = setInterval(updateClients, 20);
-  }
-}
-
-function disableMultiplayer() {
-  if (multiplayer) {
-    multiplayer = false;
-    clearInterval(interval);
-
-    // flush updateData
-    updateData.push({message: 'disabled multiplayer'});
-    updateClients();
-  }
-}
-
-function connect(socket) {
-  clients[socket.id] = {socket: socket};
-  socket.send({message: 'setID', data: {id: socket.id}});
-
-  if (!multiplayer && Object.keys(clients).length > 1) {
-    enableMultiplayer();
-  }
-
-  if (multiplayer) {
-    updateData.push({id: socket.id, message: 'connect'});
-  }
-}
-
-function disconnect() {
-  var id = this.id;
-  delete clients[id];
-  console.log(clients);
-
-  if (multiplayer && Object.keys(clients).length < 2) {
-    disableMultiplayer();
-  }
-
-  if (multiplayer) {
-    updateData.push({id: id, message: 'disconnect'});
-  }
-}
 
 function updateServer(data) {
   clients[this.id].position = data.position;
