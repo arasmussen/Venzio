@@ -1,33 +1,41 @@
-window.onload = main;
+define([
+    'client/NetworkManager',
+    'client/GraphicsManager',
+    'shared/physics/PhysicsManager',
+    'client/InputManager',
+    'client/Game'
+  ],
+  function(NetworkManager, GraphicsManager, PhysicsManager, InputManager, Game) {
+    return function() {
+      // connect to the server
+      NetworkManager.initialize();
 
-function main() {
-  // connect to the server
-  NetworkManager.initialize();
+      // set up WebGL context
+      var canvas = document.getElementById('canvas');
+      if (!GraphicsManager.initialize(canvas)) {
+        console.log('Could not initialize WebGL');
+        return;
+      }
 
-  // set up WebGL context
-  var canvas = document.getElementById('canvas');
-  if (!GraphicsManager.initialize(canvas)) {
-    console.log('Could not initialize WebGL');
-    return;
-  }
+      InputManager.initialize(canvas);
 
-  InputManager.initialize(canvas);
+      var game = new Game();
+      var framerate = new Framerate('framerate');
+      var lastFrameTime = new Date();
 
-  var game = new Game();
-  var framerate = new Framerate('framerate');
-  var lastFrameTime = new Date();
+      var baseLoop = function() {
+        var currentTime = new Date();
+        var tslf = (currentTime.getTime() - lastFrameTime.getTime()) / 1000;
+        if (tslf > 0.1) {
+          tslf = 0.1;
+        }
+        lastFrameTime = currentTime;
 
-  var baseLoop = function() {
-    var currentTime = new Date();
-    var tslf = (currentTime.getTime() - lastFrameTime.getTime()) / 1000;
-    if (tslf > 0.1) {
-      tslf = 0.1;
+        framerate.snapshot();
+        game.mainLoop(tslf);
+        window.requestAnimFrame(baseLoop, canvas);
+      };
+      baseLoop();
     }
-    lastFrameTime = currentTime;
-
-    framerate.snapshot();
-    game.mainLoop(tslf);
-    window.requestAnimFrame(baseLoop, canvas);
-  };
-  baseLoop();
-}
+  }
+);
