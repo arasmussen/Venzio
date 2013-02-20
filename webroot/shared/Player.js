@@ -1,9 +1,10 @@
 define([
     'client/InputManager',
     'shared/Wall.js',
-    'shared/Globals.js'
+    'shared/Globals.js',
+    'basejs'
   ],
-  function(InputManager, Wall, Globals) {
+  function(InputManager, Wall, Globals, Base) {
     return Base.extend({
       constructor: function() {
         this.rotateSpeed = 1/250;
