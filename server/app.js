@@ -1,7 +1,12 @@
-var server = require('./server.js');
+var requirejs = require('requirejs');
 
-var server_instance = new server();
-server_instance.init();
+requirejs.config({
+  nodeRequire: require
+});
+
+requirejs(['server'], function(server) {
+  server.main();
+});
 
 var interval;
 var updateData = [];

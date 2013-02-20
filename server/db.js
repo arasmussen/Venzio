@@ -1,19 +1,20 @@
-module.exports = function() {
-  this.mongoose = require('mongoose');
-  this.db = null;
-};
+define(['mongoose'], function(mongoose) {
+  return {
+    db: null,
 
-module.exports.prototype.connect = function() {
-  this.mongoose.connect('mongodb://localhost/gfx');
-  this.db = this.mongoose.connection;
-  this.db.on('error', this.error);
-  this.db.once('open', this.success);
-};
+    connect: function() {
+      mongoose.connect('mongodb://localhost/gfx');
+      this.db = mongoose.connection;
+      this.db.on('error', this.error.bind(this));
+      this.db.once('open', this.success.bind(this));
+    },
 
-module.exports.prototype.error = function(msg) {
-  console.error('connection error:', msg);
-};
+    error: function(msg) {
+      console.error('connection error:', msg);
+    },
 
-module.exports.prototype.success = function() {
-  console.log('db successfully connected');
-};
+    success: function() {
+      console.log('db successfully connected');
+    }
+  };
+});
