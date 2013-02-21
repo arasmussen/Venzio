@@ -1,4 +1,4 @@
-define(function() {
+define(['basejs'], function(Base) {
   return Base.extend({
     constructor: function(program) {
       this.program = program;

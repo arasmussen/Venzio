@@ -3,14 +3,15 @@ define([
     'shared/Player',
     'client/Camera',
     'client/InputManager',
-    'shared/physics/PhysicsManager'
+    'shared/PhysicsManager',
+    'basejs'
   ],
-  function(TerrainManager, Player, Camera, InputManager, PhysicsManager) {
+  function(TerrainManager, Player, Camera, InputManager, PhysicsManager, Base) {
     return Base.extend({
       constructor: function() {
         TerrainManager.initialize();
 
-        this.player = new Player();
+        this.player = new Player(InputManager);
         this.camera = new Camera(this.player);
         this.peers = {};
       },

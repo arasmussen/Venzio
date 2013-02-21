@@ -1,15 +1,11 @@
 define([
-    'shared/physics/Shape'
+    'client/primitives/DrawablePrimitive.js',
+    'shared/primitives.Sphere'
   ],
-  function(Shape) {
-    return Shape.extend({
+  function(DrawablePrimitive, Sphere) {
+    return Sphere.extend(DrawablePrimitive.extend({
       constructor: function(center, radius) {
-        this.base();
-        this.position = center;
-        this.radius = radius;
-
-        this.rows = 12;
-        this.columns = 20;
+        this.base(center, radius);
       },
 
       getData: function(attrib) {
@@ -40,7 +36,7 @@ define([
           return new Float32Array(colors);
         }
       },
-      
+
       getIndexData: function() {
         var indices = [];
         var centerBottom = this.columns * (this.rows - 2);
@@ -67,10 +63,6 @@ define([
 
       getNumItems: function() {
         return 2 * this.columns * (2 * this.rows - 3);
-      },
-
-      getDrawMode: function() {
-        return gl.LINES;
       }
     });
   }

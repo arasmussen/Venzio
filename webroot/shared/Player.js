@@ -1,12 +1,11 @@
 define([
-    'client/InputManager',
-    'shared/Wall.js',
-    'shared/Globals.js',
+    'shared/Wall',
+    'shared/Globals',
     'basejs'
   ],
-  function(InputManager, Wall, Globals, Base) {
+  function(Wall, Globals, Base) {
     return Base.extend({
-      constructor: function() {
+      constructor: function(inputManager) {
         this.rotateSpeed = 1/250;
         this.position = {x: 0.0, y: 10.0, z: 0.0};
         this.velocity = {x: 0.0, y: 0.0, z: 0.0};
@@ -24,8 +23,10 @@ define([
         this.buildMode = false;
         this.buildObject = new Wall(this);
 
-        InputManager.subscribe(66, this.toggleBuildMode.bind(this));
-        InputManager.subscribe(67, this.toggleFreeFloatMode.bind(this));
+        this.inputManager = inputManager;
+
+        this.inputManager.subscribe(66, this.toggleBuildMode.bind(this));
+        this.inputManager.subscribe(67, this.toggleFreeFloatMode.bind(this));
       },
 
       handleInput: function() {
@@ -38,23 +39,22 @@ define([
         this.strafe = 0;
         this.walk = 0;
 
-        // i swear i don't just use obscure numbers....
-        if (InputManager.isKeyPressed(37) || InputManager.isKeyPressed(65)) {
+        if (this.inputManager.isLeftPressed()) {
           this.strafe -= 0.5;
         }
-        if (InputManager.isKeyPressed(39) || InputManager.isKeyPressed(68)) {
+        if (this.inputManager.isRightPressed()) {
           this.strafe += 0.5;
         }
-        if (InputManager.isKeyPressed(38) || InputManager.isKeyPressed(87)) {
+        if (this.inputManager.isDownPressed()) {
           this.walk -= 0.5;
         }
-        if (InputManager.isKeyPressed(40) || InputManager.isKeyPressed(83)) {
+        if (this.inputManager.isUpPressed()) {
           this.walk += 0.5;
         }
       },
 
       handleRotationInput: function() {
-        var mouseDelta = InputManager.getMouseDelta();
+        var mouseDelta = this.inputManager.getMouseDelta();
         var newPitch = this.rotation.pitch - mouseDelta.y * this.rotateSpeed;
         if (newPitch > Math.PI / 2) {
           this.rotation.pitch = Math.PI / 2;
@@ -66,14 +66,16 @@ define([
         this.rotation.yaw -= mouseDelta.x * this.rotateSpeed;
       },
 
-      toggleFreeFloatMode: function() {
-        this.freeFloat = !this.freeFloat;
+      handleJumpInput: function() {
+        if (this.onGround && !this.freeFloat) {
+          if (this.inputManager.isSpacePressed()) {
+            this.jump = true;
+          }
+        }
       },
 
-      handleJumpInput: function() {
-        if (this.onGround && !this.freeFloat && InputManager.isKeyPressed(32)) {
-          this.jump = true;
-        }
+      toggleFreeFloatMode: function() {
+        this.freeFloat = !this.freeFloat;
       },
 
       toggleBuildMode: function() {

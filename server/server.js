@@ -1,10 +1,12 @@
 define([
     'socket.io',
     'server/db',
-    'shared/physics/PhysicsManager',
-    'shared/Player'
+    'server/ServerInputManager',
+    'shared/PhysicsManager',
+    'shared/Player',
+    'shared/TerrainManager'
   ],
-  function(io, db, PhysicsManager, Player) {
+  function(io, db, InputManager, PhysicsManager, Player, TerrainManager) {
     return {
       main: function() {
         // set up socket connect/disconnect hooks
@@ -17,12 +19,14 @@ define([
 
         this.clients = {};
         this.interval = setInterval(this.updateClients.bind(this), 20);
+
+        TerrainManager.initialize();
       },
 
       onConnect: function(socket) {
         this.clients[socket.id] = {
           lastFrame: new Date().getTime(),
-          player: new Player(),
+          player: new Player(InputManager),
           socket: socket,
           toggles: {
             build: false,
@@ -40,43 +44,16 @@ define([
       },
 
       onInput: function(socket, msg) {
-        var input_bitmap = msg.msg.input;
+        InputManager.handleInput(msg.msg.input);
+
         var player = this.clients[socket.id].player;
-
-        player.strafe = 0.0;
-        player.walk = 0.0;
-        player.strafe =
-          0.5 * (0x04 & input_bitmap ? 1 : 0) -
-          0.5 * (0x02 & input_bitmap ? 1 : 0);
-        player.walk =
-          0.5 * (0x01 & input_bitmap ? 1 : 0) -
-          0.5 * (0x08 & input_bitmap ? 1 : 0);
-
-        if (player.onGround && !player.freeFloat && (0x10 & input_bitmap)) {
-          player.jump = true;
-        }
-
-        if (0x20 & input_bitmap) {
-          if (!this.clients[socket.id].toggles.build) {
-            this.client[socket.id].toggles.build = true;
-            player.buildMode = !player.buildMode;
-          }
-        } else {
-          this.client[socket.id].toggles.build = false;
-        }
-
-        if (0x40 & input_bitmap) {
-          if (!this.clients[socket.id].toggles.camera) {
-            this.client[socket.id].toggles.camera = true;
-            player.freeFloat = !player.freeFloat;
-          }
-        } else {
-          this.client[socket.id].toggles.camera = false;
-        }
+        player.handleInput();
 
         var time = new Date().getTime();
         var tslf = time - this.clients[socket.id].lastFrame;
         this.clients[socket.id].lastFrame = time;
+
+        player.update();
         PhysicsManager.movePlayer(player, tslf);
       },
 

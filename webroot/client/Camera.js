@@ -1,4 +1,4 @@
-define(function() {
+define(['basejs'], function(Base) {
   return Base.extend({
     constructor: function(attachee) {
       this.attachee = attachee;

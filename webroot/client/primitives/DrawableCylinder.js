@@ -1,16 +1,13 @@
 define([
-    'shared/physics/Shape'
+    'shared/primitives/Cylinder',
+    'client/DrawablePrimitive'
   ],
-  function(Shape) {
-    return Shape.extend({
+  function(Cylinder, DrawablePrimitive) {
+    return Cylinder.extend(DrawablePrimitive.extend({
       constructor: function(bottom, radius, height) {
-        this.base();
+        Cylinder.prototype.constructor.bind(this)(bottom, radius, height);
+        DrawablePrimitive.prototype.constructor.bind(this)();
         this.position = bottom;
-        this.radius = radius;
-        this.height = height;
-
-        this.rows = 5;
-        this.columns = 20;
       },
 
       getData: function(attrib) {
@@ -40,7 +37,7 @@ define([
           return new Float32Array(colors);
         }
       },
-      
+
       getIndexData: function() {
         var indices = [];
         var centerBottom = this.columns * this.rows;
@@ -67,10 +64,6 @@ define([
 
       getNumItems: function() {
         return 2 * this.columns * (2 * this.rows + 1);
-      },
-
-      getDrawMode: function() {
-        return gl.LINES;
       }
     });
   }

@@ -1,7 +1,7 @@
 define([
     'client/NetworkManager',
     'client/GraphicsManager',
-    'shared/physics/PhysicsManager',
+    'shared/PhysicsManager',
     'client/InputManager',
     'client/Game'
   ],

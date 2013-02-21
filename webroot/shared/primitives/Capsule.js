@@ -17,20 +17,6 @@ define([
 
         this.radius = radius;
         this.height = cylinderHeight;
-
-        this.initialize();
-      },
-
-      initialize: function() {
-        this.cylinder.initialize();
-        this.bottomSphere.initialize();
-        this.topSphere.initialize();
-      },
-
-      draw: function() {
-        this.cylinder.draw();
-        this.bottomSphere.draw();
-        this.topSphere.draw();
       },
 
       updatePosRot: function(pos, rot) {

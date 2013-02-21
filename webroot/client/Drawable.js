@@ -1,13 +1,13 @@
 define([
     'client/ShaderManager',
-    'client/TextureManager'
+    'client/TextureManager',
+    'basejs'
   ],
-  function(ShaderManager, TextureManager) {
+  function(ShaderManager, TextureManager, Base) {
     return Base.extend({
-      constructor: function(usingIndices) {
+      constructor: function() {
         this.position = {x: 0.0, y: 0.0, z: 0.0};
         this.rotation = {pitch: 0.0, yaw: 0.0};
-        this.usingIndices = usingIndices;
         this.buffers = {};
         this.textures = {};
       },
@@ -39,7 +39,7 @@ define([
           gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), buffer_usage);
         }
 
-        if (this.usingIndices) {
+        if (this.isUsingIndices()) {
           // create the buffer
           this.indexBuffer = gl.createBuffer();
 
@@ -93,7 +93,7 @@ define([
           );
         }
 
-        if (this.usingIndices) {
+        if (this.isUsingIndices()) {
           gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer);
         }
       },
@@ -117,7 +117,7 @@ define([
         this.bindTextures();
         this.bindAttributes();
 
-        if (this.usingIndices) {
+        if (this.isUsingIndices()) {
           gl.drawElements(
             this.getDrawMode(), this.getNumItems(), gl.UNSIGNED_SHORT, 0
           );
@@ -162,6 +162,10 @@ define([
       },
 
       isDynamic: function(attrib) {
+        return false;
+      },
+
+      isUsingIndices: function() {
         return false;
       },
 

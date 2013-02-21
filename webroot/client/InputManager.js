@@ -105,6 +105,26 @@ define([
       return delta;
     },
 
+    isLeftPressed: function() {
+      return this.keys[37] || this.keys[65];
+    },
+
+    isRightPressed: function() {
+      return this.keys[39] || this.keys[68];
+    },
+
+    isDownPressed: function() {
+      return this.keys[38] || this.keys[87];
+    },
+
+    isUpPressed: function() {
+      return this.keys[40] || this.keys[83];
+    },
+
+    isSpacePressed: function() {
+      return this.keys[32];
+    },
+
     isKeyPressed: function(keyCode) {
       if (this.keys[keyCode] == undefined) {
         this.keys[keyCode] = false;
