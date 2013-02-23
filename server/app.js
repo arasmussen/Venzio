@@ -4,9 +4,9 @@ requirejs.config({
   nodeRequire: require,
   baseUrl: '..',
   paths: {
-    client: 'webroot/client',
+    client: 'root/client',
     server: 'server',
-    shared: 'webroot/shared'
+    shared: 'root/shared'
   }
 });
 
