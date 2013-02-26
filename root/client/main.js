@@ -1,11 +1,10 @@
 define([
     'client/NetworkManager',
     'client/GraphicsManager',
-    'shared/PhysicsManager',
     'client/InputManager',
     'client/Game'
   ],
-  function(NetworkManager, GraphicsManager, PhysicsManager, InputManager, Game) {
+  function(NetworkManager, GraphicsManager, InputManager, Game) {
     return function() {
       // connect to the server
       NetworkManager.initialize();

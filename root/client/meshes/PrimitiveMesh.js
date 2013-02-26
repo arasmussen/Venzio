@@ -1,5 +1,5 @@
-define(['client/Drawable'], function(Drawable) {
-  return Drawable.extend({
+define(['client/Mesh'], function(Mesh) {
+  return Mesh.extend({
     getDrawMode: function() {
       return gl.LINES;
     },

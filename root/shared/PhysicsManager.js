@@ -1,12 +1,16 @@
 define([
+    'basejs',
     'shared/TerrainManager',
     'shared/Globals'
-  ], function(TerrainManager, Globals) {
-  return {
-    moveSpeed: 5.0,
+  ], function(Base, TerrainManager, Globals) {
+  return Base.extend({
+    constructor: function(terrainManager) {
+      this.terrainManager = terrainManager;
+      this.moveSpeed = 5.0;
+    },
 
     movePlayer: function(player, tslf) {
-      var terrainHeight = TerrainManager.getTerrainHeight(player.position);
+      var terrainHeight = this.terrainManager.getTerrainHeight(player.position);
 
       if (player.position.y <= terrainHeight) {
         player.velocity.y = 0;
@@ -50,7 +54,7 @@ define([
         testVelocity.z = player.desiredVelocity.z * current
         testPosition.x = player.position.x + testVelocity.x * tslf,
         testPosition.z = player.position.z + testVelocity.z * tslf
-        testPosition.y = TerrainManager.getTerrainHeight(testPosition) + 0.0005
+        testPosition.y = this.terrainManager.getTerrainHeight(testPosition) + 0.0005
 
         var distance = Globals.distance(testPosition, player.position);
         if (Globals.floatEquals(distance, this.moveSpeed * tslf, 0.001)) {
@@ -92,7 +96,7 @@ define([
         y: player.position.y + player.velocity.y * tslf,
         z: player.position.z + player.velocity.z * tslf
       };
-      var terrainHeight = TerrainManager.getTerrainHeight(testPosition) + 0.0005;
+      var terrainHeight = this.terrainManager.getTerrainHeight(testPosition) + 0.0005;
 
       // if hit ground
       if (testPosition.y < terrainHeight) {
@@ -110,7 +114,7 @@ define([
           testPosition.x = player.position.x + testVelocity.x * tslf;
           testPosition.y = player.position.y + testVelocity.y * tslf;
           testPosition.z = player.position.z + testVelocity.z * tslf;
-          terrainHeight = TerrainManager.getTerrainHeight(testPosition);
+          terrainHeight = this.terrainManager.getTerrainHeight(testPosition);
 
           if (Globals.floatEquals(testPosition.y, terrainHeight + 0.0005, 0.00025)) {
             player.velocity.x = testVelocity.x;
@@ -127,5 +131,5 @@ define([
         }
       }
     }
-  };
+  });
 });

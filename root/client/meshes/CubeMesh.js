@@ -1,13 +1,21 @@
 define([
-    'client/Drawable'
+    'client/Mesh.js'
   ],
-  function(Drawable) {
-    return Drawable.extend({
+  function(Mesh) {
+    return Mesh.extend({
       constructor: function(position, rotation) {
-        this.base(true);
+        this.base();
         this.position = position;
         this.rotation = rotation;
         this.initialize();
+      },
+
+      getPosition: function() {
+        return this.position;
+      },
+
+      getRotation: function() {
+        return this.rotation;
       },
 
       getAttributes: function() {

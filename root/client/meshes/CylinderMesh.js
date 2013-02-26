@@ -1,13 +1,30 @@
 define([
-    'shared/primitives/Cylinder',
-    'client/DrawablePrimitive'
+    'shared/primitives/Cylinder'
   ],
-  function(Cylinder, DrawablePrimitive) {
-    return Cylinder.extend(DrawablePrimitive.extend({
+  function(Cylinder, Mesh) {
+    return Mesh.extend({
       constructor: function(bottom, radius, height) {
-        Cylinder.prototype.constructor.bind(this)(bottom, radius, height);
-        DrawablePrimitive.prototype.constructor.bind(this)();
-        this.position = bottom;
+        this.base();
+
+        this.cylinder = new Cylinder(bottom, radius, height);
+
+        this.rows = 5;
+        this.columns = 20;
+
+        this.initialize();
+      },
+
+      getPosition: function() {
+        return this.cylinder.position;
+      },
+
+      getRotation: function() {
+        return this.cylinder.rotation;
+      },
+
+      updatePosRot: function(pos, rot) {
+        this.cylinder.position = pos;
+        this.cylinder.rotation = rot;
       },
 
       getData: function(attrib) {
@@ -15,15 +32,15 @@ define([
           var vertices = [];
           for (var i = 0; i < this.columns; i++) {
             var angle = (i / this.columns) * 2 * Math.PI;
-            var x = this.radius * Math.cos(angle);
-            var z = this.radius * Math.sin(angle);
+            var x = this.cylinder.radius * Math.cos(angle);
+            var z = this.cylinder.radius * Math.sin(angle);
             for (var j = 0; j < this.rows; j++) {
-              var y = this.height * (j / (this.rows - 1));
+              var y = this.cylinder.height * (j / (this.rows - 1));
               vertices.push(x, y, z);
             }
           }
           vertices.push(0.0, 0.0, 0.0);
-          vertices.push(0.0, this.height, 0.0);
+          vertices.push(0.0, this.cylinder.height, 0.0);
           return new Float32Array(vertices);
         } else if (attrib == 'Color') {
           var colors = [];
@@ -36,6 +53,10 @@ define([
           colors.push(1.0, 0.0, 0.0, 1.0);
           return new Float32Array(colors);
         }
+      },
+
+      getDrawMode: function() {
+        return gl.LINES;
       },
 
       getIndexData: function() {
@@ -64,6 +85,10 @@ define([
 
       getNumItems: function() {
         return 2 * this.columns * (2 * this.rows + 1);
+      },
+
+      isUsingIndices: function() {
+        return true;
       }
     });
   }

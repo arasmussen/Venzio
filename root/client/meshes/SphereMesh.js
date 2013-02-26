@@ -1,11 +1,31 @@
 define([
-    'client/primitives/DrawablePrimitive.js',
-    'shared/primitives.Sphere'
+    'shared/primitives/Sphere',
+    'client/Mesh'
   ],
-  function(DrawablePrimitive, Sphere) {
-    return Sphere.extend(DrawablePrimitive.extend({
+  function(Sphere, Mesh) {
+    return Mesh.extend({
       constructor: function(center, radius) {
-        this.base(center, radius);
+        this.base();
+
+        this.sphere = new Sphere(center, radius);
+
+        this.rows = 12;
+        this.columns = 20;
+
+        this.initialize();
+      },
+
+      getPosition: function() {
+        return this.sphere.position;
+      },
+
+      getRotation: function() {
+        return this.sphere.rotation;
+      },
+
+      updatePosRot: function(pos, rot) {
+        this.sphere.position = pos;
+        this.sphere.rotation = rot;
       },
 
       getData: function(attrib) {
@@ -15,14 +35,14 @@ define([
             var yAngle = (i / (this.rows - 1)) * Math.PI;
             for (var j = 0; j < this.columns; j++) {
               var xzAngle = (j / this.columns) * 2 * Math.PI;
-              var x = this.radius * Math.sin(yAngle) * Math.cos(xzAngle);
-              var y = -this.radius * Math.cos(yAngle);
-              var z = this.radius * Math.sin(yAngle) * Math.sin(xzAngle);
+              var x = this.sphere.radius * Math.sin(yAngle) * Math.cos(xzAngle);
+              var y = -this.sphere.radius * Math.cos(yAngle);
+              var z = this.sphere.radius * Math.sin(yAngle) * Math.sin(xzAngle);
               vertices.push(x, y, z);
             }
           }
-          vertices.push(0.0, -this.radius, 0.0);
-          vertices.push(0.0, this.radius, 0.0);
+          vertices.push(0.0, -this.sphere.radius, 0.0);
+          vertices.push(0.0, this.sphere.radius, 0.0);
           return new Float32Array(vertices);
         } else if (attrib == 'Color') {
           var colors = [];

@@ -5,7 +5,7 @@ define([
   ],
   function(Wall, Globals, Base) {
     return Base.extend({
-      constructor: function(inputManager) {
+      constructor: function(inputManager, terrainManager) {
         this.rotateSpeed = 1/250;
         this.position = {x: 0.0, y: 10.0, z: 0.0};
         this.velocity = {x: 0.0, y: 0.0, z: 0.0};
@@ -21,7 +21,7 @@ define([
         this.walk = 0;
 
         this.buildMode = false;
-        this.buildObject = new Wall(this);
+        this.buildObject = new Wall(this, terrainManager);
 
         this.inputManager = inputManager;
 

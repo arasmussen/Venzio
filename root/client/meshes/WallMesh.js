@@ -1,18 +1,32 @@
 define([
-    'shared/Wall',
-    'client/Drawable'
+    'client/Mesh',
+    'shared/Wall'
   ],
-  function(Wall, Drawable) {
-    return Wall.extend(Drawable.extend({
-      constructor: function(attachee) {
-        Wall.prototype.constructor.bind(this)(attachee);
-        Drawable.prototype.constructor.bind(this)();
+  function(Mesh, Wall) {
+    return Mesh.extend({
+      constructor: function(attachee, terrainManager) {
+        this.base();
+
+        this.wall = new Wall(attachee, terrainManager);
+
         this.initialize();
+      },
+
+      getPosition: function() {
+        return this.wall.position;
+      },
+
+      getRotation: function() {
+        return this.wall.rotation;
+      },
+
+      update: function() {
+        this.wall.update();
       },
 
       getData: function(attrib) {
         if (attrib == 'Position') {
-          return this.positionData;
+          return this.wall.positionData;
         } else if (attrib == 'Color') {
           return new Float32Array([
             1.0, 0.0, 0.2, 1.0,

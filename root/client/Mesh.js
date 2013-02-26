@@ -5,14 +5,10 @@ define([
   ],
   function(ShaderManager, TextureManager, Base) {
     return Base.extend({
-      constructor: function() {
-        this.position = {x: 0.0, y: 0.0, z: 0.0};
-        this.rotation = {pitch: 0.0, yaw: 0.0};
+      initialize: function() {
         this.buffers = {};
         this.textures = {};
-      },
 
-      initialize: function() {
         this.initializeShaders();
         this.initializeBuffers();
         this.initializeTextures();
@@ -139,16 +135,20 @@ define([
       },
 
       transform: function() {
-        var translate = [this.position.x, this.position.y, this.position.z];
+        var position = this.getPosition();
+        var rotation = this.getRotation();
+        var translate = [position.x, position.y, position.z];
         mat4.translate(mvMatrix, translate);
-        mat4.rotate(mvMatrix, this.rotation.yaw, [0, 1, 0]);
-        mat4.rotate(mvMatrix, this.rotation.pitch, [1, 0, 0]);
+        mat4.rotate(mvMatrix, rotation.yaw, [0, 1, 0]);
+        mat4.rotate(mvMatrix, rotation.pitch, [1, 0, 0]);
       },
 
       untransform: function() {
-        var translate = [-this.position.x, -this.position.y, -this.position.z];
-        mat4.rotate(mvMatrix, -this.rotation.pitch, [1, 0, 0]);
-        mat4.rotate(mvMatrix, -this.rotation.yaw, [0, 1, 0]);
+        var position = this.getPosition();
+        var rotation = this.getRotation();
+        var translate = [-position.x, -position.y, -position.z];
+        mat4.rotate(mvMatrix, -rotation.pitch, [1, 0, 0]);
+        mat4.rotate(mvMatrix, -rotation.yaw, [0, 1, 0]);
         mat4.translate(mvMatrix, translate);
       },
 
@@ -179,9 +179,20 @@ define([
         }
       },
 
+      getData: function() {
+        console.error('forgot to implement getData in child mesh');
+      },
+
       getShaderName: function() {
-        console.log('forgot to implement getShaderName in child');
-        return 'color';
+        console.error('forgot to implement getShaderName in child mesh');
+      },
+
+      getPosition: function() {
+        console.error('forgot to implement getPosition in child mesh');
+      },
+
+      getRotation: function() {
+        console.error('forgot to implement getRotation in child mesh');
       },
 
       getTextures: function() {

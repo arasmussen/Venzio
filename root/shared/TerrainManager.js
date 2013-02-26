@@ -1,10 +1,11 @@
 define([
+    'basejs',
     'shared/Terrain',
     'shared/Globals'
   ],
-  function(Terrain, Globals) {
-    return {
-      initialize: function() {
+  function(Base, Terrain, Globals) {
+    return Base.extend({
+      constructor: function() {
         this.length = Globals.terrainLength;
         this.offset = Globals.terrainOffset;
         this.terrains = {};
@@ -76,6 +77,6 @@ define([
         var terrain = this.terrains[section.x][section.z];
         return terrain.getHeight(position);
       }
-    };
+    });
   }
 );
