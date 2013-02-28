@@ -2,7 +2,7 @@ define([
     'client/CPlayer',
     'client/CTerrainManager',
     'client/Camera',
-    'client/InputManager',
+    'client/CInputManager',
     'shared/PhysicsManager',
     'basejs'
   ],

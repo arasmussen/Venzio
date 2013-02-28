@@ -1,7 +1,7 @@
 define([
     'socket.io',
     'server/db',
-    'server/ServerInputManager',
+    'server/SInputManager',
     'shared/PhysicsManager',
     'shared/Player',
     'shared/TerrainManager'
@@ -19,8 +19,8 @@ define([
 
         this.clients = {};
         this.interval = setInterval(this.updateClients.bind(this), 20);
-
-        TerrainManager.initialize();
+        this.terrainManager = new TerrainManager();
+        this.physicsManager = new PhysicsManager(this.terrainManager);
       },
 
       onConnect: function(socket) {
@@ -54,7 +54,7 @@ define([
         this.clients[socket.id].lastFrame = time;
 
         player.update();
-        PhysicsManager.movePlayer(player, tslf);
+        this.physicsManager.movePlayer(player, tslf);
       },
 
       updateClients: function() {

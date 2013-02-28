@@ -1,7 +1,7 @@
 define([
     'client/NetworkManager',
     'client/GraphicsManager',
-    'client/InputManager',
+    'client/CInputManager',
     'client/Game'
   ],
   function(NetworkManager, GraphicsManager, InputManager, Game) {
