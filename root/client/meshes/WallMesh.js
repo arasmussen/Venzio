@@ -6,9 +6,7 @@ define([
     return Mesh.extend({
       constructor: function(attachee, terrainManager) {
         this.base();
-
         this.wall = new Wall(attachee, terrainManager);
-
         this.initialize();
       },
 
@@ -26,7 +24,7 @@ define([
 
       getData: function(attrib) {
         if (attrib == 'Position') {
-          return this.wall.positionData;
+          return new Float32Array(this.wall.positionData);
         } else if (attrib == 'Color') {
           return new Float32Array([
             1.0, 0.0, 0.2, 1.0,
@@ -57,6 +55,10 @@ define([
           return true;
         }
         return false;
+      },
+
+      isUsingIndices: function() {
+        return true;
       },
 
       getNumItems: function() {
