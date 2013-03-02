@@ -2,6 +2,7 @@ define(['shared/Globals', 'client/lib/socket.io'], function(Globals, io) {
   return {
     address: Globals.address,
     connected: false,
+    peers: {},
     port: Globals.port,
     socket: null,
 
@@ -19,6 +20,19 @@ define(['shared/Globals', 'client/lib/socket.io'], function(Globals, io) {
     onServerMessage: function(data) {
       if (!this.connected) {
         return;
+      }
+
+      for (var id in data) {
+        if (id == this.id) {
+          continue;
+        }
+        if (!this.peers.hasOwnProperty(id)) {
+          this.peers[id] = new Peer();
+        }
+        this.peers[id].updateTransform(
+          data[id].position,
+          data[id].rotation
+        );
       }
     },
 

@@ -50,14 +50,30 @@ define([
         player.handleInput();
 
         var time = new Date().getTime();
-        var tslf = time - this.clients[socket.id].lastFrame;
+        var tslf = (time - this.clients[socket.id].lastFrame) / 1000;
         this.clients[socket.id].lastFrame = time;
+
+        console.log(msg.msg.input);
+        console.log(tslf);
+
+        this.terrainManager.update(player.position);
 
         player.update();
         this.physicsManager.movePlayer(player, tslf);
       },
 
       updateClients: function() {
+        var data = [];
+        for (var id in this.clients) {
+          data.push({
+            id: id,
+            position: this.clients[id].player.position,
+            rotation: this.clients[id].player.rotation
+          });
+        }
+        for (var id in this.clients) {
+          this.clients[id].socket.emit('message', data);
+        }
       }
     };
   }
