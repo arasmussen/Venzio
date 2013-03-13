@@ -1,8 +1,9 @@
 define([
-    'shared/primitives/Cylinder'
+    'shared/primitives/Cylinder',
+    'client/meshes/PrimitiveMesh'
   ],
-  function(Cylinder, Mesh) {
-    return Mesh.extend({
+  function(Cylinder, PrimitiveMesh) {
+    return PrimitiveMesh.extend({
       constructor: function(bottom, radius, height) {
         this.base();
 
@@ -55,10 +56,6 @@ define([
         }
       },
 
-      getDrawMode: function() {
-        return gl.LINES;
-      },
-
       getIndexData: function() {
         var indices = [];
         var centerBottom = this.columns * this.rows;
@@ -85,10 +82,6 @@ define([
 
       getNumItems: function() {
         return 2 * this.columns * (2 * this.rows + 1);
-      },
-
-      isUsingIndices: function() {
-        return true;
       }
     });
   }

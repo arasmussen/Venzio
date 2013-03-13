@@ -1,8 +1,9 @@
 define([
-    'shared/physics/Cylinder',
-    'shared/physics/Sphere'
+    'basejs',
+    'shared/primitives/Cylinder',
+    'shared/primitives/Sphere'
   ],
-  function(Cylinder, Sphere) {
+  function(Base, Cylinder, Sphere) {
     return Base.extend({
       constructor: function(cylinderBottom, radius, cylinderHeight) {
         var cylinderTop = {

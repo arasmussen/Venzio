@@ -3,17 +3,19 @@ define([
     'client/CTerrainManager',
     'client/Camera',
     'client/CInputManager',
+    'client/NetworkManager',
     'shared/PhysicsManager',
     'basejs'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base) {
+  function(CPlayer, CTerrainManager, Camera, InputManager, NetworkManager, PhysicsManager, Base) {
     return Base.extend({
       constructor: function() {
         this.terrainManager = new CTerrainManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.player = new CPlayer(InputManager, this.terrainManager);
         this.camera = new Camera(this.player);
-        this.peers = {};
+        this.networkManager = new NetworkManager(this.player);
+        InputManager.networkManager = this.networkManager;
       },
 
       mainLoop: function(tslf) {
@@ -33,7 +35,7 @@ define([
         this.terrainManager.update(this.player.position);
 
         if (!this.player.freeFloat) {
-          this.physicsManager.movePlayer(this.player, tslf);
+          // this.physicsManager.movePlayer(this.player, tslf);
         }
 
         // this.socket.emit('updateServer', {
@@ -53,12 +55,7 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        for (id in this.peers) {
-          if (id == this.client_id) {
-            continue;
-          }
-          this.peers[id].draw();
-        }
+        this.networkManager.drawPeers();
       },
 
       setID: function(data) {

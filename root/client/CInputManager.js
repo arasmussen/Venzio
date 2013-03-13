@@ -1,7 +1,4 @@
-define([
-    'client/NetworkManager'
-  ],
-  function(NetworkManager) {
+define(function() {
   return {
     canvas: null,
     keys: [],
@@ -65,7 +62,13 @@ define([
         0x10 * (this.isKeyPressed(32)) +                         // space
         0x20 * (this.processQueue.indexOf(66) != -1) +           // B/build
         0x40 * (this.processQueue.indexOf(67) != -1);            // C/camera
-      NetworkManager.sendMessage({input: input_bitmap});
+      this.networkManager.sendMessage({input: {
+        bitArray: input_bitmap,
+        mouseDelta: {
+          x: this.mouseDelta.x,
+          y: this.mouseDelta.y
+        }
+      }});
     },
 
     processSubscriptionQueue: function() {

@@ -5,12 +5,16 @@ define(function() {
     down: false,
     right: false,
     space: false,
+    mouseDelta: {
+      x: 0,
+      y: 0
+    },
 
     subscriptions: {},
 
     subscribe: function(key, callback) {
       if (this.subscriptions[key] == undefined) {
-        this.subscriptions[key] = callback;
+        this.subscriptions[key] = [callback];
       } else {
         if (this.subscriptions[key].indexOf(callback) == -1) {
           this.subscriptions[key].push(callback);
@@ -47,15 +51,23 @@ define(function() {
     },
 
     getMouseDelta: function() {
-      return {x: 0, y: 0};
+      var ret = {
+        x: this.mouseDelta.x,
+        y: this.mouseDelta.y,
+      };
+      this.mouseDelta.x = 0;
+      this.mouseDelta.y = 0;
+      return ret;
     },
 
-    handleInput: function(bitArray) {
-      this.up = (0x01 & bitArray ? true : false);
-      this.left = (0x02 & bitArray ? true : false);
-      this.down = (0x04 & bitArray ? true : false);
-      this.right = (0x08 & bitArray ? true : false);
-      this.space = (0x10 & bitArray ? true : false);
+    handleInput: function(input) {
+      this.up = (0x01 & input.bitArray ? true : false);
+      this.left = (0x02 & input.bitArray ? true : false);
+      this.down = (0x04 & input.bitArray ? true : false);
+      this.right = (0x08 & input.bitArray ? true : false);
+      this.space = (0x10 & input.bitArray ? true : false);
+      this.mouseDelta.x += input.mouseDelta.x;
+      this.mouseDelta.y += input.mouseDelta.y;
     }
   };
 });

@@ -2,7 +2,7 @@ define([
     'basejs',
     'client/meshes/CylinderMesh',
     'client/meshes/SphereMesh',
-    'shared/physics/Capsule'
+    'shared/primitives/Capsule'
   ],
   function(Base, CylinderMesh, SphereMesh, Capsule) {
     return Base.extend({
@@ -34,6 +34,10 @@ define([
       },
 
       updatePosRot: function(pos, rot) {
+        rot = {
+          pitch: 0,
+          yaw: rot.yaw
+        };
         var bottom = {
           x: pos.x,
           y: pos.y + this.capsule.radius,

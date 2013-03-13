@@ -52,9 +52,10 @@ define([
         var time = new Date().getTime();
         var tslf = (time - this.clients[socket.id].lastFrame) / 1000;
         this.clients[socket.id].lastFrame = time;
+        tslf = (tslf > 0.1 ? 0.1 : tslf);
+        tslf = (tslf < 0.005 ? 0.005 : tslf);
 
-        console.log(msg.msg.input);
-        console.log(tslf);
+        console.log('input: ' + msg.msg.input.bitArray + ', tslf: ' + tslf);
 
         this.terrainManager.update(player.position);
 
@@ -65,6 +66,7 @@ define([
       updateClients: function() {
         var data = [];
         for (var id in this.clients) {
+          console.log(this.clients[id].player.position);
           data.push({
             id: id,
             position: this.clients[id].player.position,
@@ -72,7 +74,7 @@ define([
           });
         }
         for (var id in this.clients) {
-          this.clients[id].socket.emit('message', data);
+          this.clients[id].socket.emit('msg', data);
         }
       }
     };

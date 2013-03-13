@@ -6,9 +6,6 @@ define([
   ],
   function(NetworkManager, GraphicsManager, InputManager, Game) {
     return function() {
-      // connect to the server
-      NetworkManager.initialize();
-
       // set up WebGL context
       var canvas = document.getElementById('canvas');
       if (!GraphicsManager.initialize(canvas)) {

@@ -1,9 +1,9 @@
 define([
     'shared/primitives/Sphere',
-    'client/Mesh'
+    'client/meshes/PrimitiveMesh'
   ],
-  function(Sphere, Mesh) {
-    return Mesh.extend({
+  function(Sphere, PrimitiveMesh) {
+    return PrimitiveMesh.extend({
       constructor: function(center, radius) {
         this.base();
 

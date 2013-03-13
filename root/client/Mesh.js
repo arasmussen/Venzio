@@ -184,6 +184,7 @@ define([
       },
 
       getShaderName: function() {
+        debugger;
         console.error('forgot to implement getShaderName in child mesh');
       },
 

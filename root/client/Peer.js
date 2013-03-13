@@ -1,31 +1,27 @@
 define([
-    'shared/physics/Capsule'
+    'basejs',
+    'client/meshes/CapsuleMesh'
   ],
-  function(Capsule) {
+  function(Base, Capsule) {
     return Base.extend({
-      constructor: function(id) {
+      constructor: function(id, pos) {
         this.id = id;
-        this.capsule = null;
+
+        var radius = 1.0;
+        var height = 5.0;
+        var bottom = {
+          x: pos.x,
+          y: pos.y + radius,
+          z: pos.z
+        };
+        this.capsule = new Capsule(bottom, radius, height);
       },
 
       draw: function() {
-        if (this.capsule == null) {
-          return;
-        }
         this.capsule.draw();
       },
 
       updateTransform: function(pos, rot) {
-        if (this.capsule == null) {
-          var radius = 1.0;
-          var height = 5.0;
-          var bottom = {
-            x: pos.x,
-            y: pos.y + radius,
-            z: pos.z
-          };
-          this.capsule = new Capsule(bottom, radius, height);
-        }
         this.capsule.updatePosRot(pos, rot);
       }
     });
