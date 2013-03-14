@@ -1,12 +1,8 @@
 define([
-    'basejs',
+    'basejs'
   ], function(Base) {
     return Base.extend({
-      up: false,
-      left: false,
-      down: false,
-      right: false,
-      space: false,
+      bitArray: 0,
       mouseDelta: {
         x: 0,
         y: 0
@@ -32,24 +28,8 @@ define([
         this.subscriptions.splice(this.subscriptions.indexOf(callback), 1);
       },
 
-      isLeftPressed: function() {
-        return this.left;
-      },
-
-      isRightPressed: function() {
-        return this.right;
-      },
-
-      isDownPressed: function() {
-        return this.down;
-      },
-
-      isUpPressed: function() {
-        return this.up;
-      },
-
-      isSpacePressed: function() {
-        return this.space;
+      isPressed: function(input) {
+        return Boolean(input & this.bitArray);
       },
 
       getMouseDelta: function() {
@@ -63,11 +43,7 @@ define([
       },
 
       handleInput: function(input) {
-        this.up = (0x01 & input.bitArray ? true : false);
-        this.left = (0x02 & input.bitArray ? true : false);
-        this.down = (0x04 & input.bitArray ? true : false);
-        this.right = (0x08 & input.bitArray ? true : false);
-        this.space = (0x10 & input.bitArray ? true : false);
+        this.bitArray = input.bitArray;
         this.mouseDelta.x += input.mouseDelta.x;
         this.mouseDelta.y += input.mouseDelta.y;
       }

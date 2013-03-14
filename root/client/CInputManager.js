@@ -1,5 +1,8 @@
-define(function() {
+define([
+    'shared/InputGlobals',
+  ], function(InputGlobals) {
   return {
+    bitArray: 0,
     canvas: null,
     keys: [],
     mouseDelta: {x: 0, y: 0},
@@ -54,16 +57,16 @@ define(function() {
     },
 
     sendServerMessage: function() {
-      var input_bitmap =
-        0x01 * (this.isKeyPressed(40) || this.isKeyPressed(83)) + // W/up
-        0x02 * (this.isKeyPressed(37) || this.isKeyPressed(65)) + // A/left
-        0x04 * (this.isKeyPressed(38) || this.isKeyPressed(87)) + // S/down
-        0x08 * (this.isKeyPressed(39) || this.isKeyPressed(68)) + // D/right
-        0x10 * (this.isKeyPressed(32)) +                         // space
-        0x20 * (this.processQueue.indexOf(66) != -1) +           // B/build
-        0x40 * (this.processQueue.indexOf(67) != -1);            // C/camera
+      var bitArray =
+        InputGlobals.UP * this.isKeyPressed(40, 83) +
+        InputGlobals.LEFT * this.isKeyPressed(37, 65) +
+        InputGlobals.DOWN * this.isKeyPressed(38, 87) +
+        InputGlobals.RIGHT * this.isKeyPressed(39, 68) +
+        InputGlobals.SPACE * this.isKeyPressed(32) +
+        InputGlobals.TOGGLE_BUILD * (this.processQueue.indexOf(66) != -1) +
+        InputGlobals.TOGGLE_CAMERA * (this.processQueue.indexOf(67) != -1);
       this.networkManager.sendMessage({input: {
-        bitArray: input_bitmap,
+        bitArray: bitArray,
         mouseDelta: {
           x: this.mouseDelta.x,
           y: this.mouseDelta.y
@@ -108,31 +111,35 @@ define(function() {
       return delta;
     },
 
-    isLeftPressed: function() {
-      return this.keys[37] || this.keys[65];
-    },
-
-    isRightPressed: function() {
-      return this.keys[39] || this.keys[68];
-    },
-
-    isDownPressed: function() {
-      return this.keys[38] || this.keys[87];
-    },
-
-    isUpPressed: function() {
-      return this.keys[40] || this.keys[83];
-    },
-
-    isSpacePressed: function() {
-      return this.keys[32];
-    },
-
-    isKeyPressed: function(keyCode) {
-      if (this.keys[keyCode] == undefined) {
-        this.keys[keyCode] = false;
+    // this is so dumb but there are better things to work on
+    isPressed: function(input) {
+      if (input == InputGlobals.LEFT) {
+        return this.keys[37] || this.keys[65];
+      } else if (input == InputGlobals.RIGHT) {
+        return this.keys[39] || this.keys[68];
+      } else if (input == InputGlobals.DOWN) {
+        return this.keys[38] || this.keys[87];
+      } else if (input == InputGlobals.UP) {
+        return this.keys[40] || this.keys[83];
+      } else if (input == InputGlobals.SPACE) {
+        return this.keys[32];
+      } else {
+        console.log('unknown input...');
+        return false;
       }
-      return this.keys[keyCode];
+    },
+
+    isKeyPressed: function() {
+      for (var i in arguments) {
+        var keyCode = arguments[i];
+        if (this.keys[keyCode] == undefined) {
+          this.keys[keyCode] = false;
+        }
+        if (this.keys[keyCode]) {
+          return true;
+        }
+      }
+      return false;
     },
 
     isPointerLocked: function() {

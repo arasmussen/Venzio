@@ -1,9 +1,10 @@
 define([
     'shared/Wall',
+    'shared/InputGlobals',
     'shared/Globals',
     'basejs'
   ],
-  function(Wall, Globals, Base) {
+  function(Wall, InputGlobals, Globals, Base) {
     return Base.extend({
       constructor: function(inputManager, terrainManager) {
         this.rotateSpeed = 1/250;
@@ -39,16 +40,16 @@ define([
         this.strafe = 0;
         this.walk = 0;
 
-        if (this.inputManager.isLeftPressed()) {
+        if (this.inputManager.isPressed(InputGlobals.LEFT)) {
           this.strafe -= 0.5;
         }
-        if (this.inputManager.isRightPressed()) {
+        if (this.inputManager.isPressed(InputGlobals.RIGHT)) {
           this.strafe += 0.5;
         }
-        if (this.inputManager.isDownPressed()) {
+        if (this.inputManager.isPressed(InputGlobals.DOWN)) {
           this.walk -= 0.5;
         }
-        if (this.inputManager.isUpPressed()) {
+        if (this.inputManager.isPressed(InputGlobals.UP)) {
           this.walk += 0.5;
         }
       },
@@ -68,7 +69,7 @@ define([
 
       handleJumpInput: function() {
         if (this.onGround && !this.freeFloat) {
-          if (this.inputManager.isSpacePressed()) {
+          if (this.inputManager.isPressed(InputGlobals.SPACE)) {
             this.jump = true;
           }
         }
