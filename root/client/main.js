@@ -5,10 +5,29 @@ define([
     'client/Game'
   ],
   function(NetworkManager, GraphicsManager, InputManager, Game) {
+    window.requestAnimFrame = (function() {
+      return window.requestAnimationFrame ||
+             window.webkitRequestAnimationFrame ||
+             window.mozRequestAnimationFrame ||
+             window.oRequestAnimationFrame ||
+             window.msRequestAnimationFrame ||
+             function(callback, element) {
+               return window.setTimeout(callback, 1000/60);
+             };
+    })();
+    window.cancelAnimFrame = (function() {
+      return window.cancelAnimationFrame ||
+             window.webkitCancelAnimationFrame ||
+             window.mozCancelAnimationFrame ||
+             window.oCancelAnimationFrame ||
+             window.msCancelAnimationFrame ||
+             window.clearTimeout;
+    })();
+
     return function() {
       // set up WebGL context
       var canvas = document.getElementById('canvas');
-      if (!GraphicsManager.initialize(canvas)) {
+      if (GraphicsManager.initialize(canvas) != GraphicsManager.statusCodes.SUCCESS) {
         console.log('Could not initialize WebGL');
         return;
       }
