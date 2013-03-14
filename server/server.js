@@ -1,12 +1,11 @@
 define([
     'socket.io',
     'server/db',
-    'server/SInputManager',
+    'server/ClientManager',
     'shared/PhysicsManager',
-    'shared/Player',
     'shared/TerrainManager'
   ],
-  function(io, db, InputManager, PhysicsManager, Player, TerrainManager) {
+  function(io, db, ClientManager, PhysicsManager, TerrainManager) {
     return {
       main: function() {
         // set up socket connect/disconnect hooks
@@ -17,65 +16,35 @@ define([
         // connect to db
         db.connect();
 
-        this.clients = {};
-        this.interval = setInterval(this.updateClients.bind(this), 20);
+        this.intervals = {
+          updatePlayer: setInterval(this.updatePlayers.bind(this), 10),
+          updateClient: setInterval(this.updateClients.bind(this), 20)
+        };
+
         this.terrainManager = new TerrainManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
+        this.clientManager = new ClientManager(
+          this.terrainManager,
+          this.physicsManager
+        );
       },
 
       onConnect: function(socket) {
-        this.clients[socket.id] = {
-          lastFrame: new Date().getTime(),
-          player: new Player(InputManager),
-          socket: socket,
-          toggles: {
-            build: false,
-            camera: false
-          }
-        };
-
+        this.clientManager.addClient(socket);
         socket.emit('init', {id: socket.id});
-        socket.on('input', this.onInput.bind(this, socket));
         socket.on('disconnect', this.onDisconnect.bind(this, socket));
       },
 
       onDisconnect: function(socket) {
-        delete this.clients[socket.id];
+        this.clientManager.removeClient(socket);
       },
 
-      onInput: function(socket, msg) {
-        InputManager.handleInput(msg.msg.input);
-
-        var player = this.clients[socket.id].player;
-        player.handleInput();
-
-        var time = new Date().getTime();
-        var tslf = (time - this.clients[socket.id].lastFrame) / 1000;
-        this.clients[socket.id].lastFrame = time;
-        tslf = (tslf > 0.1 ? 0.1 : tslf);
-        tslf = (tslf < 0.005 ? 0.005 : tslf);
-
-        console.log('input: ' + msg.msg.input.bitArray + ', tslf: ' + tslf);
-
-        this.terrainManager.update(player.position);
-
-        player.update();
-        this.physicsManager.movePlayer(player, tslf);
+      updatePlayers: function() {
+        this.clientManager.updatePlayers();
       },
 
       updateClients: function() {
-        var data = [];
-        for (var id in this.clients) {
-          console.log(this.clients[id].player.position);
-          data.push({
-            id: id,
-            position: this.clients[id].player.position,
-            rotation: this.clients[id].player.rotation
-          });
-        }
-        for (var id in this.clients) {
-          this.clients[id].socket.emit('msg', data);
-        }
+        this.clientManager.updateClients();
       }
     };
   }
