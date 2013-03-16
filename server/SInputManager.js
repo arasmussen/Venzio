@@ -2,10 +2,12 @@ define([
     'basejs'
   ], function(Base) {
     return Base.extend({
-      bitArray: 0,
-      mouseDelta: {
-        x: 0,
-        y: 0
+      constructor: function() {
+        this.bitArray = 0;
+        this.mouseDelta = {
+          x: 0,
+          y: 0
+        };
       },
 
       subscriptions: {},
