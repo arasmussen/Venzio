@@ -33,12 +33,13 @@ define([
           return;
         }
 
+        for (var id in this.peers) {
+          this.peers[id].connected = false;
+        }
+
         for (var client in data) {
           var id = data[client].id;
           if (id == this.id) {
-            // this.player.position.x = data[client].position.x;
-            // this.player.position.y = data[client].position.y;
-            // this.player.position.z = data[client].position.z;
             continue;
           }
           if (!this.peers.hasOwnProperty(id)) {
@@ -48,11 +49,18 @@ define([
               this.terrainManager
             );
           }
+          this.peers[id].connected = true;
           this.peers[id].updateTransform(
             data[client].position,
             data[client].rotation
           );
           this.peers[id].setState(data[client].state);
+        }
+
+        for (var id in this.peers) {
+          if (this.peers[id].connected == false) {
+            delete this.peers[id];
+          }
         }
       },
 
