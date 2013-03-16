@@ -1,6 +1,7 @@
 define([
-    'basejs'
-  ], function(Base) {
+    'basejs',
+    'shared/InputGlobals'
+  ], function(Base, InputGlobals) {
     return Base.extend({
       constructor: function() {
         this.bitArray = 0;
@@ -8,9 +9,9 @@ define([
           x: 0,
           y: 0
         };
+        this.subscriptions = [];
+        this.processQueue = [];
       },
-
-      subscriptions: {},
 
       subscribe: function(key, callback) {
         if (this.subscriptions[key] == undefined) {
@@ -48,6 +49,32 @@ define([
         this.bitArray = input.bitArray;
         this.mouseDelta.x += input.mouseDelta.x;
         this.mouseDelta.y += input.mouseDelta.y;
+
+        // TODO: refactor
+        if (this.isPressed(InputGlobals.TOGGLE_BUILD)) {
+          if (this.processQueue.indexOf(InputGlobals.TOGGLE_BUILD) == -1) {
+            this.processQueue.push(InputGlobals.TOGGLE_BUILD);
+          }
+        }
+        if (this.isPressed(InputGlobals.TOGGLE_CAMERA)) {
+          if (this.processQueue.indexOf(InputGlobals.TOGGLE_CAMERA) == -1) {
+            this.processQueue.push(InputGlobals.TOGGLE_CAMERA);
+          }
+        }
+      },
+
+      update: function() {
+        this.processSubscriptionQueue()
+      },
+
+      processSubscriptionQueue: function() {
+        for (var i in this.processQueue) {
+          var keyPressed = this.processQueue[i];
+          for (var i in this.subscriptions[keyPressed]) {
+            this.subscriptions[keyPressed][i]();
+          }
+        }
+        this.processQueue = [];
       }
     });
   }

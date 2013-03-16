@@ -26,11 +26,19 @@ define([
 
         this.inputManager = inputManager;
 
-        this.inputManager.subscribe(66, this.toggleBuildMode.bind(this));
-        this.inputManager.subscribe(67, this.toggleFreeFloatMode.bind(this));
+        this.inputManager.subscribe(
+          InputGlobals.TOGGLE_BUILD,
+          this.toggleBuildMode.bind(this)
+        );
+        this.inputManager.subscribe(
+          InputGlobals.TOGGLE_CAMERA,
+          this.toggleFreeFloatMode.bind(this)
+        );
       },
 
       handleInput: function() {
+        this.inputManager.update();
+
         this.handlePositionInput();
         this.handleRotationInput();
         this.handleJumpInput();
@@ -81,6 +89,13 @@ define([
 
       toggleBuildMode: function() {
         this.buildMode = !this.buildMode;
+      },
+
+      getState: function() {
+        return (
+          0x0001 * this.buildMode +
+          0x0002 * this.freeFloat
+        );
       },
 
       update: function(tslf) {

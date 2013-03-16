@@ -24,7 +24,8 @@ define([
           data.push({
             id: id,
             position: this.clients[id].player.position,
-            rotation: this.clients[id].player.rotation
+            rotation: this.clients[id].player.rotation,
+            state: this.clients[id].player.getState()
           });
         }
         for (var id in this.clients) {
@@ -33,7 +34,7 @@ define([
       },
 
       addClient: function(socket) {
-        this.clients[socket.id] = new Client(socket);
+        this.clients[socket.id] = new Client(socket, this.terrainManager);
       },
 
       removeClient: function(socket) {

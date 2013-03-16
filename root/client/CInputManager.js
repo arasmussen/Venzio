@@ -12,9 +12,15 @@ define([
 
     onKeyDown: function(e) {
       this.keys[e.keyCode] = true;
-      if (this.subscriptions[e.keyCode] != undefined) {
-        if (this.processQueue.indexOf(e.keyCode) == -1) {
-          this.processQueue.push(e.keyCode);
+
+      // TODO: refactor
+      if (e.keyCode == 66) {
+        if (this.processQueue.indexOf(InputGlobals.TOGGLE_BUILD)) {
+          this.processQueue.push(InputGlobals.TOGGLE_BUILD);
+        }
+      } else if (e.keyCode == 67) {
+        if (this.processQueue.indexOf(InputGlobals.TOGGLE_CAMERA)) {
+          this.processQueue.push(InputGlobals.TOGGLE_CAMERA);
         }
       }
     },
@@ -57,14 +63,17 @@ define([
     },
 
     sendServerMessage: function() {
+      // TODO: refactor
       var bitArray =
         InputGlobals.UP * this.isKeyPressed(40, 83) +
         InputGlobals.LEFT * this.isKeyPressed(37, 65) +
         InputGlobals.DOWN * this.isKeyPressed(38, 87) +
         InputGlobals.RIGHT * this.isKeyPressed(39, 68) +
         InputGlobals.SPACE * this.isKeyPressed(32) +
-        InputGlobals.TOGGLE_BUILD * (this.processQueue.indexOf(66) != -1) +
-        InputGlobals.TOGGLE_CAMERA * (this.processQueue.indexOf(67) != -1);
+        InputGlobals.TOGGLE_BUILD *
+          (this.processQueue.indexOf(InputGlobals.TOGGLE_BUILD) != -1) +
+        InputGlobals.TOGGLE_CAMERA *
+          (this.processQueue.indexOf(InputGlobals.TOGGLE_CAMERA) != -1);
       this.networkManager.sendMessage({input: {
         bitArray: bitArray,
         mouseDelta: {
@@ -111,7 +120,7 @@ define([
       return delta;
     },
 
-    // this is so dumb but there are better things to work on
+    // TODO: refactor
     isPressed: function(input) {
       if (input == InputGlobals.LEFT) {
         return this.keys[37] || this.keys[65];
@@ -129,6 +138,7 @@ define([
       }
     },
 
+    // TODO: fix the fact that there are two of these functions
     isKeyPressed: function() {
       for (var i in arguments) {
         var keyCode = arguments[i];

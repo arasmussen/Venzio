@@ -4,10 +4,10 @@ define([
     'shared/Player'
   ], function(Base, InputManager, Player) {
     return Base.extend({
-      constructor: function(socket) {
+      constructor: function(socket, terrainManager) {
         this.socket = socket;
         this.lastFrame = new Date().getTime();
-        this.player = new Player(new InputManager());
+        this.player = new Player(new InputManager(), terrainManager);
         this.toggles = {
           build: false,
           camera: false

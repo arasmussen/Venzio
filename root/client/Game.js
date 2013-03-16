@@ -14,7 +14,10 @@ define([
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.player = new CPlayer(InputManager, this.terrainManager);
         this.camera = new Camera(this.player);
-        this.networkManager = new NetworkManager(this.player);
+        this.networkManager = new NetworkManager(
+          this.player,
+          this.terrainManager
+        );
         InputManager.networkManager = this.networkManager;
       },
 
@@ -25,7 +28,6 @@ define([
       },
 
       handleInput: function() {
-        InputManager.update();
         this.player.handleInput();
       },
 
@@ -35,13 +37,8 @@ define([
         this.terrainManager.update(this.player.position);
 
         if (!this.player.freeFloat) {
-          // this.physicsManager.movePlayer(this.player, tslf);
+          this.physicsManager.movePlayer(this.player, tslf);
         }
-
-        // this.socket.emit('updateServer', {
-        //   position: this.player.position,
-        //   rotation: this.player.rotation,
-        // });
       },
 
       drawWorld: function() {
