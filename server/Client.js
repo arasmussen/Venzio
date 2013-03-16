@@ -8,10 +8,6 @@ define([
         this.socket = socket;
         this.lastFrame = new Date().getTime();
         this.player = new Player(new InputManager(), terrainManager);
-        this.toggles = {
-          build: false,
-          camera: false
-        };
 
         this.socket.on('input', this.handleInput.bind(this));
       },

@@ -14,7 +14,11 @@ define([
         for (var id in this.clients) {
           var tslf = this.clients[id].update();
           this.terrainManager.update(this.clients[id].player.position);
-          this.physicsManager.movePlayer(this.clients[id].player, tslf);
+          // TODO: this should be moved into the physics manager (for both
+          // client and server)
+          if (!this.clients[id].player.freeFloat) {
+            this.physicsManager.movePlayer(this.clients[id].player, tslf);
+          }
         }
       },
 

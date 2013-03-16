@@ -2,6 +2,8 @@ define([
     'basejs',
     'shared/InputGlobals'
   ], function(Base, InputGlobals) {
+    // TODO: make a base class in shared that both client and server input
+    // managers both extend
     return Base.extend({
       constructor: function() {
         this.bitArray = 0;
@@ -68,6 +70,7 @@ define([
       },
 
       processSubscriptionQueue: function() {
+        // TODO: maybe refactor
         for (var i in this.processQueue) {
           var keyPressed = this.processQueue[i];
           for (var i in this.subscriptions[keyPressed]) {

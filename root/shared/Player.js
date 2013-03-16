@@ -84,6 +84,7 @@ define([
       },
 
       toggleFreeFloatMode: function() {
+        console.log('hereherehere');
         this.freeFloat = !this.freeFloat;
       },
 
@@ -99,6 +100,8 @@ define([
       },
 
       update: function(tslf) {
+        // TODO: the freefloat stuff really needs to be moved INTO the physics
+        // manager
         if (this.freeFloat) {
           this.position.x += this.strafe * Math.cos(this.rotation.yaw) +
             Math.cos(this.rotation.pitch) * this.walk * Math.sin(this.rotation.yaw);
