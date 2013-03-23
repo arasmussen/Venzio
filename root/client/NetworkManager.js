@@ -9,7 +9,10 @@ define([
       address: Globals.address,
       connected: false,
       peers: {},
+      pingID: 0,
+      pings: [],
       port: Globals.port,
+      serverTime: null,
       socket: null,
 
       constructor: function(player, terrainManager) {
@@ -18,6 +21,7 @@ define([
         this.socket = new io.connect(this.address, {port: this.port});
         this.socket.on('msg', this.onServerMessage.bind(this));
         this.socket.on('init', this.onServerInit.bind(this));
+        this.socket.on('reply', this.onPingReply.bind(this));
 
         this.terrainManager = terrainManager;
       },
@@ -26,6 +30,10 @@ define([
         console.log('connected');
         this.id = data.id;
         this.connected = true;
+
+        this.pingServer(function(ping, serverTime) {
+          this.serverTime = serverTime;
+        }.bind(this));
       },
 
       onServerMessage: function(data) {
@@ -62,6 +70,22 @@ define([
             delete this.peers[id];
           }
         }
+      },
+
+      pingServer: function(callback) {
+        this.pings[this.pingID] = {
+          callback: callback,
+          start: new Date()
+        };
+        this.socket.emit('ping', {id: this.pingID++});
+      },
+
+      onPingReply: function(data) {
+        var ping = (new Date()) - this.pings[data.id].start;
+        var callback = this.pings[data.id].callback;
+        delete this.pings[data.id];
+        var serverTime = new Date(data.time) + ping / 2.0;
+        callback(ping, serverTime);
       },
 
       sendMessage: function(msg) {

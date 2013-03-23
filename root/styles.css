@@ -23,6 +23,13 @@ body, html {
   color: #fff;
 }
 
+#ping {
+  position: absolute;
+  top: 26px;
+  left: 10px;
+  color: #fff;
+}
+
 #instructions {
   width: 800px;
   text-align: center;

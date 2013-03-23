@@ -10,6 +10,7 @@ define([
   function(CPlayer, CTerrainManager, Camera, InputManager, NetworkManager, PhysicsManager, Base) {
     return Base.extend({
       constructor: function() {
+        this.ready = false;
         this.terrainManager = new CTerrainManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.player = new CPlayer(InputManager, this.terrainManager);

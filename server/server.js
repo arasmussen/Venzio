@@ -33,10 +33,18 @@ define([
         this.clientManager.addClient(socket);
         socket.emit('init', {id: socket.id});
         socket.on('disconnect', this.onDisconnect.bind(this, socket));
+        socket.on('ping', this.onPing.bind(this, socket));
       },
 
       onDisconnect: function(socket) {
         this.clientManager.removeClient(socket);
+      },
+
+      onPing: function(socket, data) {
+        socket.emit('reply', {
+          id: data.id,
+          time: new Date()
+        });
       },
 
       updatePlayers: function() {

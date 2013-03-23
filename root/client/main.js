@@ -2,9 +2,11 @@ define([
     'client/NetworkManager',
     'client/GraphicsManager',
     'client/CInputManager',
-    'client/Game'
+    'client/Game',
+    'client/util/Framerate',
+    'client/util/Ping'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, Game) {
+  function(NetworkManager, GraphicsManager, InputManager, Game, Framerate, Ping) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -36,6 +38,7 @@ define([
 
       var game = new Game();
       var framerate = new Framerate('framerate');
+      var ping = new Ping('ping', game.networkManager);
       var lastFrameTime = new Date();
 
       var baseLoop = function() {
