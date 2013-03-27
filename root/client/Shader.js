@@ -3,10 +3,7 @@ define(['basejs'], function(Base) {
     constructor: function(program) {
       this.program = program;
       this.attributes = [];
-    },
-
-    use: function() {
-      gl.useProgram(this.program);
+      this.uniforms = [];
     },
 
     getAttribute: function(attr) {
@@ -17,24 +14,45 @@ define(['basejs'], function(Base) {
       return this.program[uni];
     },
 
-    getAttributes: function() {
-      return this.attributes;
+    use: function() {
+      gl.useProgram(this.program);
     },
 
-    addAttributes: function(attrs) {
-      this.use();
-      attrs.forEach(function(attr) {
-        this.program[attr] = gl.getAttribLocation(this.program, attr);
-        gl.enableVertexAttribArray(this.program[attr]);
+    enableAttributes: function() {
+      this.attributes.forEach(function(attribute) {
+        gl.enableVertexAttribArray(this.program[attribute]);
       }, this);
-      this.attributes = attrs;
     },
 
-    addUniforms: function(unis) {
-      this.use();
-      unis.forEach(function(uni) {
-        this.program[uni] = gl.getUniformLocation(this.program, uni);
+    disableAttributes: function() {
+      this.attributes.forEach(function(attribute) {
+        gl.disableVertexAttribArray(this.program[attribute]);
       }, this);
+    },
+
+    preDraw: function() {
+      this.use();
+      this.enableAttributes();
+    },
+
+    postDraw: function() {
+      this.disableAttributes();
+    },
+
+    addAttributes: function(attributes) {
+      this.use();
+      attributes.forEach(function(attribute) {
+        this.program[attribute] = gl.getAttribLocation(this.program, attribute);
+      }, this);
+      this.attributes = attributes;
+    },
+
+    addUniforms: function(uniforms) {
+      this.use();
+      uniforms.forEach(function(uniform) {
+        this.program[uniform] = gl.getUniformLocation(this.program, uniform);
+      }, this);
+      this.uniforms = uniforms;
     }
   });
 });

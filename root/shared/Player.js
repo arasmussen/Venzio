@@ -84,7 +84,6 @@ define([
       },
 
       toggleFreeFloatMode: function() {
-        console.log('hereherehere');
         this.freeFloat = !this.freeFloat;
       },
 

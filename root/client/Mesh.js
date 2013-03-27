@@ -19,11 +19,10 @@ define([
       },
 
       initializeBuffers: function() {
-        var attributes = this.shader.getAttributes();
+        var attributes = this.shader.attributes;
         for (var i in attributes) {
           var attrib = attributes[i];
 
-          // create buffer
           this.buffers[attrib] = gl.createBuffer();
 
           var buffer_usage = (
@@ -32,11 +31,10 @@ define([
 
           // pass data to gl context
           gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
-          gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), buffer_usage);
+          gl.bufferData(gl.ARRAY_BUFFER, this.getAttribData(attrib), buffer_usage);
         }
 
         if (this.isUsingIndices()) {
-          // create the buffer
           this.indexBuffer = gl.createBuffer();
 
           // pass data to gl context
@@ -71,13 +69,13 @@ define([
       },
 
       bindAttributes: function() {
-        var attributes = this.shader.getAttributes();
+        var attributes = this.shader.attributes;
         for (var i in attributes) {
           var attrib = attributes[i];
 
           gl.bindBuffer(gl.ARRAY_BUFFER, this.buffers[attrib]);
           if (this.isDynamic(attrib)) {
-            gl.bufferData(gl.ARRAY_BUFFER, this.getData(attrib), gl.DYNAMIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, this.getAttribData(attrib), gl.DYNAMIC_DRAW);
           }
           gl.vertexAttribPointer(
             this.shader.getAttribute(attrib),
@@ -126,11 +124,12 @@ define([
 
       preDraw: function() {
         this.transform();
-        this.shader.use();
+        this.shader.preDraw();
         this.setMatrixUniforms();
       },
 
       postDraw: function() {
+        this.shader.postDraw();
         this.untransform();
       },
 
@@ -176,15 +175,16 @@ define([
           return 4;
         } else if (attrib == 'TextureCoord') {
           return 2;
+        } else if (attrib == 'Layer') {
+          return 1;
         }
       },
 
-      getData: function() {
-        console.error('forgot to implement getData in child mesh');
+      getAttribData: function() {
+        console.error('forgot to implement getAttribData in child mesh');
       },
 
       getShaderName: function() {
-        debugger;
         console.error('forgot to implement getShaderName in child mesh');
       },
 

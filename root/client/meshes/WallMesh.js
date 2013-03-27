@@ -22,7 +22,7 @@ define([
         this.wall.update();
       },
 
-      getData: function(attrib) {
+      getAttribData: function(attrib) {
         if (attrib == 'Position') {
           return new Float32Array(this.wall.positionData);
         } else if (attrib == 'Color') {

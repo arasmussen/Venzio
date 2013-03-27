@@ -28,7 +28,7 @@ define([
         this.sphere.rotation = rot;
       },
 
-      getData: function(attrib) {
+      getAttribData: function(attrib) {
         if (attrib == 'Position') {
           var vertices = [];
           for (var i = 1; i < this.rows - 1; i++) {

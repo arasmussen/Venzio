@@ -5,9 +5,10 @@ define([
     'client/CInputManager',
     'client/NetworkManager',
     'shared/PhysicsManager',
-    'basejs'
+    'basejs',
+    'client/meshes/GrassMesh'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, NetworkManager, PhysicsManager, Base) {
+  function(CPlayer, CTerrainManager, Camera, InputManager, NetworkManager, PhysicsManager, Base, Grass) {
     return Base.extend({
       constructor: function() {
         this.ready = false;

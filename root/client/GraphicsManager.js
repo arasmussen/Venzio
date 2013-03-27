@@ -17,6 +17,8 @@ define(function() {
       gl.clearColor(0.5, 0.6, 1.0, 1.0);
       gl.enable(gl.DEPTH_TEST);
       gl.depthFunc(gl.LESS);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
       return this.statusCodes.SUCCESS;
     },

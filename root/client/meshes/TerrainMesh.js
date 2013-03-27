@@ -22,7 +22,7 @@ define([
         return this.terrain.getHeight(position);
       },
 
-      getData: function(attrib) {
+      getAttribData: function(attrib) {
         if (attrib == 'Position') {
           var vertices = [];
           for (var x = 0; x < this.terrain.width; x++) {

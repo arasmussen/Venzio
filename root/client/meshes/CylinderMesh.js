@@ -28,7 +28,7 @@ define([
         this.cylinder.rotation = rot;
       },
 
-      getData: function(attrib) {
+      getAttribData: function(attrib) {
         if (attrib == 'Position') {
           var vertices = [];
           for (var i = 0; i < this.columns; i++) {

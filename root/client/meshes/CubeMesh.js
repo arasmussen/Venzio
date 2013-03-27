@@ -22,7 +22,7 @@ define([
         return ['Position', 'Color'];
       },
 
-      getData: function(attrib) {
+      getAttribData: function(attrib) {
         if (attrib == 'Position') {
           return new Float32Array([
             -0.5, -0.5, -0.5,
@@ -59,6 +59,10 @@ define([
 
       getNumItems: function() {
         return 36;
+      },
+
+      isUsingIndices: function() {
+        return true;
       }
     });
   }
