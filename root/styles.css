@@ -12,8 +12,9 @@ body, html {
 }
 
 #canvas {
-  width: 800px;
+  background-color: #000;
   height: 600px;
+  width: 800px;
 }
 
 #framerate {

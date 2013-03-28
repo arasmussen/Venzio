@@ -11,7 +11,11 @@ varying vec2 texCoord;
 varying float layer;
 
 void main(void) {
-  gl_Position = uPMatrix * uMVMatrix * vec4(Position, 1.0);
+  vec4 pos = vec4(Position, 1.0);
+  pos.y += 0.01 * Layer;
+  gl_Position = uPMatrix * uMVMatrix * pos;
+
+  // pass stuff to fragment
   texCoord = TextureCoord;
   layer = Layer;
 }

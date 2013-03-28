@@ -10,6 +10,16 @@ define(function() {
         'uPMatrix'
       ]
     },
+    cube: {
+      attributes: [
+        'Position',
+        'TextureCoord'
+      ],
+      uniforms: [
+        'uMVMatrix',
+        'uPMatrix'
+      ]
+    },
     terrain: {
       attributes: [
         'Position',
@@ -32,16 +42,22 @@ define(function() {
       uniforms: [
         'uMVMatrix',
         'uPMatrix',
-        'grass_130_texture',
-        'grass_135_texture',
-        'grass_140_texture',
-        'grass_145_texture',
-        'grass_150_texture',
-        'grass_155_texture',
-        'grass_160_texture',
-        'grass_165_texture',
-        'grass_170_texture',
-        'grass_175_texture'
+        'grass_0_texture',
+        'grass_1_texture',
+        'grass_2_texture',
+        'grass_3_texture',
+        'grass_4_texture',
+        'grass_5_texture',
+        'grass_6_texture',
+        'grass_7_texture',
+        'grass_8_texture',
+        'grass_9_texture',
+        'grass_10_texture',
+        'grass_11_texture',
+        'grass_12_texture',
+        'grass_13_texture',
+        'grass_14_texture',
+        'grass_15_texture'
       ]
     }
   };

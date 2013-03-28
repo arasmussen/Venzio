@@ -12,8 +12,8 @@ define([
           pitch: 0
         };
 
-        this.layers = 10;
-        this.layerDistance = 0.01;
+        this.layers = 16;
+        this.layerDistance = 0.02;
 
         this.initialize();
       },
@@ -34,7 +34,11 @@ define([
               -0.5, i * this.layerDistance, -0.5,
               0.5, i * this.layerDistance, -0.5,
               -0.5, i * this.layerDistance, 0.5,
-              0.5, i * this.layerDistance, 0.5
+              0.5, i * this.layerDistance, 0.5,
+              -0.5, (i + 0.5) * this.layerDistance, -0.5,
+              0.5, (i + 0.5) * this.layerDistance, -0.5,
+              -0.5, (i + 0.5) * this.layerDistance, 0.5,
+              0.5, (i + 0.5) * this.layerDistance, 0.5
             );
           }
           return new Float32Array(vertices);
@@ -42,6 +46,10 @@ define([
           var texCoords = [];
           for (var i = 0; i < this.layers; i++) {
             texCoords.push(
+              0.0, 0.0,
+              1.0, 0.0,
+              0.0, 1.0,
+              1.0, 1.0,
               0.0, 0.0,
               1.0, 0.0,
               0.0, 1.0,
@@ -56,6 +64,10 @@ define([
               i,
               i,
               i,
+              i,
+              i,
+              i,
+              i,
               i
             );
           }
@@ -67,15 +79,17 @@ define([
         var indices = [];
         for (var i = 0; i < this.layers; i++) {
           indices.push(
-            4 * i, 4 * i + 1, 4 * i + 2,
-            4 * i + 1, 4 * i + 2, 4 * i + 3
+            8 * i + 0, 8 * i + 1, 8 * i + 2,
+            8 * i + 1, 8 * i + 2, 8 * i + 3,
+            8 * i + 4, 8 * i + 5, 8 * i + 6,
+            8 * i + 5, 8 * i + 6, 8 * i + 7
           );
         }
         return new Uint16Array(indices);
       },
 
       getNumItems: function() {
-        return 6 * this.layers;
+        return 12 * this.layers;
       },
 
       getShaderName: function() {
@@ -83,18 +97,14 @@ define([
       },
 
       getTextures: function() {
-        return [
-          {name: 'grass_130', filetype: 'png'},
-          {name: 'grass_135', filetype: 'png'},
-          {name: 'grass_140', filetype: 'png'},
-          {name: 'grass_145', filetype: 'png'},
-          {name: 'grass_150', filetype: 'png'},
-          {name: 'grass_155', filetype: 'png'},
-          {name: 'grass_160', filetype: 'png'},
-          {name: 'grass_165', filetype: 'png'},
-          {name: 'grass_170', filetype: 'png'},
-          {name: 'grass_175', filetype: 'png'}
-        ];
+        var textures = [];
+        for (var i = 0; i < this.layers; i++) {
+          textures.push({
+            name: 'grass_' + i,
+            filetype: 'png'
+          });
+        }
+        return textures;
       },
 
       isUsingIndices: function() {

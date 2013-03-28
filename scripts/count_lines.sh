@@ -1,7 +1,7 @@
 #!/bin/sh
 # this is my super unrobust script to count the lines in the project
 
-GFX='/home/ec2-user/www/3D-MMO-SB'
+GFX='/home/ec2-user/www/venzio'
 
 LIB=$(find ${GFX}/root/client/lib -name \*.js | xargs wc -l | grep total | awk '{print $1}')
 JS=$(find ${GFX} -name \*.js | xargs wc -l | grep total | awk '{print $1}')

@@ -25,16 +25,16 @@ define([
       getAttribData: function(attrib) {
         if (attrib == 'Position') {
           return new Float32Array(this.wall.positionData);
-        } else if (attrib == 'Color') {
+        } else if (attrib == 'TextureCoord') {
           return new Float32Array([
-            1.0, 0.0, 0.2, 1.0,
-            1.0, 0.0, 0.2, 1.0,
-            1.0, 1.0, 0.2, 1.0,
-            1.0, 1.0, 0.2, 1.0,
-            1.0, 0.0, 0.2, 1.0,
-            1.0, 0.0, 0.2, 1.0,
-            1.0, 1.0, 0.2, 1.0,
-            1.0, 1.0, 0.2, 1.0
+            0.0, 1.0,
+            1.0, 1.0,
+            0.0, 0.0,
+            1.0, 0.0,
+            1.0, 1.0,
+            0.0, 1.0,
+            1.0, 0.0,
+            0.0, 0.0
           ]);
         }
       },
@@ -48,6 +48,12 @@ define([
           0, 2, 4, 2, 4, 6, // front
           1, 3, 5, 3, 5, 7 // back
         ]);
+      },
+
+      getTextures: function() {
+        return [
+          {name: 'fatty', filetype: 'jpeg'}
+        ];
       },
 
       isDynamic: function(attrib) {
@@ -66,7 +72,7 @@ define([
       },
 
       getShaderName: function() {
-        return 'color';
+        return 'cube';
       }
     });
   }
