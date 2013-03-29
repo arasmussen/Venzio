@@ -4,7 +4,7 @@ define([
   function(TerrainMesh) {
     return TerrainMesh.extend({
       constructor: function(position) {
-        this.layers = 16;
+        this.layers = 20;
         this.base(position);
       },
 
@@ -116,14 +116,9 @@ define([
       },
 
       getTextures: function() {
-        var textures = [];
-        for (var i = 0; i < this.layers; i++) {
-          textures.push({
-            name: 'grass_' + i,
-            filetype: 'png'
-          });
-        }
-        return textures;
+        return [
+          {name: 'grass', filetype: 'png'}
+        ];
       }
     });
   }
