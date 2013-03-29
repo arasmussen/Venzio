@@ -59,47 +59,14 @@ define([
           var texCoords = [];
           for (var i = 0; i < this.terrain.width; i++) {
             for (var j = 0; j < this.terrain.length; j++) {
-              var inverse = {
-                x: i % 2 == 1,
-                z: j % 2 == 1
-              };
-              if (!inverse.x && !inverse.z) {
-                texCoords.push(
-                  0.0, 0.0,
-                  1.0, 0.0,
-                  0.0, 1.0,
-                  0.0, 1.0,
-                  1.0, 0.0,
-                  1.0, 1.0
-                );
-              } else if (!inverse.x && inverse.z) {
-                texCoords.push(
-                  0.0, 1.0,
-                  1.0, 1.0,
-                  0.0, 0.0,
-                  0.0, 0.0,
-                  1.0, 1.0,
-                  1.0, 0.0
-                );
-              } else if (inverse.x && !inverse.z) {
-                texCoords.push(
-                  1.0, 0.0,
-                  0.0, 0.0,
-                  1.0, 1.0,
-                  1.0, 1.0,
-                  0.0, 0.0,
-                  0.0, 1.0
-                );
-              } else if (inverse.x && inverse.z) {
-                texCoords.push(
-                  1.0, 1.0,
-                  0.0, 1.0,
-                  1.0, 0.0,
-                  1.0, 0.0,
-                  0.0, 1.0,
-                  0.0, 0.0
-                );
-              }
+              texCoords.push(
+                0.0, 0.0,
+                1.0, 0.0,
+                0.0, 1.0,
+                0.0, 1.0,
+                1.0, 0.0,
+                1.0, 1.0
+              );
             }
           }
           return new Float32Array(texCoords);

@@ -21,7 +21,6 @@ define([
           this.terrainManager
         );
         InputManager.networkManager = this.networkManager;
-        this.grass = new Grass({x: 5.0, y: 2.0, z: 2.0});
       },
 
       mainLoop: function(tslf) {
@@ -54,8 +53,6 @@ define([
         this.camera.transform();
         this.player.draw();
         this.terrainManager.draw(this.player.position);
-
-        this.grass.draw();
 
         this.networkManager.drawPeers();
       },
