@@ -38,9 +38,7 @@ define([
         this.camera.update();
         this.terrainManager.update(this.player.position);
 
-        if (!this.player.freeFloat) {
-          this.physicsManager.movePlayer(this.player, tslf);
-        }
+        this.physicsManager.movePlayer(this.player, tslf);
       },
 
       drawWorld: function() {

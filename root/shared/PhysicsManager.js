@@ -10,24 +10,31 @@ define([
     },
 
     movePlayer: function(player, tslf) {
-      var terrainHeight = this.terrainManager.getTerrainHeight(player.position);
-
-      if (player.position.y <= terrainHeight) {
-        player.velocity.y = 0;
-        player.position.y = terrainHeight + 0.0005;
-      }
-
-      if (player.onGround && player.position.y - 0.001 <= terrainHeight) {
-        if (player.desiredVelocity.y > 0.0) {
-          player.velocity.x = this.moveSpeed * player.desiredVelocity.x;
-          player.velocity.y = player.desiredVelocity.y;
-          player.velocity.z = this.moveSpeed * player.desiredVelocity.z;
-          this.movePlayerInAir(player, tslf);
-        } else {
-          this.movePlayerOnGround(player, tslf);
-        }
+      if (player.freeFloat) {
+        player.velocity.x = this.moveSpeed * player.desiredVelocity.x;
+        player.velocity.y = this.moveSpeed * player.desiredVelocity.y;
+        player.velocity.z = this.moveSpeed * player.desiredVelocity.z;
       } else {
-        this.movePlayerInAir(player, tslf);
+        var terrainHeight = this.terrainManager.getTerrainHeight(player.position);
+
+        if (player.position.y <= terrainHeight) {
+          player.velocity.y = 0;
+          player.position.y = terrainHeight + 0.0005;
+        }
+
+        if (player.freeFloat) {
+        } else if (player.onGround && player.position.y - 0.001 <= terrainHeight) {
+          if (player.desiredVelocity.y > 0.0) {
+            player.velocity.x = this.moveSpeed * player.desiredVelocity.x;
+            player.velocity.y = player.desiredVelocity.y;
+            player.velocity.z = this.moveSpeed * player.desiredVelocity.z;
+            this.movePlayerInAir(player, tslf);
+          } else {
+            this.movePlayerOnGround(player, tslf);
+          }
+        } else {
+          this.movePlayerInAir(player, tslf);
+        }
       }
 
       player.position.x += player.velocity.x * tslf;

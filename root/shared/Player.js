@@ -99,23 +99,17 @@ define([
       },
 
       update: function(tslf) {
-        // TODO: the freefloat stuff really needs to be moved INTO the physics
-        // manager
+        this.desiredVelocity.x = this.strafe * Math.cos(this.rotation.yaw) +
+          Math.cos(this.rotation.pitch) * this.walk * Math.sin(this.rotation.yaw);
+        this.desiredVelocity.z = -this.strafe * Math.sin(this.rotation.yaw) +
+          Math.cos(this.rotation.pitch) * this.walk * Math.cos(this.rotation.yaw);
         if (this.freeFloat) {
-          this.position.x += this.strafe * Math.cos(this.rotation.yaw) +
-            Math.cos(this.rotation.pitch) * this.walk * Math.sin(this.rotation.yaw);
-          this.position.y -= this.walk * Math.sin(this.rotation.pitch);
-          this.position.z += -this.strafe * Math.sin(this.rotation.yaw) +
-            Math.cos(this.rotation.pitch) * this.walk * Math.cos(this.rotation.yaw);
-          this.desiredVelocity.x = 0.0;
-          this.desiredVelocity.y = 0.0;
-          this.desiredVelocity.z = 0.0;
+          this.desiredVelocity.y = -this.walk * Math.sin(this.rotation.pitch);
+          this.desiredVelocity.x *= 10;
+          this.desiredVelocity.y *= 10;
+          this.desiredVelocity.z *= 10;
         } else {
-          this.desiredVelocity.x = this.strafe * Math.cos(this.rotation.yaw) +
-              this.walk * Math.sin(this.rotation.yaw);
           this.desiredVelocity.y = 0.0;
-          this.desiredVelocity.z = this.walk * Math.cos(this.rotation.yaw) -
-              this.strafe * Math.sin(this.rotation.yaw);
           this.desiredVelocity = Globals.normalize(this.desiredVelocity);
           if (this.jump) {
             this.jump = false;
