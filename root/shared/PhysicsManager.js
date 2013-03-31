@@ -22,8 +22,7 @@ define([
           player.position.y = terrainHeight + 0.0005;
         }
 
-        if (player.freeFloat) {
-        } else if (player.onGround && player.position.y - 0.001 <= terrainHeight) {
+        if (player.onGround && player.position.y - 0.001 <= terrainHeight) {
           if (player.desiredVelocity.y > 0.0) {
             player.velocity.x = this.moveSpeed * player.desiredVelocity.x;
             player.velocity.y = player.desiredVelocity.y;

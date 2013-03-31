@@ -2,7 +2,6 @@ define([
     'shared/InputGlobals',
   ], function(InputGlobals) {
   return {
-    bitArray: 0,
     canvas: null,
     keys: [],
     mouseDelta: {x: 0, y: 0},
@@ -74,13 +73,15 @@ define([
           (this.processQueue.indexOf(InputGlobals.TOGGLE_BUILD) != -1) +
         InputGlobals.TOGGLE_CAMERA *
           (this.processQueue.indexOf(InputGlobals.TOGGLE_CAMERA) != -1);
-      this.networkManager.sendMessage({input: {
-        bitArray: bitArray,
-        mouseDelta: {
-          x: this.mouseDelta.x,
-          y: this.mouseDelta.y
+      this.networkManager.sendMessage({
+        input: {
+          bitArray: bitArray,
+          mouseDelta: {
+            x: this.mouseDelta.x,
+            y: this.mouseDelta.y
+          }
         }
-      }});
+      });
     },
 
     processSubscriptionQueue: function() {
@@ -138,7 +139,7 @@ define([
       }
     },
 
-    // TODO: fix the fact that there are two of these functions
+    // TODO: fix the fact that there are two of these functions...
     isKeyPressed: function() {
       for (var i in arguments) {
         var keyCode = arguments[i];

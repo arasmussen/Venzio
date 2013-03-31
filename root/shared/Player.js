@@ -94,7 +94,8 @@ define([
       getState: function() {
         return (
           0x0001 * this.buildMode +
-          0x0002 * this.freeFloat
+          0x0002 * this.freeFloat +
+          0x0004 * this.onGround
         );
       },
 

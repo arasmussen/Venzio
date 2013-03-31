@@ -18,7 +18,8 @@ define([
         this.camera = new Camera(this.player);
         this.networkManager = new NetworkManager(
           this.player,
-          this.terrainManager
+          this.terrainManager,
+          this.physicsManager
         );
         InputManager.networkManager = this.networkManager;
       },
@@ -39,6 +40,7 @@ define([
         this.terrainManager.update(this.player.position);
 
         this.physicsManager.movePlayer(this.player, tslf);
+        this.networkManager.snapshot(tslf);
       },
 
       drawWorld: function() {

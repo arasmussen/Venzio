@@ -13,7 +13,6 @@ define([
           yaw: 0
         };
 
-        var state = 0;
         var radius = 1.0;
         var height = 5.0;
         var bottom = {
@@ -53,8 +52,8 @@ define([
 
       setState: function(state) {
         // TODO: refactor
-        this.buildMode = Boolean(0x0001 & state);
-        this.freeFloat = Boolean(0x0002 & state);
+        this.buildMode = Boolean(0x0001 & state.toggles);
+        this.freeFloat = Boolean(0x0002 & state.toggles);
       }
     });
   }

@@ -14,11 +14,7 @@ define([
         for (var id in this.clients) {
           var tslf = this.clients[id].update();
           this.terrainManager.update(this.clients[id].player.position);
-          // TODO: this should be moved into the physics manager (for both
-          // client and server)
-          if (!this.clients[id].player.freeFloat) {
-            this.physicsManager.movePlayer(this.clients[id].player, tslf);
-          }
+          this.physicsManager.movePlayer(this.clients[id].player, tslf);
         }
       },
 
@@ -29,7 +25,9 @@ define([
             id: id,
             position: this.clients[id].player.position,
             rotation: this.clients[id].player.rotation,
-            state: this.clients[id].player.getState()
+            velocity: this.clients[id].player.velocity,
+            state: this.clients[id].player.getState(),
+            time: (new Date()).valueOf()
           });
         }
         for (var id in this.clients) {
