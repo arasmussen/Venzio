@@ -17,7 +17,7 @@ define([
       socket: null,
 
       positionThreshold: 2.0,
-      timeThreshold: 8,
+      timeThreshold: 6,
 
       constructor: function(player, terrainManager, physicsManager) {
         this.player = player;
@@ -31,7 +31,6 @@ define([
       },
 
       onServerInit: function(data) {
-        console.log('connected');
         this.id = data.id;
         this.connected = true;
 
@@ -153,10 +152,9 @@ define([
 
         // if we need to correct too much then just snap, otherwise try to
         // interpolate
-
-        // TODO: figure out how to copy objects better
-        // var position_difference = Globals.distance(this.snapshots[0].position, data.position);
+        // var position_difference = Globals.distance(dummyPlayer.position, data.position);
         // if (position_difference > this.positionThreshold) {
+        //   console.log('snapped!');
         //   dummyPlayer.position.x = data.position.x;
         //   dummyPlayer.position.y = data.position.y;
         //   dummyPlayer.position.z = data.position.z;
@@ -164,14 +162,13 @@ define([
         //   dummyPlayer.velocity.y = data.velocity.y;
         //   dummyPlayer.velocity.z = data.velocity.z;
         // } else {
-        //   dummyPlayer.position.x = this.snapshots[0].position.x * 0.9 + data.position.x * 0.1;
-        //   dummyPlayer.position.y = this.snapshots[0].position.y * 0.9 + data.position.y * 0.1;
-        //   dummyPlayer.position.z = this.snapshots[0].position.z * 0.9 + data.position.z * 0.1;
-        //   dummyPlayer.velocity.x = this.snapshots[0].velocity.x * 0.9 + data.velocity.x * 0.1;
-        //   dummyPlayer.velocity.y = this.snapshots[0].velocity.y * 0.9 + data.velocity.y * 0.1;
-        //   dummyPlayer.velocity.z = this.snapshots[0].velocity.z * 0.9 + data.velocity.z * 0.1;
+        //   dummyPlayer.position.x = dummyPlayer.position.x * 0.9 + data.position.x * 0.1;
+        //   dummyPlayer.position.y = dummyPlayer.position.y * 0.9 + data.position.y * 0.1;
+        //   dummyPlayer.position.z = dummyPlayer.position.z * 0.9 + data.position.z * 0.1;
+        //   dummyPlayer.velocity.x = dummyPlayer.velocity.x * 0.9 + data.velocity.x * 0.1;
+        //   dummyPlayer.velocity.y = dummyPlayer.velocity.y * 0.9 + data.velocity.y * 0.1;
+        //   dummyPlayer.velocity.z = dummyPlayer.velocity.z * 0.9 + data.velocity.z * 0.1;
         // }
-        // dummyPlayer.onGround = Boolean(this.snapshots[0].state & 0x0004);
 
         // fast forward through more physics
         for (var i in this.snapshots) {
