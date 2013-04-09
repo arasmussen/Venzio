@@ -6,36 +6,39 @@ define([
   ],
   function(Globals, Peer, io, Base) {
     return Base.extend({
-      address: Globals.address,
-      connected: false,
-      peers: {},
-      pingID: 0,
-      pings: [],
-      port: Globals.port,
-      serverTimeOffset: null,
-      snapshots: [],
-      socket: null,
+      constructor: function() {
+        this.address = Globals.address;
+        this.connected = false;
+        this.peers = {};
+        this.pingID = 0;
+        this.pings = [];
+        this.port = Globals.port;
+        this.serverTimeOffset = null;
+        this.snapshots = [];
+        this.socket = null;
 
-      positionThreshold: 2.0,
-      timeThreshold: 6,
+        this.positionThreshold = 2.0;
+        this.timeThreshold = 5;
+      },
 
-      constructor: function(player, terrainManager, physicsManager) {
-        this.player = player;
-        this.terrainManager = terrainManager;
-        this.physicsManager = physicsManager;
-
+      connect: function() {
         this.socket = new io.connect(this.address, {port: this.port});
         this.socket.on('msg', this.onServerMessage.bind(this));
         this.socket.on('init', this.onServerInit.bind(this));
         this.socket.on('reply', this.onPingReply.bind(this));
       },
 
+      startGame: function(player, terrainManager, physicsManager) {
+        this.player = player;
+        this.terrainManager = terrainManager;
+        this.physicsManager = physicsManager;
+      },
+
       onServerInit: function(data) {
         this.id = data.id;
-        this.connected = true;
-
-        this.pingServer(function(ping, serverTime) {
-          this.serverTimeOffset = serverTime.valueOf() - (new Date()).valueOf();
+        this.pingServer(function(ping, offset) {
+          this.serverTimeOffset = offset;
+          this.connected = true;
         }.bind(this));
       },
 
@@ -152,23 +155,23 @@ define([
 
         // if we need to correct too much then just snap, otherwise try to
         // interpolate
-        // var position_difference = Globals.distance(dummyPlayer.position, data.position);
-        // if (position_difference > this.positionThreshold) {
-        //   console.log('snapped!');
-        //   dummyPlayer.position.x = data.position.x;
-        //   dummyPlayer.position.y = data.position.y;
-        //   dummyPlayer.position.z = data.position.z;
-        //   dummyPlayer.velocity.x = data.velocity.x;
-        //   dummyPlayer.velocity.y = data.velocity.y;
-        //   dummyPlayer.velocity.z = data.velocity.z;
-        // } else {
-        //   dummyPlayer.position.x = dummyPlayer.position.x * 0.9 + data.position.x * 0.1;
-        //   dummyPlayer.position.y = dummyPlayer.position.y * 0.9 + data.position.y * 0.1;
-        //   dummyPlayer.position.z = dummyPlayer.position.z * 0.9 + data.position.z * 0.1;
-        //   dummyPlayer.velocity.x = dummyPlayer.velocity.x * 0.9 + data.velocity.x * 0.1;
-        //   dummyPlayer.velocity.y = dummyPlayer.velocity.y * 0.9 + data.velocity.y * 0.1;
-        //   dummyPlayer.velocity.z = dummyPlayer.velocity.z * 0.9 + data.velocity.z * 0.1;
-        // }
+        var position_difference = Globals.distance(dummyPlayer.position, data.position);
+        if (position_difference > this.positionThreshold) {
+          console.log('snapped!');
+          dummyPlayer.position.x = data.position.x;
+          dummyPlayer.position.y = data.position.y;
+          dummyPlayer.position.z = data.position.z;
+          dummyPlayer.velocity.x = data.velocity.x;
+          dummyPlayer.velocity.y = data.velocity.y;
+          dummyPlayer.velocity.z = data.velocity.z;
+        } else {
+          dummyPlayer.position.x = dummyPlayer.position.x * 0.9 + data.position.x * 0.1;
+          dummyPlayer.position.y = dummyPlayer.position.y * 0.9 + data.position.y * 0.1;
+          dummyPlayer.position.z = dummyPlayer.position.z * 0.9 + data.position.z * 0.1;
+          dummyPlayer.velocity.x = dummyPlayer.velocity.x * 0.9 + data.velocity.x * 0.1;
+          dummyPlayer.velocity.y = dummyPlayer.velocity.y * 0.9 + data.velocity.y * 0.1;
+          dummyPlayer.velocity.z = dummyPlayer.velocity.z * 0.9 + data.velocity.z * 0.1;
+        }
 
         // fast forward through more physics
         for (var i in this.snapshots) {
@@ -185,28 +188,28 @@ define([
         }
 
         this.player.position.x = dummyPlayer.position.x;
-        this.player.position.x = dummyPlayer.position.x;
-        this.player.position.x = dummyPlayer.position.x;
+        this.player.position.y = dummyPlayer.position.y;
+        this.player.position.z = dummyPlayer.position.z;
         this.player.velocity.x = dummyPlayer.velocity.x;
-        this.player.velocity.x = dummyPlayer.velocity.x;
-        this.player.velocity.x = dummyPlayer.velocity.x;
+        this.player.velocity.y = dummyPlayer.velocity.y;
+        this.player.velocity.z = dummyPlayer.velocity.z;
         this.player.onGround = dummyPlayer.onGround;
       },
 
       pingServer: function(callback) {
-        this.pings[this.pingID] = {
+        var time = (new Date()).valueOf();
+        this.socket.emit('ping', {id: this.pingID, time: time});
+        this.pings[this.pingID++] = {
           callback: callback,
-          start: (new Date()).valueOf()
+          start: time
         };
-        this.socket.emit('ping', {id: this.pingID++});
       },
 
       onPingReply: function(data) {
         var ping = (new Date()).valueOf() - this.pings[data.id].start;
         var callback = this.pings[data.id].callback;
         delete this.pings[data.id];
-        var serverTime = new Date(data.time).valueOf() + ping / 2.0;
-        callback(ping, serverTime);
+        callback(ping, data.offset);
       },
 
       sendMessage: function(msg) {

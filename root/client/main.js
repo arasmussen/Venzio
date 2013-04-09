@@ -34,11 +34,15 @@ define([
         return;
       }
 
+      // connect to server
+      var networkManager = new NetworkManager();
+      networkManager.connect();
+
       InputManager.initialize(canvas);
 
-      var game = new Game();
+      var game = new Game(networkManager);
       var framerate = new Framerate('framerate');
-      var ping = new Ping('ping', game.networkManager);
+      var ping = new Ping('ping', networkManager);
       var lastFrameTime = new Date();
 
       var baseLoop = function() {

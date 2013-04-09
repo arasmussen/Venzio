@@ -4,6 +4,7 @@ define([
   ], function(Base, Client) {
     return Base.extend({
       clients: {},
+      dataQueue: [],
 
       constructor: function(terrainManager, physicsManager) {
         this.terrainManager = terrainManager;
@@ -15,13 +16,7 @@ define([
           var tslf = this.clients[id].update();
           this.terrainManager.update(this.clients[id].player.position);
           this.physicsManager.movePlayer(this.clients[id].player, tslf);
-        }
-      },
-
-      updateClients: function() {
-        var data = [];
-        for (var id in this.clients) {
-          data.push({
+          this.dataQueue.push({
             id: id,
             position: this.clients[id].player.position,
             rotation: this.clients[id].player.rotation,
@@ -30,9 +25,13 @@ define([
             time: (new Date()).valueOf()
           });
         }
+      },
+
+      updateClients: function() {
         for (var id in this.clients) {
-          this.clients[id].socket.emit('msg', data);
+          this.clients[id].socket.emit('msg', this.dataQueue);
         }
+        this.dataQueue = [];
       },
 
       addClient: function(socket) {

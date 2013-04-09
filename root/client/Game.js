@@ -3,24 +3,20 @@ define([
     'client/CTerrainManager',
     'client/Camera',
     'client/CInputManager',
-    'client/NetworkManager',
     'shared/PhysicsManager',
     'basejs',
     'client/meshes/GrassMesh'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, NetworkManager, PhysicsManager, Base, Grass) {
+  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass) {
     return Base.extend({
-      constructor: function() {
+      constructor: function(networkManager) {
         this.ready = false;
         this.terrainManager = new CTerrainManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.player = new CPlayer(InputManager, this.terrainManager);
         this.camera = new Camera(this.player);
-        this.networkManager = new NetworkManager(
-          this.player,
-          this.terrainManager,
-          this.physicsManager
-        );
+        this.networkManager = networkManager;
+        networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
         InputManager.networkManager = this.networkManager;
       },
 

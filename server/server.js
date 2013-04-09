@@ -41,9 +41,10 @@ define([
       },
 
       onPing: function(socket, data) {
+        var time = (new Date()).valueOf();
         socket.emit('reply', {
           id: data.id,
-          time: new Date()
+          offset: time - data.time
         });
       },
 
