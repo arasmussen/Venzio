@@ -17,7 +17,7 @@ define([
         this.snapshots = [];
         this.socket = null;
 
-        this.positionThreshold = 2.0;
+        this.positionThreshold = 1.0;
         this.timeThreshold = 5;
       },
 
