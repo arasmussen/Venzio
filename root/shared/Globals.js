@@ -1,6 +1,6 @@
 define(function() {
   return {
-    address: 'http://gfx.rasmuzen.com',
+    address: '/',
     port: 8080,
 
     // must be even!
