@@ -2,10 +2,10 @@ var requirejs = require('requirejs');
 
 requirejs.config({
   nodeRequire: require,
-  baseUrl: '..',
+  baseUrl: '../..',
   paths: {
     client: 'root/client',
-    server: 'server',
+    server: 'server/socket',
     shared: 'root/shared'
   }
 });
