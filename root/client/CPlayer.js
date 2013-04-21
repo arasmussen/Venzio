@@ -7,7 +7,7 @@ define([
     return Player.extend({
       constructor: function(inputManager, terrainManager) {
         this.base(inputManager, terrainManager);
-        this.buildObject = new WallMesh(this, terrainManager);
+        // this.buildObject = new WallMesh(this, terrainManager);
       },
 
       draw: function() {

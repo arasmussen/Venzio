@@ -5,9 +5,10 @@ define([
     'client/CInputManager',
     'shared/PhysicsManager',
     'basejs',
-    'client/meshes/GrassMesh'
+    'client/meshes/GrassMesh',
+    'client/meshes/WallMesh'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass) {
+  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass, Wall) {
     return Base.extend({
       constructor: function(networkManager) {
         this.ready = false;
@@ -18,6 +19,12 @@ define([
         this.networkManager = networkManager;
         networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
         InputManager.networkManager = this.networkManager;
+        this.walls = [];
+        for (var i = 0; i < 20; i++) {
+          for (var j = 0; j < 3; j++) {
+            this.walls[i * 3 + j] = new Wall(this.terrainManager, {x: i, y: j, z: 0.0}, {yaw: 0.0, pitch: 0.0});
+          }
+        }
       },
 
       mainLoop: function(tslf) {
@@ -49,6 +56,10 @@ define([
         this.camera.transform();
         this.player.draw();
         this.terrainManager.draw(this.player.position);
+
+        for (var i = 0; i < 60; i++) {
+          this.walls[i].draw();
+        }
 
         this.networkManager.drawPeers();
       },

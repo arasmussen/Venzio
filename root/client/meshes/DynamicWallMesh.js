@@ -4,9 +4,9 @@ define([
   ],
   function(Mesh, Wall) {
     return Mesh.extend({
-      constructor: function(terrainManager, position, rotation) {
+      constructor: function(attachee, terrainManager) {
         this.base();
-        this.wall = new Wall(terrainManager, position, rotation);
+        this.wall = new Wall(attachee, terrainManager);
         this.initialize();
       },
 

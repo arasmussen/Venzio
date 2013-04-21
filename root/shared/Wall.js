@@ -1,57 +1,76 @@
 define([
-    'shared/TerrainManager',
     'basejs'
   ],
-  function(TerrainManager, Base) {
+  function(Base) {
     return Base.extend({
-      constructor: function(attachee, terrainManager) {
-        this.attachee = attachee;
+      constructor: function(terrainManager, position, rotation) {
         this.terrainManager = terrainManager;
 
-        this.position = {x: 0.0, y: 0.0, z: 0.0};
-        this.rotation = {
-          yaw: this.attachee.rotation.yaw,
-          pitch: 0.0
-        };
+        this.position = position;
+        this.rotation = {pitch: 0.0, yaw: 0.0};
+        this.yaw = rotation.yaw;
 
         this.width = 1.0;
         this.depth = 0.1;
-        this.distance = 5.0;
         this.height = 1.0;
 
-        this.positionData = new Float32Array([
-          -this.width / 2, 0.0, -this.depth / 2,
-          -this.width / 2, 0.0, this.depth / 2,
-          -this.width / 2, this.height, -this.depth / 2,
-          -this.width / 2, this.height, this.depth / 2,
-          this.width / 2, 0.0, -this.depth / 2,
-          this.width / 2, 0.0, this.depth / 2,
-          this.width / 2, this.height, -this.depth / 2,
-          this.width / 2, this.height, this.depth / 2
-        ]);
+        this.updatePositionData();
       },
 
-      update: function() {
-        var yawComponent = {
-          x: Math.sin(this.attachee.rotation.yaw),
-          z: Math.cos(this.attachee.rotation.yaw)
+      updatePositionData: function() {
+        var width = {
+          x: (this.width * Math.cos(this.yaw)) / 2,
+          z: (this.width * Math.sin(this.yaw)) / 2
         };
-        this.position.x = this.attachee.position.x - this.distance * yawComponent.x;
-        this.position.z = this.attachee.position.z - this.distance * yawComponent.z;
-        this.position.y = this.terrainManager.getTerrainHeight(this.position);
-        for (var i = 0; i < 4; i++) {
-          var j = ((i < 2) ? (i * 3) : ((i + 2) * 3));
-          this.positionData[j + 1] = this.terrainManager.getTerrainHeight({
-            x: this.position.x +
-              (i < 2 ? -1.0 : 1.0) * (this.width / 2) * yawComponent.z +
-              (i % 2 == 0 ? -1.0 : 1.0) * (this.depth / 2) * yawComponent.x,
-            z: this.position.z +
-              (i % 2 == 0 ? -1.0 : 1.0) * (this.depth / 2) * yawComponent.z -
-              (i < 2 ? -1.0 : 1.0) * (this.width / 2) * yawComponent.x
-          }) - this.position.y;
-          this.positionData[j + 7] = this.positionData[j + 1] + 1.0;
-        }
-        this.rotation.yaw = this.attachee.rotation.yaw;
+        var depth = {
+          x: (this.depth * Math.sin(this.yaw)) / 2,
+          z: -(this.depth * Math.cos(this.yaw)) / 2
+        };
+
+        var front_left = {
+          x: -width.x - depth.x,
+          z: -width.z - depth.z
+        };
+        var front_right = {
+          x: width.x - depth.x,
+          z: width.z - depth.z
+        };
+        var back_left = {
+          x: -width.x + depth.x,
+          z: -width.z + depth.z
+        };
+        var back_right = {
+          x: width.x + depth.x,
+          z: width.z + depth.z
+        };
+
+        front_left.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + front_left.x,
+          z: this.position.z + front_left.z
+        });
+        front_right.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + front_right.x,
+          z: this.position.z + front_right.z
+        });
+        back_left.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + back_left.x,
+          z: this.position.z + back_left.z
+        });
+        back_right.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + back_right.x,
+          z: this.position.z + back_right.z
+        });
+
+        this.positionData = new Float32Array([
+          front_left.x, front_left.y, front_left.z,
+          back_left.x, back_left.y, back_left.z,
+          front_left.x, front_left.y + this.height, front_left.z,
+          back_left.x, back_left.y + this.height, back_left.z,
+          front_right.x, front_right.y, front_right.z,
+          back_right.x, back_right.y, back_right.z,
+          front_right.x, front_right.y + this.height, front_right.z,
+          back_right.x, back_right.y + this.height, back_right.z
+        ]);
       }
     });
   }

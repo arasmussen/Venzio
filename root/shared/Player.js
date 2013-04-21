@@ -22,7 +22,7 @@ define([
         this.walk = 0;
 
         this.buildMode = false;
-        this.buildObject = new Wall(this, terrainManager);
+        // this.buildObject = new Wall(this, terrainManager);
 
         this.inputManager = inputManager;
 
