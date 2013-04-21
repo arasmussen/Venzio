@@ -7,7 +7,16 @@ define([
       constructor: function(terrainManager, position, rotation) {
         this.base();
         this.wall = new Wall(terrainManager, position, rotation);
+        this.position = this.wall.position;
         this.initialize();
+      },
+
+      setPosition: function(x, y, z) {
+        this.wall.setPosition(x, y, z);
+      },
+
+      setYaw: function(yaw) {
+        this.wall.setYaw(yaw);
       },
 
       getPosition: function() {
@@ -18,8 +27,8 @@ define([
         return this.wall.rotation;
       },
 
-      update: function() {
-        this.wall.update();
+      updatePositionData: function() {
+        this.wall.updatePositionData();
       },
 
       getAttribData: function(attrib) {

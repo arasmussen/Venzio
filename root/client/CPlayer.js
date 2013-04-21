@@ -1,13 +1,11 @@
 define([
-    'client/meshes/WallMesh',
-    'shared/Player',
-    'shared/Globals'
+    'client/meshes/WallAttachmentMesh',
+    'shared/Player'
   ],
-  function(WallMesh, Player, Globals) {
+  function(WallAttachmentMesh, Player) {
     return Player.extend({
-      constructor: function(inputManager, terrainManager) {
-        this.base(inputManager, terrainManager);
-        // this.buildObject = new WallMesh(this, terrainManager);
+      getAttachmentType: function() {
+        return WallAttachmentMesh;
       },
 
       draw: function() {

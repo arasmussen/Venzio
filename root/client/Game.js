@@ -6,25 +6,21 @@ define([
     'shared/PhysicsManager',
     'basejs',
     'client/meshes/GrassMesh',
-    'client/meshes/WallMesh'
+    'client/meshes/WallMesh',
+    'client/WallManager'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass, Wall) {
+  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
     return Base.extend({
       constructor: function(networkManager) {
         this.ready = false;
         this.terrainManager = new CTerrainManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
-        this.player = new CPlayer(InputManager, this.terrainManager);
+        this.wallManager = new WallManager();
+        this.player = new CPlayer(InputManager, this.terrainManager, this.wallManager);
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;
         networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
         InputManager.networkManager = this.networkManager;
-        this.walls = [];
-        for (var i = 0; i < 20; i++) {
-          for (var j = 0; j < 3; j++) {
-            this.walls[i * 3 + j] = new Wall(this.terrainManager, {x: i, y: j, z: -10.0}, {yaw: 0.0, pitch: 0.0});
-          }
-        }
       },
 
       mainLoop: function(tslf) {
@@ -57,11 +53,8 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        for (var i = 0; i < 60; i++) {
-          this.walls[i].draw();
-        }
-
         this.networkManager.drawPeers();
+        this.wallManager.drawWalls();
       },
 
       setID: function(data) {

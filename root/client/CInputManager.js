@@ -4,6 +4,7 @@ define([
   return {
     canvas: null,
     keys: [],
+    mouseClicks: 0,
     mouseDelta: {x: 0, y: 0},
     pointerLocked: false,
     processQueue: [],
@@ -36,6 +37,12 @@ define([
         };
         this.mouseDelta.x += movement.x;
         this.mouseDelta.y += movement.y;
+      }
+    },
+
+    onMouseUp: function(e) {
+      if (this.pointerLocked === true) {
+        this.mouseClicks++;
       }
     },
 
@@ -102,6 +109,7 @@ define([
       document.onkeyup = this.onKeyUp.bind(this);
 
       // mouse stuff
+      document.onmouseup = this.onMouseUp.bind(this);
       document.onmousemove = this.onMouseMoved.bind(this);
 
       // pointer lock stuff
@@ -119,6 +127,12 @@ define([
       var delta = {x: this.mouseDelta.x, y: this.mouseDelta.y};
       this.mouseDelta = {x: 0, y: 0};
       return delta;
+    },
+
+    getMouseClicks: function() {
+      var clicks = this.mouseClicks;
+      this.mouseClicks = 0;
+      return clicks;
     },
 
     // TODO: refactor

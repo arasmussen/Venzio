@@ -1,12 +1,12 @@
 define([
-    'shared/Wall',
+    'shared/WallAttachment',
     'shared/InputGlobals',
     'shared/Globals',
     'basejs'
   ],
   function(Wall, InputGlobals, Globals, Base) {
     return Base.extend({
-      constructor: function(inputManager, terrainManager) {
+      constructor: function(inputManager, terrainManager, wallManager) {
         this.rotateSpeed = 1/250;
         this.position = {x: 0.0, y: 10.0, z: 0.0};
         this.velocity = {x: 0.0, y: 0.0, z: 0.0};
@@ -21,9 +21,11 @@ define([
         this.strafe = 0;
         this.walk = 0;
 
+        var attachmentType = this.getAttachmentType();
+        this.buildObject = new attachmentType(this, terrainManager);
         this.buildMode = false;
-        // this.buildObject = new Wall(this, terrainManager);
 
+        this.wallManager = wallManager;
         this.inputManager = inputManager;
 
         this.inputManager.subscribe(
@@ -36,12 +38,17 @@ define([
         );
       },
 
+      getAttachmentType: function() {
+        return WallAttachment;
+      },
+
       handleInput: function() {
         this.inputManager.update();
 
         this.handlePositionInput();
         this.handleRotationInput();
         this.handleJumpInput();
+        this.handleBuildInput();
       },
 
       handlePositionInput: function() {
@@ -83,12 +90,24 @@ define([
         }
       },
 
+      handleBuildInput: function() {
+        var mouseClicks = this.inputManager.getMouseClicks();
+        if (this.buildMode && mouseClicks > 0) {
+          this.build();
+        }
+      },
+
       toggleFreeFloatMode: function() {
         this.freeFloat = !this.freeFloat;
       },
 
       toggleBuildMode: function() {
         this.buildMode = !this.buildMode;
+      },
+
+      build: function() {
+        this.wallManager.add(this.buildObject.wall);
+        this.buildObject.getNewWall();
       },
 
       getState: function() {
@@ -120,12 +139,6 @@ define([
 
         if (this.buildMode) {
           this.buildObject.update();
-        }
-      },
-
-      draw: function() {
-        if (this.buildMode) {
-          this.buildObject.draw();
         }
       }
     });

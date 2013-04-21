@@ -17,6 +17,16 @@ define([
         this.updatePositionData();
       },
 
+      setPosition: function(x, y, z) {
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
+      },
+
+      setYaw: function(yaw) {
+        this.yaw = yaw;
+      },
+
       updatePositionData: function() {
         var width = {
           x: (this.width * Math.cos(this.yaw)) / 2,
