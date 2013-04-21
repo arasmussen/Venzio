@@ -22,7 +22,7 @@ define([
         this.walls = [];
         for (var i = 0; i < 20; i++) {
           for (var j = 0; j < 3; j++) {
-            this.walls[i * 3 + j] = new Wall(this.terrainManager, {x: i, y: j, z: 5.0}, {yaw: 0.0, pitch: 0.0});
+            this.walls[i * 3 + j] = new Wall(this.terrainManager, {x: i, y: j, z: -10.0}, {yaw: 0.0, pitch: 0.0});
           }
         }
       },
