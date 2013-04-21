@@ -6,7 +6,8 @@ define([
     return Base.extend({
       constructor: function() {
         this.walls = [];
-        this.snapDistance = 2.0;
+        this.snappingThreshold = 0.3;
+        this.candidateThreshold = this.snappingThreshold + 1.0;
       },
 
       add: function(wall) {
@@ -17,12 +18,11 @@ define([
         var candidates = [];
         for (var i in this.walls) {
           var testWall = this.walls[i];
-          if (Globals.distance(wall.position, testWall.position) < this.snapDistance) {
+          if (Globals.distance(wall.position, testWall.position) < this.candidateThreshold) {
             candidates.push(testWall);
           }
         }
 
-        var minDistance = 1.0;
         var bestPosition = {
           x: wall.position.x,
           y: wall.position.y,
@@ -38,7 +38,7 @@ define([
             for (var k in sideNames) {
               var side2 = sideNames[k];
               var distance = Globals.distance(sides[side1], testSides[side2]);
-              if (distance < minDistance) {
+              if (distance < this.snappingThreshold) {
                 var diff = {
                   x: testSides[side2].x - sides[side1].x,
                   y: testSides[side2].y - sides[side1].y,
