@@ -22,7 +22,7 @@ define([
         this.walk = 0;
 
         var attachmentType = this.getAttachmentType();
-        this.buildObject = new attachmentType(this, terrainManager);
+        this.buildObject = new attachmentType(this, terrainManager, wallManager);
         this.buildMode = false;
 
         this.wallManager = wallManager;

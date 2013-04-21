@@ -27,6 +27,10 @@ define([
         return this.wall.rotation;
       },
 
+      getSides: function() {
+        return this.wall.getSides();
+      },
+
       updatePositionData: function() {
         this.wall.updatePositionData();
       },

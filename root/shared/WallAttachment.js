@@ -3,9 +3,10 @@ define([
   ],
   function(Base) {
     return Base.extend({
-      constructor: function(attachee, terrainManager) {
+      constructor: function(attachee, terrainManager, wallManager) {
         this.attachee = attachee;
         this.terrainManager = terrainManager;
+        this.wallManager = wallManager;
         this.distance = 5.0;
 
         this.getNewWall();
@@ -31,6 +32,7 @@ define([
           this.attachee.position.z - this.distance * yawComponent.z
         );
         this.wall.setYaw(-this.attachee.rotation.yaw);
+        this.wallManager.tryToSnapWall(this.wall);
 
         this.wall.updatePositionData();
       },

@@ -27,6 +27,25 @@ define([
         this.yaw = yaw;
       },
 
+      getSides: function() {
+        var width = {
+          x: (this.width * Math.cos(this.yaw)) / 2,
+          z: (this.width * Math.sin(this.yaw)) / 2
+        };
+        return {
+          left: {
+            x: this.position.x - width.x,
+            y: this.position.y - this.height / 2.0,
+            z: this.position.z - width.z
+          },
+          right: {
+            x: this.position.x + width.x,
+            y: this.position.y - this.height / 2.0,
+            z: this.position.z + width.z
+          }
+        };
+      },
+
       updatePositionData: function() {
         var width = {
           x: (this.width * Math.cos(this.yaw)) / 2,

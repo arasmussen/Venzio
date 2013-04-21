@@ -1,14 +1,60 @@
 define([
-    'basejs'
+    'basejs',
+    'shared/Globals'
   ],
-  function(Base) {
+  function(Base, Globals) {
     return Base.extend({
       constructor: function() {
         this.walls = [];
+        this.snapDistance = 2.0;
       },
 
       add: function(wall) {
         this.walls.push(wall);
+      },
+
+      tryToSnapWall: function(wall) {
+        var candidates = [];
+        for (var i in this.walls) {
+          var testWall = this.walls[i];
+          if (Globals.distance(wall.position, testWall.position) < this.snapDistance) {
+            candidates.push(testWall);
+          }
+        }
+
+        var minDistance = 1.0;
+        var bestPosition = {
+          x: wall.position.x,
+          y: wall.position.y,
+          z: wall.position.z
+        };
+        var sides = wall.getSides();
+        for (var i in candidates) {
+          var testWall = candidates[i];
+          var testSides = testWall.getSides();
+          var sideNames = ['left', 'right'];
+          for (var j in sideNames) {
+            var side1 = sideNames[j];
+            for (var k in sideNames) {
+              var side2 = sideNames[k];
+              var distance = Globals.distance(sides[side1], testSides[side2]);
+              if (distance < minDistance) {
+                var diff = {
+                  x: testSides[side2].x - sides[side1].x,
+                  y: testSides[side2].y - sides[side1].y,
+                  z: testSides[side2].z - sides[side1].z
+                };
+                bestPosition.x = wall.position.x + diff.x;
+                bestPosition.y = wall.position.y + diff.y;
+                bestPosition.z = wall.position.z + diff.z;
+                minDistance = distance;
+              }
+            }
+          }
+        }
+        wall.position.x = bestPosition.x;
+        wall.position.y = bestPosition.y;
+        wall.position.z = bestPosition.z;
       },
 
       drawWalls: function() {
