@@ -22,7 +22,7 @@ define([
         };
 
         this.buildMode = false;
-        this.buildObject = new Wall(this, terrainManager);
+        // this.buildObject = new Wall(this, terrainManager);
 
         this.freeFloat = false;
         this.capsule = new Capsule(bottom, radius, height);
