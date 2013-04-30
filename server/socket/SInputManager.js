@@ -11,6 +11,7 @@ define([
           x: 0,
           y: 0
         };
+        this.mouseClicks = 0;
         this.subscriptions = [];
         this.processQueue = [];
       },
@@ -45,6 +46,12 @@ define([
         this.mouseDelta.x = 0;
         this.mouseDelta.y = 0;
         return ret;
+      },
+
+      getMouseClicks: function() {
+        var clicks = this.mouseClicks;
+        this.mouseClicks = 0;
+        return clicks;
       },
 
       handleInput: function(input) {

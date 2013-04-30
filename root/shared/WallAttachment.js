@@ -1,7 +1,8 @@
 define([
-    'basejs'
+    'basejs',
+    'shared/Wall'
   ],
-  function(Base) {
+  function(Base, Wall) {
     return Base.extend({
       constructor: function(attachee, terrainManager, wallManager) {
         this.attachee = attachee;

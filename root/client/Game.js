@@ -7,7 +7,7 @@ define([
     'basejs',
     'client/meshes/GrassMesh',
     'client/meshes/WallMesh',
-    'client/WallManager'
+    'shared/WallManager'
   ],
   function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
     return Base.extend({

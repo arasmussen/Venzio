@@ -3,9 +3,10 @@ define([
     'server/db',
     'server/ClientManager',
     'shared/PhysicsManager',
-    'shared/TerrainManager'
+    'shared/TerrainManager',
+    'shared/WallManager'
   ],
-  function(io, db, ClientManager, PhysicsManager, TerrainManager) {
+  function(io, db, ClientManager, PhysicsManager, TerrainManager, WallManager) {
     return {
       main: function() {
         // set up socket connect/disconnect hooks
@@ -22,9 +23,11 @@ define([
         };
 
         this.terrainManager = new TerrainManager();
+        this.wallManager = new WallManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.clientManager = new ClientManager(
           this.terrainManager,
+          this.wallManager,
           this.physicsManager
         );
       },

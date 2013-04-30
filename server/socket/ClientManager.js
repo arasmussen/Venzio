@@ -6,8 +6,9 @@ define([
       clients: {},
       dataQueue: [],
 
-      constructor: function(terrainManager, physicsManager) {
+      constructor: function(terrainManager, wallManager, physicsManager) {
         this.terrainManager = terrainManager;
+        this.wallManager = wallManager;
         this.physicsManager = physicsManager;
       },
 
@@ -35,7 +36,7 @@ define([
       },
 
       addClient: function(socket) {
-        this.clients[socket.id] = new Client(socket, this.terrainManager);
+        this.clients[socket.id] = new Client(socket, this.terrainManager, this.wallManager);
       },
 
       removeClient: function(socket) {

@@ -4,7 +4,7 @@ define([
     'shared/Globals',
     'basejs'
   ],
-  function(Wall, InputGlobals, Globals, Base) {
+  function(WallAttachment, InputGlobals, Globals, Base) {
     return Base.extend({
       constructor: function(inputManager, terrainManager, wallManager) {
         this.rotateSpeed = 1/250;
