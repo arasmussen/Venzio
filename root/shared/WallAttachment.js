@@ -8,7 +8,7 @@ define([
         this.attachee = attachee;
         this.terrainManager = terrainManager;
         this.wallManager = wallManager;
-        this.maxDistance = 7.0;
+        this.maxDistance = 4.0;
 
         this.getNewWall();
         this.update();
@@ -40,8 +40,9 @@ define([
         }
 
         var interpolate = false;
-        for (var distance = 0; distance <= this.maxDistance; distance += 0.1) {
-          var terrainHeight = this.terrainManager.getTerrainHeight({
+        for (var i = 0; i <= 100; i++) {
+          var distance = this.maxDistance * i / 100;
+          terrainHeight = this.terrainManager.getTerrainHeight({
             x: attacheePosition.x + distance * looking.x,
             z: attacheePosition.z + distance * looking.z
           });
