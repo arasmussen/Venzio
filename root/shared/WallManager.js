@@ -28,10 +28,10 @@ define([
           y: wall.position.y,
           z: wall.position.z
         };
-        var sides = wall.getSides();
+        var sides = wall.getSnapData();
         for (var i in candidates) {
           var testWall = candidates[i];
-          var testSides = testWall.getSides();
+          var testSides = testWall.getSnapData();
           var sideNames = ['left', 'right'];
           for (var j in sideNames) {
             var side1 = sideNames[j];

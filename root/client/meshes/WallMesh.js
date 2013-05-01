@@ -11,12 +11,12 @@ define([
         this.initialize();
       },
 
-      setPosition: function(x, y, z) {
-        this.wall.setPosition(x, y, z);
+      setPosition: function(position) {
+        this.wall.setPosition(position);
       },
 
-      setYaw: function(yaw) {
-        this.wall.setYaw(yaw);
+      setRotation: function(rotation) {
+        this.wall.setRotation(rotation);
       },
 
       getPosition: function() {
@@ -27,8 +27,8 @@ define([
         return this.wall.rotation;
       },
 
-      getSides: function() {
-        return this.wall.getSides();
+      getSnapData: function() {
+        return this.wall.getSnapData();
       },
 
       updatePositionData: function() {
