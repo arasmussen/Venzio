@@ -11,7 +11,7 @@ var extensions = {
   'jpeg': {contentType: 'image/jpeg', binary: true},
   'jpg': {contentType: 'image/jpeg', binary: true},
   'png': {contentType: 'image/png', binary: true},
-  'ico': {contentType: 'image/ico', binary: true},
+  'ico': {contentType: 'image/x-icon', binary: true},
   'other': {contentType: 'text/plain', binary: false}
 };
 
