@@ -29,13 +29,23 @@ define([
           z: -Math.cos(this.attachee.rotation.pitch) * Math.cos(this.attachee.rotation.yaw)
         };
 
+        var attacheePosition = {
+          x: this.attachee.position.x,
+          y: this.attachee.position.y,
+          z: this.attachee.position.z
+        };
+        var terrainHeight = this.terrainManager.getTerrainHeight(this.attachee.position);
+        if (terrainHeight > this.attachee.position.y) {
+          attacheePosition.y = terrainHeight;
+        }
+
         var interpolate = false;
         for (var distance = 0; distance <= this.maxDistance; distance += 0.1) {
           var terrainHeight = this.terrainManager.getTerrainHeight({
-            x: this.attachee.position.x + distance * looking.x,
-            z: this.attachee.position.z + distance * looking.z
+            x: attacheePosition.x + distance * looking.x,
+            z: attacheePosition.z + distance * looking.z
           });
-          if (terrainHeight > this.attachee.position.y + distance * looking.y + 2.0) {
+          if (terrainHeight > attacheePosition.y + distance * looking.y + 2.0) {
             // wall collides with ground, need to binary search
             interpolate = true;
             break;
@@ -49,12 +59,12 @@ define([
           while (true) {
             var distance = (lower + upper) / 2.0;
             var terrainHeight = this.terrainManager.getTerrainHeight({
-              x: this.attachee.position.x + distance * looking.x,
-              z: this.attachee.position.z + distance * looking.z
+              x: attacheePosition.x + distance * looking.x,
+              z: attacheePosition.z + distance * looking.z
             });
-            if (this.attachee.position.y + distance * looking.y + 2.0 <= terrainHeight) {
+            if (attacheePosition.y + distance * looking.y + 2.0 <= terrainHeight) {
               upper = distance;
-            } else if (this.attachee.position.y + distance * looking.y + 2.0 - terrainHeight <= 0.01) {
+            } else if (attacheePosition.y + distance * looking.y + 2.0 - terrainHeight <= 0.01) {
               break;
             } else {
               lower = distance;
@@ -63,11 +73,11 @@ define([
         } else {
           distance = this.maxDistance;
         }
-        
+
         this.wall.setPosition({
-          x: this.attachee.position.x + distance * looking.x,
-          y: this.attachee.position.y + distance * looking.y + 2.0,
-          z: this.attachee.position.z + distance * looking.z
+          x: attacheePosition.x + distance * looking.x,
+          y: attacheePosition.y + distance * looking.y + 2.0,
+          z: attacheePosition.z + distance * looking.z
         });
         this.wall.setRotation({
           pitch: 0.0,
