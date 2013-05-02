@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 precision mediump float;
 
 attribute vec3 Position;

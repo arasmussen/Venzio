@@ -1,5 +1,8 @@
 #!/bin/sh
+# Copyright (c) Venzio 2013 All Rights Reserved
+#
 # this is my super unrobust script to count the lines in the project
+
 
 pushd `dirname $0` < /dev/null
 

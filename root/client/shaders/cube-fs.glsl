@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 precision mediump float;
 
 uniform sampler2D wood_texture;

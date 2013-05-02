@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 attribute vec3 Position;
 attribute vec4 Color;
 
