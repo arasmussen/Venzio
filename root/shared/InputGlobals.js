@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 define(function() {
   return {
     UP:             0x0001,

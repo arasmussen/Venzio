@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 var fs = require('fs');
 
 var Buffer = require('Buffer');

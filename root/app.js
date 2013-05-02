@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 requirejs.config({
   baseUrl: '.',
   urlArgs: 'bust=' + (new Date()).getTime(),

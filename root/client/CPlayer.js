@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 define([
     'client/meshes/WallAttachmentMesh',
     'shared/Player'

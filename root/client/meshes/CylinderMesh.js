@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 define([
     'shared/primitives/Cylinder',
     'client/meshes/PrimitiveMesh'

@@ -1,3 +1,5 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
 define(['client/Mesh'], function(Mesh) {
   return Mesh.extend({
     constructor: function() {
