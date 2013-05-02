@@ -40,17 +40,6 @@ define([
       networkManager.connect(callback);
     }
 
-    var handleFailure = function(pass) {
-      if (pass == -1) {
-        console.log('main was called with a value of false');
-      } else if (pass == 0) {
-        console.log('WebGL context couldn\'t be created');
-      } else if (pass == 1) {
-        console.log('Couldn\'t connect to the server');
-        setTimeout(main.bind(null, true), 0); // play anyways...
-      }
-    }
-
     var loadingHeader = $('#loading h3');
     var loadingDone = $('#loading-done');
     var loadingToDo = $('#loading-todo');
@@ -75,6 +64,19 @@ define([
       }
     }
 
+    var handleFailure = function(pass) {
+      if (pass == -1) {
+        console.log('main was called with a value of false');
+      } else if (pass == 0) {
+        console.log('WebGL context couldn\'t be created');
+      } else if (pass == 1) {
+        console.log('Couldn\'t connect to the server');
+        loadingHeader.html('Failed, starting single player game');
+        updateLoadingBar(imageWidth * 0.95);
+        setTimeout(main.bind(null, true), 0); // play anyways...
+      }
+    }
+
     var pass = -1;
     var canvas = document.getElementById('canvas');
     var networkManager = new NetworkManager();
@@ -83,10 +85,9 @@ define([
       if (!success) {
         handleFailure(pass);
         return;
-      } else {
-        handleSuccess(pass);
       }
 
+      handleSuccess(pass);
       pass++;
 
       if (pass == 0) {
