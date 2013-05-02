@@ -21,11 +21,27 @@ define([
         this.timeThreshold = 5;
       },
 
-      connect: function() {
+      connect: function(callback) {
         this.socket = new io.connect(this.address, {port: this.port});
         this.socket.on('msg', this.onServerMessage.bind(this));
         this.socket.on('init', this.onServerInit.bind(this));
         this.socket.on('reply', this.onPingReply.bind(this));
+
+        var checks = 0;
+        var maxChecks = 500;
+        var checkInterval = 10;
+
+        var checkConnection = function() {
+          checks++;
+          if (this.connected) {
+            setTimeout(callback.bind(null, true), 0);
+          } else if (checks < maxChecks) {
+            setTimeout(checkConnection.bind(this), checkInterval);
+          } else {
+            setTimeout(callback.bind(null, false), 0);
+          }
+        }
+        setTimeout(checkConnection.bind(this), checkInterval);
       },
 
       startGame: function(player, terrainManager, physicsManager) {

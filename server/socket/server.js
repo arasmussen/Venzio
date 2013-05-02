@@ -33,6 +33,7 @@ define([
       },
 
       onConnect: function(socket) {
+        console.log('connect');
         this.clientManager.addClient(socket);
         socket.emit('init', {id: socket.id});
         socket.on('disconnect', this.onDisconnect.bind(this, socket));

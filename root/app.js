@@ -11,5 +11,5 @@ requirejs.config({
 });
 
 requirejs(['client/main'], function(main) {
-  main();
+  main(true);
 });
