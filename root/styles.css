@@ -31,6 +31,45 @@ body, html {
   color: #fff;
 }
 
+#loading {
+  width: 800px;
+  height: 400px;
+  background: #000;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  text-align: center;
+  padding-top: 200px;
+}
+
+#loading h3 {
+  color: #fff;
+}
+
+#loading-wrapper {
+  position: relative;
+  height: 75px;
+  width: 265px;
+  margin: 0 auto;
+}
+
+#loading-done, #loading-todo, #loading img {
+  height: 75px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#loading-done {
+  background: #2992fd;
+  width: 0px;
+}
+
+#loading-todo {
+  background: #aaa;
+  width: 265px;
+}
+
 #instructions {
   width: 800px;
   text-align: center;

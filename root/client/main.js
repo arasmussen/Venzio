@@ -51,6 +51,30 @@ define([
       }
     }
 
+    var loadingHeader = $('#loading h3');
+    var loadingDone = $('#loading-done');
+    var loadingToDo = $('#loading-todo');
+    var imageWidth = 265;
+
+    var updateLoadingBar = function(width) {
+      loadingDone.animate({width: width + 'px'});
+      loadingToDo.animate({width: (imageWidth - width) + 'px', left: width + 'px'});
+    }
+
+    var handleSuccess = function(pass) {
+      if (pass == -1) {
+        updateLoadingBar(imageWidth * 0.2);
+        loadingHeader.html('Setting up WebGL context');
+      } else if (pass == 0) {
+        updateLoadingBar(imageWidth * 0.7);
+        loadingHeader.html('Connecting to server');
+      } else if (pass == 1) {
+        updateLoadingBar(imageWidth);
+        setTimeout(function() {$('#loading').remove();}, 500);
+        loadingHeader.html('Starting game');
+      }
+    }
+
     var pass = -1;
     var canvas = document.getElementById('canvas');
     var networkManager = new NetworkManager();
@@ -59,6 +83,8 @@ define([
       if (!success) {
         handleFailure(pass);
         return;
+      } else {
+        handleSuccess(pass);
       }
 
       pass++;
