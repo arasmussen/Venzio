@@ -23,7 +23,6 @@ define([
 
         var time = new Date().getTime();
         var tslf = (time - this.lastFrame) / 1000;
-        console.log(tslf);
 
         if (tslf < 0.002) {
           console.log('updating clients too quickly');
