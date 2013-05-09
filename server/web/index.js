@@ -15,6 +15,10 @@ var extensions = {
   'other': {contentType: 'text/plain', binary: false}
 };
 
+var keywords = {
+  'heightmap': require('./heightmap')
+};
+
 function getExtension(url) {
   var lastDot = url.lastIndexOf('.') + 1;
   var questionMark = url.indexOf('?');
@@ -31,19 +35,35 @@ function getFilepath(url) {
   if (fullpath.indexOf('?') == -1) {
     return fullpath;
   }
+  // strip get params if there are any
   return fullpath.substr(0, fullpath.indexOf('?'));
 }
 
 http.createServer(function(request, response) {
   var url = request.url;
-
   var filepath = getFilepath(url);
+
+  // if it's a special keyword then call that function
+  if (keywords.hasOwnProperty(filepath)) {
+    response.writeHead(200, {'Content-Type': 'text/plain'});
+    response.end('true', 'utf8');
+    return;
+    keywords[filepath](url);
+    return;
+  }
+  response.writeHead(200, {'Content-Type': 'text/plain'});
+  response.end('false', 'utf8');
+  return;
+
+  // if the file doesn't exist return a 404
   if (!fs.existsSync(filepath)) {
     response.writeHead(404);
     response.end();
     return;
   }
 
+  // otherwise just serve that file. this is probably a huge security issue
+  // (for example if the user somehow requests http://venz.io/../../../../../etc/passwd)
   var extension = getExtension(url);
   response.writeHead(200, {'Content-Type': extension.contentType});
   var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
