@@ -1,0 +1,23 @@
+{
+  "name": "venzio",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "root/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:arasmussen/Venzio.git"
+  },
+  "keywords": [
+    "webgl",
+    "3d",
+    "game",
+    "venzio",
+    "websockets",
+    "socketio"
+  ],
+  "author": "Andrew Rasmussen",
+  "license": "Closed Source"
+}
