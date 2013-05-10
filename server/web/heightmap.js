@@ -22,7 +22,7 @@ function errorCheck(query, response) {
   var check = {'left': left, 'right': right, 'bottom': bottom, 'top': top};
   for (var side in check) {
     if (!isNumber(check[side])) {
-      invalidParamter(side, response);
+      invalidParameter(side, response);
       return false;
     }
   }
