@@ -14,10 +14,10 @@ function isNumber(n) {
 }
 
 function errorCheck(query, response) {
-  var left = query.hasOwnProperty['left'] ? query['left'] : 0;
-  var right = query.hasOwnProperty['right'] ? query['right'] : 10;
-  var bottom = query.hasOwnProperty['bottom'] ? query['bottom'] : 0;
-  var top = query.hasOwnProperty['top'] ? query['top'] : 10;
+  var left = query.hasOwnProperty('left') ? query['left'] : 0;
+  var right = query.hasOwnProperty('right') ? query['right'] : 10;
+  var bottom = query.hasOwnProperty('bottom') ? query['bottom'] : 0;
+  var top = query.hasOwnProperty('top') ? query['top'] : 10;
 
   var check = {'left': left, 'right': right, 'bottom': bottom, 'top': top};
   for (var side in check) {
@@ -57,10 +57,10 @@ module.exports = function(request, response) {
     srand.seed(query['seed']);
   }
 
-  var left = query.hasOwnProperty['left'] ? query['left'] : 0;
-  var right = query.hasOwnProperty['right'] ? query['right'] : 10;
-  var bottom = query.hasOwnProperty['bottom'] ? query['bottom'] : 0;
-  var top = query.hasOwnProperty['top'] ? query['top'] : 10;
+  var left = query.hasOwnProperty('left') ? query['left'] : 0;
+  var right = query.hasOwnProperty('right') ? query['right'] : 10;
+  var bottom = query.hasOwnProperty('bottom') ? query['bottom'] : 0;
+  var top = query.hasOwnProperty('top') ? query['top'] : 10;
 
   var dimensions = {
     x: (right - left) * pixelsPerUnit,
