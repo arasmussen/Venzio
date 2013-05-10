@@ -16,7 +16,11 @@ var extensions = {
 };
 
 var keywords = {
-  'heightmap': require('./heightmap')
+  '/heightmap': require('./heightmap')
+};
+
+var redirects = {
+  '/': '/index.html'
 };
 
 function getExtension(url) {
@@ -31,31 +35,29 @@ function getExtension(url) {
 }
 
 function getFilepath(url) {
-  var fullpath = webroot + url;
-  if (fullpath.indexOf('?') == -1) {
-    return fullpath;
+  if (url.indexOf('?') == -1) {
+    return url;
   }
   // strip get params if there are any
-  return fullpath.substr(0, fullpath.indexOf('?'));
+  return url.substr(0, url.indexOf('?'));
 }
 
 http.createServer(function(request, response) {
-  var url = request.url;
-  var filepath = getFilepath(url);
+  var url = getFilepath(request.url);
 
   // if it's a special keyword then call that function
-  if (keywords.hasOwnProperty(filepath)) {
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.end('true', 'utf8');
-    return;
-    keywords[filepath](url);
+  if (keywords.hasOwnProperty(url)) {
+    keywords[url](request, response);
     return;
   }
-  response.writeHead(200, {'Content-Type': 'text/plain'});
-  response.end('false', 'utf8');
-  return;
+
+  // if it's a redirect then fix the url
+  if (redirects.hasOwnProperty(url)) {
+    url = redirects[url];
+  }
 
   // if the file doesn't exist return a 404
+  var filepath = webroot + url;
   if (!fs.existsSync(filepath)) {
     response.writeHead(404);
     response.end();
