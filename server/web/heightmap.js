@@ -67,19 +67,62 @@ module.exports = function(request, response) {
     y: (top - bottom) * pixelsPerUnit
   };
 
+  var iterations = 25;
+  var noiseMatrix = [];
+
+  for (var x = 0; x < dimensions.x + 2 * iterations; x++) {
+    for (var y = 0; y < dimensions.y + 2 * iterations; y++) {
+      var idx = x * (dimensions.y + 2 * iterations) + y;
+      noiseMatrix[idx] = srand.random();
+    }
+  }
+
+  var beforeIteration = noiseMatrix;
+
+  for (var iteration = 1; iteration <= iterations; iteration++) {
+    var offset = iterations - iteration;
+    afterIteration = [];
+    for (var x = 0; x < dimensions.x + 2 * offset; x++) {
+      for (var y = 0; y < dimensions.y + 2 * offset; y++) {
+        var beforeIdx = (x + 1) * (dimensions.y + 2 * (offset + 1)) + y + 1;
+        var afterIdx = x * (dimensions.y + 2 * offset) + y;
+
+        var above = beforeIdx - 1;
+        var below = beforeIdx + 1;
+        var left = beforeIdx - (dimensions.y + 2 * (offset + 1));
+        var right = beforeIdx + (dimensions.y + 2 * (offset + 1));
+        var center = beforeIdx;
+
+        var after =
+          0.15 * beforeIteration[above] +
+          0.15 * beforeIteration[below] +
+          0.15 * beforeIteration[left] +
+          0.15 * beforeIteration[right] +
+          0.4 * beforeIteration[center];
+        after = Math.min(Math.max((after - 0.47) * 1.3 + 0.47, 0.0), 0.999);
+
+        afterIteration[afterIdx] = after;
+      }
+    }
+    beforeIteration = afterIteration;
+  }
+
   var image = new PNG({
     width: dimensions.x,
     height: dimensions.y
   });
-
+  image.data = [];
   for (var x = 0; x < dimensions.x; x++) {
     for (var y = 0; y < dimensions.y; y++) {
-      var idx = 4 * (x * dimensions.y + y);
+      var beforeIdx = x * dimensions.y + y;
+      var imageIdx = beforeIdx * 4;
 
-      image.data[idx + 0] = 128;
-      image.data[idx + 1] = 128;
-      image.data[idx + 2] = 128;
-      image.data[idx + 3] = 255;
+      var mountains = beforeIteration[beforeIdx] < 0.5;
+
+      image.data[imageIdx + 0] = 0;
+      image.data[imageIdx + 1] = mountains ? 0 : 255;
+      image.data[imageIdx + 2] = mountains ? 255 : 0;
+      image.data[imageIdx + 3] = 255;
     }
   }
 
