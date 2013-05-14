@@ -8,12 +8,16 @@ define([
   ],
   function(Base, srand, Globals, MurmurHash2) {
     var HeightmapSectionFetcher = Base.extend({
-      constructor: function(seed) {
+      constructor: function(seed, distance, amount, contrast) {
         this.hasher = new MurmurHash2(seed, 256);
         this.terrainLength = Globals.terrainLength;
 
-        this.blurIterations = 5;
+        this.blurDistance = distance;
+        this.blurAmount = amount;
+        this.contrast = contrast;
         this.cachedSectionData = {};
+
+        this.calculateBlurMatrix();
       },
 
       fetch: function(x, y) {
@@ -22,7 +26,9 @@ define([
           return this.cachedSectionData[sectionKey];
         }
 
-        var matrix = this.applyBlurryContrast(this.getNoiseMatrix(x, y));
+        var matrix = this.getNoiseMatrix(x, y);
+        matrix = this.applyBlur(matrix);
+        matrix = this.applyContrast(matrix);
 
         this.cachedSectionData[sectionKey] = matrix;
         return matrix;
@@ -30,10 +36,10 @@ define([
 
       getNoiseMatrix: function(x, y) {
         var noiseMatrixSize = {
-          x1: x * this.terrainLength - this.blurIterations,
-          x2: (x + 1) * this.terrainLength + this.blurIterations,
-          y1: y * this.terrainLength - this.blurIterations,
-          y2: (y + 1) * this.terrainLength + this.blurIterations
+          x1: x * this.terrainLength - this.blurDistance,
+          x2: (x + 1) * this.terrainLength + this.blurDistance,
+          y1: y * this.terrainLength - this.blurDistance,
+          y2: (y + 1) * this.terrainLength + this.blurDistance
         };
 
         var noiseMatrix = [];
@@ -47,47 +53,68 @@ define([
         return noiseMatrix;
       },
 
-      applyBlurryContrast: function(matrix) {
-        for (var iteration = 1; iteration <= this.blurIterations; iteration++) {
-          var offset = this.blurIterations - iteration;
-          var afterIteration = [];
-          for (var x = 0; x < this.terrainLength + 2 * offset; x++) {
-            for (var y = 0; y < this.terrainLength + 2 * offset; y++) {
-              var beforeIdx = (x + 1) * (this.terrainLength + 2 * (offset + 1)) + y + 1;
-              var afterIdx = x * (this.terrainLength + 2 * offset) + y;
+      applyBlur: function(unblurred) {
+        var blurred = [];
+        for (var x = 0; x < this.terrainLength; x++) {
+          for (var y = 0; y < this.terrainLength; y++) {
+            var beforeIdx = (x + this.blurDistance) * (2 * this.blurDistance + this.terrainLength) + y + this.blurDistance;
+            var afterIdx = x * this.terrainLength + y;
+            var indexOffsets = {
+              x: this.terrainLength + 2 * this.blurDistance,
+              y: 1
+            };
 
-              var up = -1;
-              var down = 1;
-              var left = -(this.terrainLength + 2 * (offset + 1));
-              var right = this.terrainLength + 2 * (offset + 1);
-
-              // blur
-              var after =
-                0.2 * matrix[beforeIdx + up] +
-                0.2 * matrix[beforeIdx + down] +
-                0.2 * matrix[beforeIdx + left] +
-                0.2 * matrix[beforeIdx + right] +
-                0.2 * matrix[beforeIdx];
-
-              // contrast
-              // after = Math.min(Math.max((after - 0.5) * 1.5 + 0.5, 0.0), 1.0);
-
-              afterIteration[afterIdx] = after;
+            blurred[afterIdx] = 0;
+            for (var i in this.blurMatrix) {
+              for (var j in this.blurMatrix[i]) {
+                blurred[afterIdx] += this.blurMatrix[i][j] *
+                  unblurred[beforeIdx + i * indexOffsets.x + j * indexOffsets.y];
+              }
             }
           }
-          matrix = afterIteration;
+        }
+        return blurred;
+      },
+
+      applyContrast: function(matrix) {
+        for (var x = 0; x < this.terrainLength; x++) {
+          for (var y = 0; y < this.terrainLength; y++) {
+            var idx = x * this.terrainLength + y;
+            matrix[idx] = Math.min(Math.max((matrix[idx] - 0.5) * this.contrast + 0.5, 0.0), 1.0);
+          }
+        }
+        return matrix;
+      },
+
+      calculateBlurMatrix: function() {
+        var total = 0;
+        this.blurMatrix = [];
+        for (var x = -this.blurDistance; x <= this.blurDistance; x++) {
+          this.blurMatrix[x] = [];
+          for (var y = -this.blurDistance; y <= this.blurDistance; y++) {
+            var distanceSquared = Math.pow(x, 2) + Math.pow(y, 2);
+            var amountSquared = Math.pow(this.blurAmount, 2);
+            this.blurMatrix[x][y] = Math.pow(Math.E, -distanceSquared / amountSquared) / (2 * Math.PI * amountSquared);
+            total += this.blurMatrix[x][y];
+          }
         }
 
-        return matrix;
+        var factor = 1 / total;
+        for (var x = -this.blurDistance; x <= this.blurDistance; x++) {
+          for (var y = -this.blurDistance; y <= this.blurDistance; y++) {
+            this.blurMatrix[x][y] *= factor;
+          }
+        }
       }
     });
 
     var fetchers = {};
-    HeightmapSectionFetcher.get = function(seed) {
-      if (!fetchers.hasOwnProperty(seed)) {
-        fetchers[seed] = new HeightmapSectionFetcher(seed);
+    HeightmapSectionFetcher.get = function(seed, distance, amount, contrast) {
+      var key = seed + ' ' + distance + ' ' + amount + ' ' + contrast;
+      if (!fetchers.hasOwnProperty(key)) {
+        fetchers[key] = new HeightmapSectionFetcher(seed, distance, amount, contrast);
       }
-      return fetchers[seed];
+      return fetchers[key];
     };
 
     return HeightmapSectionFetcher;

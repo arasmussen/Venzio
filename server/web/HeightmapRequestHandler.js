@@ -20,6 +20,9 @@ define([
         this.top = urlParams.hasOwnProperty('top') ? parseInt(urlParams['top']) : 1;
 
         this.seed = urlParams.hasOwnProperty('seed') ? parseInt(urlParams['seed']) : Date.now();
+        this.distance = urlParams.hasOwnProperty('distance') ? parseInt(urlParams['distance']) : 2;
+        this.amount = urlParams.hasOwnProperty('amount') ? parseInt(urlParams['amount']) : 2;
+        this.contrast = urlParams.hasOwnProperty('contrast') ? parseInt(urlParams['contrast']) : 5;
 
         this.response = response;
 
@@ -31,7 +34,7 @@ define([
           return;
         }
 
-        var sectionFetcher = HeightmapSectionFetcher.get(this.seed);
+        var sectionFetcher = HeightmapSectionFetcher.get(this.seed, this.distance, this.amount, this.contrast);
 
         var imageSize = {
           x: (this.right - this.left) * this.terrainLength,
@@ -54,13 +57,13 @@ define([
             for (var i = 0; i < this.terrainLength; i++) {
               for (var j = 0; j < this.terrainLength; j++) {
                 var sectionIdx = i * this.terrainLength + j;
-                var imageIdx = 4 * ((i + imageOffset.x) * image.height + (j + imageOffset.y));
+                var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x));
 
                 var mountains = sectionData[sectionIdx] < 0.4;
 
-                image.data[imageIdx + 0] = sectionData[sectionIdx] * 255;
-                image.data[imageIdx + 1] = sectionData[sectionIdx] * 255;
-                image.data[imageIdx + 2] = sectionData[sectionIdx] * 255; // mountains ? 255 : 0;
+                image.data[imageIdx + 0] = 0;
+                image.data[imageIdx + 1] = mountains ? 0 : 255;
+                image.data[imageIdx + 2] = mountains ? 255 : 0;
                 image.data[imageIdx + 3] = 255;
               }
             }
@@ -101,11 +104,11 @@ define([
           }
         }
         if (this.right <= this.left) {
-          invalidParameter('right');
+          this.invalidParameter('right');
           return false;
         }
         if (this.top <= this.bottom) {
-          invalidParameter('left');
+          this.invalidParameter('top');
           return false;
         }
 
