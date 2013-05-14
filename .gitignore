@@ -1,1 +1,8 @@
+## swap files for vim
+
 .*.swp
+
+
+## node_modules stuff
+
+node_modules/*/build/*
