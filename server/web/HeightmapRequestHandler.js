@@ -56,11 +56,11 @@ define([
                 var sectionIdx = i * this.terrainLength + j;
                 var imageIdx = 4 * ((i + imageOffset.x) * image.height + (j + imageOffset.y));
 
-                var mountains = sectionData[sectionIdx] < 0.5;
+                var mountains = sectionData[sectionIdx] < 0.4;
 
-                image.data[imageIdx + 0] = 0;
-                image.data[imageIdx + 1] = mountains ? 0 : 255;
-                image.data[imageIdx + 2] = mountains ? 255 : 0;
+                image.data[imageIdx + 0] = sectionData[sectionIdx] * 255;
+                image.data[imageIdx + 1] = sectionData[sectionIdx] * 255;
+                image.data[imageIdx + 2] = sectionData[sectionIdx] * 255; // mountains ? 255 : 0;
                 image.data[imageIdx + 3] = 255;
               }
             }

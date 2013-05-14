@@ -12,7 +12,7 @@ define([
         this.hasher = new MurmurHash2(seed, 256);
         this.terrainLength = Globals.terrainLength;
 
-        this.blurIterations = 25;
+        this.blurIterations = 5;
         this.cachedSectionData = {};
       },
 
@@ -22,8 +22,7 @@ define([
           return this.cachedSectionData[sectionKey];
         }
 
-        var matrix = this.getNoiseMatrix(x, y);
-        matrix = this.applyBlurryContrast(matrix);
+        var matrix = this.applyBlurryContrast(this.getNoiseMatrix(x, y));
 
         this.cachedSectionData[sectionKey] = matrix;
         return matrix;
@@ -57,19 +56,21 @@ define([
               var beforeIdx = (x + 1) * (this.terrainLength + 2 * (offset + 1)) + y + 1;
               var afterIdx = x * (this.terrainLength + 2 * offset) + y;
 
-              var above = beforeIdx - 1;
-              var below = beforeIdx + 1;
-              var left = beforeIdx - (this.terrainLength + 2 * (offset + 1));
-              var right = beforeIdx + (this.terrainLength + 2 * (offset + 1));
-              var center = beforeIdx;
+              var up = -1;
+              var down = 1;
+              var left = -(this.terrainLength + 2 * (offset + 1));
+              var right = this.terrainLength + 2 * (offset + 1);
 
+              // blur
               var after =
-                0.15 * matrix[above] +
-                0.15 * matrix[below] +
-                0.15 * matrix[left] +
-                0.15 * matrix[right] +
-                0.40 * matrix[center];
-              after = Math.min(Math.max((after - 0.47) * 1.3 + 0.47, 0.0), 0.999);
+                0.2 * matrix[beforeIdx + up] +
+                0.2 * matrix[beforeIdx + down] +
+                0.2 * matrix[beforeIdx + left] +
+                0.2 * matrix[beforeIdx + right] +
+                0.2 * matrix[beforeIdx];
+
+              // contrast
+              // after = Math.min(Math.max((after - 0.5) * 1.5 + 0.5, 0.0), 1.0);
 
               afterIteration[afterIdx] = after;
             }
