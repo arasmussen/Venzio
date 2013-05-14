@@ -8,15 +8,15 @@ pushd `dirname $0` < /dev/null
 
 GFX='..'
 
-LIB=$(find ${GFX}/root/client/lib -name \*.js | xargs wc -l | grep total | awk '{print $1}')
-JS=$(find ${GFX} -name \*.js | xargs wc -l | grep total | awk '{print $1}')
-MODULES_JS=$(find ${GFX}/node_modules -name \*.js | xargs wc -l | grep total | awk '{print $1}')
-GLSL=$(find ${GFX} -name \*.glsl | xargs wc -l | grep total | awk '{print $1}')
-CSS=$(find ${GFX} -name \*.css | xargs wc -l | grep total | awk '{print $1}')
-MODULES_CSS=$(find ${GFX}/node_modules -name \*.css | xargs wc -l | grep total | awk '{print $1}')
-HTML=$(find ${GFX} -name \*.html | xargs wc -l | grep total | awk '{print $1}')
-MODULES_HTML=$(find ${GFX}/node_modules -name \*.html | xargs wc -l | grep total | awk '{print $1}')
-SH=$(find ${GFX} -name \*.sh | xargs wc -l | grep total | awk '{print $1}')
+JS=$(wc -l `find ${GFX} -name \*.js` | grep total | awk '{print $1}')
+LIB=$(wc -l `find ${GFX}/root/client/lib -name \*.js` | grep total | awk '{print $1}')
+MODULES_JS=$(wc -l `find ${GFX}/node_modules -name \*.js` | grep total | awk '{print $1}')
+GLSL=$(wc -l `find ${GFX} -name \*.glsl` | grep total | awk '{print $1}')
+CSS=$(wc -l `find ${GFX} -name \*.css` | grep total | awk '{print $1}')
+MODULES_CSS=$(wc -l `find ${GFX}/node_modules -name \*.css` | grep total | awk '{print $1}')
+HTML=$(wc -l `find ${GFX} -name \*.html` | grep total | awk '{print $1}')
+MODULES_HTML=$(wc -l `find ${GFX}/node_modules -name \*.html` | grep total | awk '{print $1}')
+SH=$(wc -l `find ${GFX} -name \*.sh` | grep total | awk '{print $1}')
 
 echo "JS: $(expr $JS - $LIB - $MODULES_JS)"
 echo "GLSL: $GLSL"
