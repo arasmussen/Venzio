@@ -2,11 +2,10 @@
 
 define([
     'basejs',
-    'srand',
     'shared/Globals',
     'server/MurmurHash2'
   ],
-  function(Base, srand, Globals, MurmurHash2) {
+  function(Base, Globals, MurmurHash2) {
     var HeightmapSectionFetcher = Base.extend({
       constructor: function(seed, distance, amount, contrast) {
         this.hasher = new MurmurHash2(seed, 256);
