@@ -4,7 +4,7 @@
 # this is my super unrobust script to count the lines in the project
 
 
-pushd `dirname $0` < /dev/null
+pushd `dirname $0` > /dev/null
 
 GFX='..'
 
@@ -26,4 +26,4 @@ echo "SH: $SH"
 echo "-----"
 echo "Total: $(expr $JS + $GLSL + $CSS + $HTML + $SH - $LIB - $MODULES_JS - $MODULES_CSS - $MODULES_HTML)"
 
-popd < /dev/null
+popd > /dev/null
