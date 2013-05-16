@@ -87,6 +87,6 @@ requirejs([
       response.writeHead(200, {'Content-Type': extension.contentType});
       var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
       response.end(contents, extension.binary ? 'binary' : 'utf8');
-    }).listen(80);
+    }).listen(8001);
   }
 );
