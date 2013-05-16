@@ -3,7 +3,7 @@
 define([
     'basejs',
     'shared/Globals',
-    'server/MurmurHash2'
+    'shared/MurmurHash2'
   ],
   function(Base, Globals, MurmurHash2) {
     var HeightmapSectionFetcher = Base.extend({
@@ -118,9 +118,6 @@ define([
             }
 
             terrainMatrix.push(height);
-            terrainMatrix.push(height);
-            terrainMatrix.push(height);
-            terrainMatrix.push(255);
           }
         }
         return terrainMatrix;

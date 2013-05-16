@@ -4,7 +4,7 @@ define([
     'basejs',
     'pngjs',
     'url',
-    'server/HeightmapSectionFetcher',
+    'shared/HeightmapSectionFetcher',
     'shared/Globals'
   ],
   function(Base, pngjs, url, HeightmapSectionFetcher, Globals) {
@@ -56,11 +56,13 @@ define([
             };
             for (var i = 0; i < this.terrainLength; i++) {
               for (var j = 0; j < this.terrainLength; j++) {
-                for (var byte = 0; byte < 4; byte++) {
-                  var sectionIdx = 4 * (i * this.terrainLength + j) + byte;
-                  var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x)) + byte;
-                  image.data[imageIdx] = sectionData[sectionIdx];
-                }
+                var sectionIdx = i * this.terrainLength + j;
+                var height = sectionData[sectionIdx];
+                var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x));
+                image.data[imageIdx + 0] = height;
+                image.data[imageIdx + 1] = height;
+                image.data[imageIdx + 2] = height;
+                image.data[imageIdx + 3] = 255;
               }
             }
           }
