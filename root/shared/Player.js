@@ -25,7 +25,6 @@ define([
         this.strafe = 0;
         this.walk = 0;
 
-        var attachmentType = this.getAttachmentType();
         this.buildObject = null;
         this.buildMode = false;
 
@@ -109,7 +108,8 @@ define([
       toggleBuildMode: function() {
         this.buildMode = !this.buildMode;
         if (this.buildMode && this.buildObject == null) {
-          this.buildObject = new attachmentType(this, terrainManager, wallManager);
+          var attachmentType = this.getAttachmentType();
+          this.buildObject = new attachmentType(this, this.terrainManager, this.wallManager);
         }
       },
 
