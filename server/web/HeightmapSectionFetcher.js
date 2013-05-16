@@ -28,6 +28,7 @@ define([
         var matrix = this.getNoiseMatrix(x, y);
         matrix = this.applyBlur(matrix);
         matrix = this.applyContrast(matrix);
+        matrix = this.applyTerrain(matrix);
 
         this.cachedSectionData[sectionKey] = matrix;
         return matrix;
@@ -83,6 +84,37 @@ define([
           }
         }
         return matrix;
+      },
+
+      applyTerrain: function(matrix) {
+        var terrainMatrix = [];
+        for (var x = 0; x < this.terrainLength; x++) {
+          for (var y = 0; y < this.terrainLength; y++) {
+            var idx = x * this.terrainLength + y;
+
+            var mountainThreshold = 0.6;
+            var mountainStartHeight = 40;
+
+            var height;
+            if (matrix[idx] < mountainThreshold) {
+              var minHeight = 0;
+              var maxHeight = mountainStartHeight;
+              var percentage = matrix[idx] / mountainThreshold;
+              height = 255 - parseInt(minHeight + (maxHeight - minHeight) * percentage);
+            } else { // >= mountainThreshold
+              var minHeight = mountainStartHeight;
+              var maxHeight = 255;
+              var percentage = (matrix[idx] - mountainThreshold) / (1 - mountainThreshold);
+              height = 255 - parseInt(minHeight + (maxHeight - minHeight) * percentage);
+            }
+
+            terrainMatrix.push(height);
+            terrainMatrix.push(height);
+            terrainMatrix.push(height);
+            terrainMatrix.push(255);
+          }
+        }
+        return terrainMatrix;
       },
 
       calculateBlurMatrix: function() {

@@ -56,15 +56,12 @@ define([
             };
             for (var i = 0; i < this.terrainLength; i++) {
               for (var j = 0; j < this.terrainLength; j++) {
-                var sectionIdx = i * this.terrainLength + j;
-                var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x));
+                for (var byte = 0; byte < 4; byte++) {
+                  var sectionIdx = 4 * (i * this.terrainLength + j) + byte;
+                  var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x)) + byte;
 
-                var mountains = sectionData[sectionIdx] < 0.4;
-
-                image.data[imageIdx + 0] = 0;
-                image.data[imageIdx + 1] = mountains ? 0 : 255;
-                image.data[imageIdx + 2] = mountains ? 255 : 0;
-                image.data[imageIdx + 3] = 255;
+                  image.data[imageIdx] = sectionData[sectionIdx];
+                }
               }
             }
           }
