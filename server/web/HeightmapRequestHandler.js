@@ -59,7 +59,6 @@ define([
                 for (var byte = 0; byte < 4; byte++) {
                   var sectionIdx = 4 * (i * this.terrainLength + j) + byte;
                   var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x)) + byte;
-
                   image.data[imageIdx] = sectionData[sectionIdx];
                 }
               }

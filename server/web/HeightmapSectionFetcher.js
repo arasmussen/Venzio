@@ -54,25 +54,34 @@ define([
       },
 
       applyBlur: function(unblurred) {
-        var blurred = [];
-        for (var x = 0; x < this.terrainLength; x++) {
+        // blur columns
+        var blurredColumns = [];
+        for (var x = 0; x < this.terrainLength + 2 * this.blurDistance; x++) {
           for (var y = 0; y < this.terrainLength; y++) {
-            var beforeIdx = (x + this.blurDistance) * (2 * this.blurDistance + this.terrainLength) + y + this.blurDistance;
+            var beforeIdx = x * (2 * this.blurDistance + this.terrainLength) + y + this.blurDistance;
             var afterIdx = x * this.terrainLength + y;
-            var indexOffsets = {
-              x: this.terrainLength + 2 * this.blurDistance,
-              y: 1
-            };
 
-            blurred[afterIdx] = 0;
+            blurredColumns[afterIdx] = 0;
             for (var i in this.blurMatrix) {
-              for (var j in this.blurMatrix[i]) {
-                blurred[afterIdx] += this.blurMatrix[i][j] *
-                  unblurred[beforeIdx + i * indexOffsets.x + j * indexOffsets.y];
-              }
+              blurredColumns[afterIdx] += this.blurMatrix[i] * unblurred[beforeIdx + parseInt(i)];
             }
           }
         }
+
+        // blur rows
+        var blurred = [];
+        for (var x = 0; x < this.terrainLength; x++) {
+          for (var y = 0; y < this.terrainLength; y++) {
+            var beforeIdx = (x + this.blurDistance) * this.terrainLength + y;
+            var afterIdx = x * this.terrainLength + y;
+
+            blurred[afterIdx] = 0;
+            for (var i in this.blurMatrix) {
+              blurred[afterIdx] += this.blurMatrix[i] * blurredColumns[beforeIdx + i * this.terrainLength];
+            }
+          }
+        }
+
         return blurred;
       },
 
@@ -121,20 +130,14 @@ define([
         var total = 0;
         this.blurMatrix = [];
         for (var x = -this.blurDistance; x <= this.blurDistance; x++) {
-          this.blurMatrix[x] = [];
-          for (var y = -this.blurDistance; y <= this.blurDistance; y++) {
-            var distanceSquared = Math.pow(x, 2) + Math.pow(y, 2);
-            var amountSquared = Math.pow(this.blurAmount, 2);
-            this.blurMatrix[x][y] = Math.pow(Math.E, -distanceSquared / amountSquared) / (2 * Math.PI * amountSquared);
-            total += this.blurMatrix[x][y];
-          }
+          var amountSquared = Math.pow(this.blurAmount, 2);
+          this.blurMatrix[x] = Math.pow(Math.E, -Math.pow(x, 2) / amountSquared) / (2 * Math.PI * amountSquared);
+          total += this.blurMatrix[x];
         }
 
         var factor = 1 / total;
         for (var x = -this.blurDistance; x <= this.blurDistance; x++) {
-          for (var y = -this.blurDistance; y <= this.blurDistance; y++) {
-            this.blurMatrix[x][y] *= factor;
-          }
+          this.blurMatrix[x] *= factor;
         }
       }
     });
