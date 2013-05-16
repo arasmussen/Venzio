@@ -10,7 +10,9 @@ define([
     return Base.extend({
       constructor: function(inputManager, terrainManager, wallManager) {
         this.rotateSpeed = 1/250;
-        this.position = {x: 0.0, y: 10.0, z: 0.0};
+
+        var terrainHeight = terrainManager.getTerrainHeight({x: 0.0, z: 0.0});
+        this.position = {x: 0.0, y: terrainHeight + 0.01, z: 0.0};
         this.velocity = {x: 0.0, y: 0.0, z: 0.0};
         this.rotation = {pitch: 0.0, yaw: 0.0};
 
@@ -24,9 +26,10 @@ define([
         this.walk = 0;
 
         var attachmentType = this.getAttachmentType();
-        this.buildObject = new attachmentType(this, terrainManager, wallManager);
+        this.buildObject = null;
         this.buildMode = false;
 
+        this.terrainManager = terrainManager;
         this.wallManager = wallManager;
         this.inputManager = inputManager;
 
@@ -105,6 +108,9 @@ define([
 
       toggleBuildMode: function() {
         this.buildMode = !this.buildMode;
+        if (this.buildMode && this.buildObject == null) {
+          this.buildObject = new attachmentType(this, terrainManager, wallManager);
+        }
       },
 
       build: function() {

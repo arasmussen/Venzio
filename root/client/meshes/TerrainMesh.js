@@ -6,9 +6,9 @@ define([
   ],
   function(Terrain, Mesh) {
     return Mesh.extend({
-      constructor: function(position) {
+      constructor: function(coord, heights) {
         this.base();
-        this.terrain = new Terrain(position);
+        this.terrain = new Terrain(coord, heights);
         this.initialize();
       },
 

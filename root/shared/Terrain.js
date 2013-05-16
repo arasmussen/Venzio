@@ -6,27 +6,12 @@ define([
   ],
   function(Globals, Base) {
     return Base.extend({
-      constructor: function(position) {
+      constructor: function(coord, heights) {
         this.width = Globals.terrainLength;
         this.length = Globals.terrainLength;
-        this.initializeHeights();
-        this.position = position;
-        this.rotation = {
-          yaw: 0.0,
-          pitch: 0.0
-        };
-      },
-
-      initializeHeights: function() {
-        this.heights = [];
-        for (var x = 0; x < this.width + 1; x++) {
-          this.heights[x] = [];
-          for (var z = 0; z < this.length + 1; z++) {
-            this.heights[x][z] =
-              3 * Math.sin(2 * Math.PI * x / (this.width)) +
-              2 * Math.cos(2 * Math.PI * z / (this.length));
-          }
-        }
+        this.position = {x: coord.x * this.length, y: 0, z: coord.z * this.length};
+        this.rotation = {yaw: 0.0, pitch: 0.0};
+        this.heights = heights;
       },
 
       getHeight: function(position) {

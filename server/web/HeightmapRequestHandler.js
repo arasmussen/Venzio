@@ -54,9 +54,9 @@ define([
               x: (x - this.left) * this.terrainLength,
               y: (y - this.bottom) * this.terrainLength
             };
-            for (var i = 0; i < this.terrainLength; i++) {
-              for (var j = 0; j < this.terrainLength; j++) {
-                var sectionIdx = i * this.terrainLength + j;
+            for (var i = 0; i < this.terrainLength + 1; i++) {
+              for (var j = 0; j < this.terrainLength + 1; j++) {
+                var sectionIdx = i * (this.terrainLength + 1) + j;
                 var height = sectionData[sectionIdx];
                 var imageIdx = 4 * ((j + imageOffset.y) * image.width + (i + imageOffset.x));
                 image.data[imageIdx + 0] = height;

@@ -10,14 +10,8 @@ define([
         this.base();
       },
 
-      createTerrain: function(x, z) {
-        if (this.terrains[x] == null) {
-          this.terrains[x] = {};
-        }
-        if (this.terrains[x][z] == null) {
-          var position = {x: x * this.length, y: 0, z: z * this.length};
-          this.terrains[x][z] = new TerrainMesh(position);
-        }
+      newTerrain: function(coords, heights) {
+        return new TerrainMesh(coords, heights);
       },
 
       draw: function() {

@@ -37,9 +37,9 @@ define([
       getNoiseMatrix: function(x, y) {
         var noiseMatrixSize = {
           x1: x * this.terrainLength - this.blurDistance,
-          x2: (x + 1) * this.terrainLength + this.blurDistance,
+          x2: (x + 1) * this.terrainLength + this.blurDistance + 1,
           y1: y * this.terrainLength - this.blurDistance,
-          y2: (y + 1) * this.terrainLength + this.blurDistance
+          y2: (y + 1) * this.terrainLength + this.blurDistance + 1
         };
 
         var noiseMatrix = [];
@@ -56,10 +56,10 @@ define([
       applyBlur: function(unblurred) {
         // blur columns
         var blurredColumns = [];
-        for (var x = 0; x < this.terrainLength + 2 * this.blurDistance; x++) {
-          for (var y = 0; y < this.terrainLength; y++) {
-            var beforeIdx = x * (2 * this.blurDistance + this.terrainLength) + y + this.blurDistance;
-            var afterIdx = x * this.terrainLength + y;
+        for (var x = 0; x < this.terrainLength + 1 + 2 * this.blurDistance; x++) {
+          for (var y = 0; y < this.terrainLength + 1; y++) {
+            var beforeIdx = x * (2 * this.blurDistance + this.terrainLength + 1) + y + this.blurDistance;
+            var afterIdx = x * (this.terrainLength + 1) + y;
 
             blurredColumns[afterIdx] = 0;
             for (var i in this.blurMatrix) {
@@ -70,14 +70,14 @@ define([
 
         // blur rows
         var blurred = [];
-        for (var x = 0; x < this.terrainLength; x++) {
-          for (var y = 0; y < this.terrainLength; y++) {
-            var beforeIdx = (x + this.blurDistance) * this.terrainLength + y;
-            var afterIdx = x * this.terrainLength + y;
+        for (var x = 0; x < (this.terrainLength + 1); x++) {
+          for (var y = 0; y < (this.terrainLength + 1); y++) {
+            var beforeIdx = (x + this.blurDistance) * (this.terrainLength + 1) + y;
+            var afterIdx = x * (this.terrainLength + 1) + y;
 
             blurred[afterIdx] = 0;
             for (var i in this.blurMatrix) {
-              blurred[afterIdx] += this.blurMatrix[i] * blurredColumns[beforeIdx + i * this.terrainLength];
+              blurred[afterIdx] += this.blurMatrix[i] * blurredColumns[beforeIdx + i * (this.terrainLength + 1)];
             }
           }
         }
@@ -86,9 +86,9 @@ define([
       },
 
       applyContrast: function(matrix) {
-        for (var x = 0; x < this.terrainLength; x++) {
-          for (var y = 0; y < this.terrainLength; y++) {
-            var idx = x * this.terrainLength + y;
+        for (var x = 0; x < (this.terrainLength + 1); x++) {
+          for (var y = 0; y < (this.terrainLength + 1); y++) {
+            var idx = x * (this.terrainLength + 1) + y;
             matrix[idx] = Math.min(Math.max((matrix[idx] - 0.5) * this.contrast + 0.5, 0.0), 1.0);
           }
         }
@@ -97,12 +97,12 @@ define([
 
       applyTerrain: function(matrix) {
         var terrainMatrix = [];
-        for (var x = 0; x < this.terrainLength; x++) {
-          for (var y = 0; y < this.terrainLength; y++) {
-            var idx = x * this.terrainLength + y;
+        for (var x = 0; x < (this.terrainLength + 1); x++) {
+          for (var y = 0; y < (this.terrainLength + 1); y++) {
+            var idx = x * (this.terrainLength + 1) + y;
 
             var mountainThreshold = 0.6;
-            var mountainStartHeight = 40;
+            var mountainStartHeight = 60;
 
             var height;
             if (matrix[idx] < mountainThreshold) {
