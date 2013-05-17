@@ -65,7 +65,7 @@ define([
         loadingHeader.html('Initializing game and terrain');
       } else if (pass == 3) {
         loadingHeader.html('Starting game');
-        $('#loading').remove();
+        setTimeout(function() { $('#loading').remove(); }, 20);
       }
     }
 
