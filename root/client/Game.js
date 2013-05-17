@@ -21,7 +21,6 @@ define([
         this.player = new CPlayer(InputManager, this.terrainManager, this.wallManager);
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;
-        networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
         InputManager.networkManager = this.networkManager;
       },
 
@@ -29,6 +28,10 @@ define([
         this.handleInput();
         this.updateWorld(tslf);
         this.drawWorld();
+      },
+
+      start: function() {
+        this.networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
       },
 
       handleInput: function() {
