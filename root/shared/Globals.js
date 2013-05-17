@@ -7,7 +7,7 @@ define(function() {
 
     // must be even!
     terrainLength: 32,
-    terrainOffset: 4,
+    terrainOffset: 6,
 
     normalize: function(vec3) {
       if (vec3.x == 0.0 && vec3.y == 0.0 && vec3.z == 0.0) {

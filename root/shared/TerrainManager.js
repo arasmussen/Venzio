@@ -38,7 +38,7 @@ define([
             heightMatrix[i] = [];
             for (var j = 0; j < this.length + 1; j++) {
               var idx = i * (this.length + 1) + j;
-              heightMatrix[i][j] = (255 - heights[idx]) / 10 - 6;
+              heightMatrix[i][j] = (255 - heights[idx]) / 6 - 8;
             }
           }
           this.terrains[x][z] = this.newTerrain({x: x, z: z}, heightMatrix);
