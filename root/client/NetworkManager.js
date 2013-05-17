@@ -30,7 +30,7 @@ define([
         this.socket.on('reply', this.onPingReply.bind(this));
 
         var checks = 0;
-        var maxChecks = 500;
+        var maxChecks = 300;
         var checkInterval = 10;
 
         var checkConnection = function() {
