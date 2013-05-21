@@ -2,7 +2,6 @@
 
 define([
     'client/CPlayer',
-    'client/CTerrainManager',
     'client/Camera',
     'client/CInputManager',
     'shared/PhysicsManager',
@@ -11,11 +10,10 @@ define([
     'client/meshes/WallMesh',
     'shared/WallManager'
   ],
-  function(CPlayer, CTerrainManager, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
     return Base.extend({
-      constructor: function(networkManager) {
-        this.ready = false;
-        this.terrainManager = new CTerrainManager();
+      constructor: function(networkManager, terrainManager) {
+        this.terrainManager = terrainManager;
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.wallManager = new WallManager();
         this.player = new CPlayer(InputManager, this.terrainManager, this.wallManager);

@@ -4,11 +4,12 @@ define([
     'client/NetworkManager',
     'client/GraphicsManager',
     'client/CInputManager',
+    'client/CTerrainManager',
     'client/Game',
     'client/util/Framerate',
     'client/util/Ping'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, Game, Framerate, Ping) {
+  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, Framerate, Ping) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -51,30 +52,30 @@ define([
     }
 
     var handleSuccess = function(pass) {
-      if (pass == -1) {
+      if (pass == 0) {
         updateLoadingBar(imageWidth * 0.1);
         loadingHeader.html('Setting up WebGL context');
-      } else if (pass == 0) {
+      } else if (pass == 1) {
         updateLoadingBar(imageWidth * 0.5);
         loadingHeader.html('Connecting to server');
-      } else if (pass == 1) {
-        updateLoadingBar(imageWidth * 0.75);
-        loadingHeader.html('Initializing input');
       } else if (pass == 2) {
-        updateLoadingBar(imageWidth);
-        loadingHeader.html('Initializing game and terrain');
+        updateLoadingBar(imageWidth * 0.75);
+        loadingHeader.html('Initializing terrain');
       } else if (pass == 3) {
+        updateLoadingBar(imageWidth);
+        loadingHeader.html('Initializing game and player');
+      } else if (pass == 4) {
         loadingHeader.html('Starting game');
         setTimeout(function() { $('#loading').remove(); }, 20);
       }
     }
 
     var handleFailure = function(pass) {
-      if (pass == -1) {
+      if (pass == 0) {
         console.log('main was called with a value of false');
-      } else if (pass == 0) {
-        console.log('WebGL context couldn\'t be created');
       } else if (pass == 1) {
+        console.log('WebGL context couldn\'t be created');
+      } else if (pass == 2) {
         console.log('Couldn\'t connect to the server');
         loadingHeader.html('Failed, starting single player game');
         updateLoadingBar(imageWidth);
@@ -85,9 +86,10 @@ define([
       }
     }
 
-    var pass = -1;
+    var pass = 0;
     var canvas = document.getElementById('canvas');
     var networkManager = new NetworkManager();
+    var terrainManager;
     var game;
 
     var main = function(success) {
@@ -99,15 +101,15 @@ define([
       handleSuccess(pass);
       pass++;
 
-      if (pass == 0) {
-        createGLContext(canvas, main, pass);
-      } else if (pass == 1) {
-        connectSocket(networkManager, main, pass);
+      if (pass == 1) {
+        createGLContext(canvas, main);
       } else if (pass == 2) {
-        InputManager.initialize(canvas);
-        setTimeout(main.bind(null, true), 0);
+        connectSocket(networkManager, main);
       } else if (pass == 3) {
-        game = new Game(networkManager);
+        InputManager.initialize(canvas);
+        terrainManager = new CTerrainManager(main);
+      } else if (pass == 4) {
+        game = new Game(networkManager, terrainManager);
         setTimeout(main.bind(null, true), 0);
       } else {
         var framerate = new Framerate('framerate');

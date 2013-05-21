@@ -4,45 +4,83 @@ define([
     'basejs',
     'shared/Terrain',
     'shared/Globals',
-    'shared/HeightmapSectionFetcher'
+    'shared/HeightmapSectionFetcher',
+    'shared/RequireWorker'
   ],
-  function(Base, Terrain, Globals, HeightmapSectionFetcher) {
+  function(Base, Terrain, Globals, HeightmapSectionFetcher, RequireWorker) {
     return Base.extend({
-      constructor: function() {
+      constructor: function(callback) {
         this.length = Globals.terrainLength;
         this.offset = Globals.terrainOffset;
         this.terrains = {};
 
-        var seed = 123;
-        var distance = 20;
-        var amount = 11;
-        var contrast = 16;
+        var options = {
+          seed: 123,
+          distance: 20,
+          amount: 11,
+          contrast: 16
+        };
 
-        this.sectionFetcher = new HeightmapSectionFetcher(seed, distance, amount, contrast);
+        var numWorkers = 2;
+        this.workers = [];
+        this.generateQueue = {};
+
+        this.initializing = true;
+        this.callback = callback;
+
+        for (var i = 0; i < numWorkers; i++) {
+          this.workers[i] = new RequireWorker(this.getWorker(), this.getWorkerPath());
+          this.workers[i].count = 0;
+          this.workers[i].onmessage = this.onTerrainGenerated.bind(this, i);
+          this.workers[i].postMessage({
+            'type': 'init',
+            'options': options
+          });
+        }
 
         for (var x = -this.offset; x <= this.offset; x++) {
           for (var z = -this.offset; z <= this.offset; z++) {
-            this.createTerrain(x, z);
+            this.generateTerrain({x: x, z: z});
           }
         }
       },
 
-      createTerrain: function(x, z) {
-        if (this.terrains[x] == null) {
-          this.terrains[x] = {};
+      keyForCoords: function(coords) {
+        return coords.x + '~' + coords.z;
+      },
+
+      generateTerrain: function(coords) {
+        // assert this.workers.length > 0
+        var hash = Math.abs(coords.x + coords.z) % this.workers.length;
+        this.workers[hash].postMessage({
+          'type': 'fetch',
+          'coords': coords
+        });
+        this.workers[hash].count++;
+
+        var key = this.keyForCoords(coords);
+        this.generateQueue[key] = true;
+      },
+
+      onTerrainGenerated: function(i, e) {
+        var coords = e.data.coords;
+        var heights = e.data.heights;
+        if (this.terrains[coords.x] == null) {
+          this.terrains[coords.x] = {};
         }
-        if (this.terrains[x][z] == null) {
-          var heights = this.sectionFetcher.fetch(x, z);
-          var heightMatrix = [];
-          for (var i = 0; i < this.length + 1; i++) {
-            heightMatrix[i] = [];
-            for (var j = 0; j < this.length + 1; j++) {
-              var idx = i * (this.length + 1) + j;
-              heightMatrix[i][j] = (255 - heights[idx]) / 6 - 8;
+        this.terrains[coords.x][coords.z] = this.newTerrain(coords, heights);
+        this.workers[i].count--;
+
+        if (this.initializing) {
+          for (var i = 0; i < this.workers.length; i++) {
+            if (this.workers[i].count != 0) {
+              return;
             }
           }
-          this.terrains[x][z] = this.newTerrain({x: x, z: z}, heightMatrix);
+          this.initializing = false;
+          setTimeout(this.callback.bind(null, true), 0);
         }
+        delete this.generateQueue[this.keyForCoords(coords)];
       },
 
       newTerrain: function(coords, heights) {
@@ -65,24 +103,11 @@ define([
               this.terrains[x] = {};
             }
             if (this.terrains[x][z] == null) {
-              this.createTerrain(x, z);
+              var coords = {x: x, z: z};
+              if (!this.generateQueue.hasOwnProperty(this.keyForCoords(coords))) {
+                this.generateTerrain({x: x, z: z});
+              }
             }
-          }
-        }
-      },
-
-      draw: function() {
-        var min = {
-          x: this.section.x - this.offset,
-          z: this.section.z - this.offset
-        };
-        var max = {
-          x: this.section.x + this.offset,
-          z: this.section.z + this.offset
-        };
-        for (var x = min.x; x <= max.x; x++) {
-          for (var z = min.z; z <= max.z; z++) {
-            this.terrains[x][z].draw();
           }
         }
       },

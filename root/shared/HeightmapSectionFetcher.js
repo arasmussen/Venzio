@@ -7,44 +7,47 @@ define([
   ],
   function(Base, Globals, MurmurHash2) {
     var HeightmapSectionFetcher = Base.extend({
-      constructor: function(seed, distance, amount, contrast) {
-        this.hasher = new MurmurHash2(seed, 256);
+      constructor: function(options) {
+        this.hasher = new MurmurHash2(options.seed, 256);
         this.terrainLength = Globals.terrainLength;
 
-        this.blurDistance = distance;
-        this.blurAmount = amount;
-        this.contrast = contrast;
-        this.cachedSectionData = {};
+        this.blurDistance = options.distance;
+        this.blurAmount = options.amount;
+        this.contrast = options.contrast;
+        // this.cachedSectionData = {};
 
         this.calculateBlurMatrix();
       },
 
-      fetch: function(x, y) {
-        var sectionKey = x + ' ' + y;
-        if (this.cachedSectionData.hasOwnProperty(sectionKey)) {
-          return this.cachedSectionData[sectionKey];
-        }
+      fetch: function(coords) {
+        // var sectionKey = coords.x + ' ' + coords.z;
+        // if (this.cachedSectionData.hasOwnProperty(sectionKey)) {
+        //   return this.cachedSectionData[sectionKey];
+        // }
 
-        var matrix = this.getNoiseMatrix(x, y);
+        var matrix = this.getNoiseMatrix(coords);
         matrix = this.applyBlur(matrix);
         matrix = this.applyContrast(matrix);
         matrix = this.applyTerrain(matrix);
 
-        this.cachedSectionData[sectionKey] = matrix;
+        // this.cachedSectionData[sectionKey] = matrix;
         return matrix;
       },
 
-      getNoiseMatrix: function(x, y) {
+      getNoiseMatrix: function(coords) {
+        var x = coords.x;
+        var z = coords.z;
+
         var noiseMatrixSize = {
           x1: x * this.terrainLength - this.blurDistance,
           x2: (x + 1) * this.terrainLength + this.blurDistance + 1,
-          y1: y * this.terrainLength - this.blurDistance,
-          y2: (y + 1) * this.terrainLength + this.blurDistance + 1
+          z1: z * this.terrainLength - this.blurDistance,
+          z2: (z + 1) * this.terrainLength + this.blurDistance + 1
         };
 
         var noiseMatrix = [];
         for (var i = noiseMatrixSize.x1; i < noiseMatrixSize.x2; i++) {
-          for (var j = noiseMatrixSize.y1; j < noiseMatrixSize.y2; j++) {
+          for (var j = noiseMatrixSize.z1; j < noiseMatrixSize.z2; j++) {
             var vertexKey = i + ' ' + j;
             noiseMatrix.push(this.hasher.hash(vertexKey) / 255);
           }

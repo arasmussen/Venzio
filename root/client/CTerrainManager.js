@@ -6,8 +6,12 @@ define([
   ],
   function(TerrainManager, TerrainMesh) {
     return TerrainManager.extend({
-      constructor: function() {
-        this.base();
+      getWorker: function() {
+        return Worker;
+      },
+
+      getWorkerPath: function() {
+        return '/shared/CTerrainWorker.js';
       },
 
       newTerrain: function(coords, heights) {
@@ -25,7 +29,9 @@ define([
         };
         for (var x = min.x; x <= max.x; x++) {
           for (var z = min.z; z <= max.z; z++) {
-            this.terrains[x][z].draw();
+            if (this.terrains[x] != null && this.terrains[x][z] != null) {
+              this.terrains[x][z].draw();
+            }
           }
         }
       }

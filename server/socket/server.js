@@ -3,12 +3,17 @@ define([
     'server/db',
     'server/ClientManager',
     'shared/PhysicsManager',
-    'shared/TerrainManager',
+    'server/STerrainManager',
     'shared/WallManager'
   ],
   function(io, db, ClientManager, PhysicsManager, TerrainManager, WallManager) {
     return {
       main: function() {
+        // generate the terrain
+        this.terrainManager = new TerrainManager(this.start.bind(this));
+      },
+
+      start: function() {
         // set up socket connect/disconnect hooks
         io = io.listen(8080);
         io.sockets.on('connection', this.onConnect.bind(this));
@@ -22,7 +27,6 @@ define([
           updateClient: setInterval(this.updateClients.bind(this), 20)
         };
 
-        this.terrainManager = new TerrainManager();
         this.wallManager = new WallManager();
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.clientManager = new ClientManager(
