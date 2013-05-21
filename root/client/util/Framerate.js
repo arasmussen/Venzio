@@ -8,7 +8,7 @@ define([
         this.id = id;
 
         this.framesSinceUpdate = 0;
-        this.interval = 250;
+        this.interval = 1000;
 
         setInterval(this.updateFramerate.bind(this), this.interval);
       },
