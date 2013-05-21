@@ -13,7 +13,7 @@ define([
       },
 
       getWorkerPath: function() {
-        var dirname = path.dirname(module.filename);
+        var dirname = path.dirname(module.uri);
         return dirname + '/STerrainWorker.js';
       }
     });
