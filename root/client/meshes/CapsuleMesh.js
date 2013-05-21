@@ -4,7 +4,7 @@ define([
     'basejs',
     'client/meshes/CylinderMesh',
     'client/meshes/SphereMesh',
-    'shared/primitives/Capsule'
+    'common/primitives/Capsule'
   ],
   function(Base, CylinderMesh, SphereMesh, Capsule) {
     return Base.extend({

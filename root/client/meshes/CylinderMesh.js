@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/primitives/Cylinder',
+    'common/primitives/Cylinder',
     'client/meshes/PrimitiveMesh'
   ],
   function(Cylinder, PrimitiveMesh) {

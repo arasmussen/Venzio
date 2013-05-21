@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/TerrainManager',
+    'common/TerrainManager',
     'client/meshes/TerrainMesh'
   ],
   function(TerrainManager, TerrainMesh) {
@@ -11,7 +11,7 @@ define([
       },
 
       getWorkerPath: function() {
-        return '/shared/CTerrainWorker.js';
+        return '/common/CTerrainWorker.js';
       },
 
       newTerrain: function(coords, heights) {

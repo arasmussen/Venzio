@@ -4,11 +4,11 @@ define([
     'client/CPlayer',
     'client/Camera',
     'client/CInputManager',
-    'shared/PhysicsManager',
+    'common/PhysicsManager',
     'basejs',
     'client/meshes/GrassMesh',
     'client/meshes/WallMesh',
-    'shared/WallManager'
+    'common/WallManager'
   ],
   function(CPlayer, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
     return Base.extend({

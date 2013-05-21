@@ -7,7 +7,7 @@ requirejs.config({
   baseUrl: __dirname + '/../..',
   paths: {
     server: 'server/web',
-    shared: 'root/shared'
+    common: 'root/common'
   }
 });
 

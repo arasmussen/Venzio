@@ -2,7 +2,7 @@
 
 define([
     'basejs',
-    'shared/Globals'
+    'common/Globals'
   ],
   function(Base, Globals) {
     return Base.extend({

@@ -2,9 +2,9 @@ define([
     'socket.io',
     'server/db',
     'server/ClientManager',
-    'shared/PhysicsManager',
+    'common/PhysicsManager',
     'server/STerrainManager',
-    'shared/WallManager'
+    'common/WallManager'
   ],
   function(io, db, ClientManager, PhysicsManager, STerrainManager, WallManager) {
     return {

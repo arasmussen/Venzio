@@ -2,8 +2,8 @@
 
 define([
     'basejs',
-    'shared/Globals',
-    'shared/MurmurHash2'
+    'common/Globals',
+    'common/MurmurHash2'
   ],
   function(Base, Globals, MurmurHash2) {
     var HeightmapSectionFetcher = Base.extend({

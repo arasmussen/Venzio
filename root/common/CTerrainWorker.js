@@ -8,7 +8,7 @@ require({
       basejs: 'client/lib/Base'
     }
   },
-  ['shared/HeightmapSectionFetcher'],
+  ['common/HeightmapSectionFetcher'],
   function(HeightmapSectionFetcher) {
     postMessage({
       type: 'require'

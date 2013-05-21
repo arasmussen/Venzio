@@ -2,7 +2,7 @@
 
 define([
     'client/meshes/WallAttachmentMesh',
-    'shared/Player'
+    'common/Player'
   ],
   function(WallAttachmentMesh, Player) {
     return Player.extend({

@@ -2,8 +2,8 @@
 
 define([
     'basejs',
-    'shared/TerrainManager',
-    'shared/Globals'
+    'common/TerrainManager',
+    'common/Globals'
   ], function(Base, TerrainManager, Globals) {
   return Base.extend({
     constructor: function(terrainManager) {

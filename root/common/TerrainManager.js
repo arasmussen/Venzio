@@ -2,10 +2,10 @@
 
 define([
     'basejs',
-    'shared/Terrain',
-    'shared/Globals',
-    'shared/HeightmapSectionFetcher',
-    'shared/RequireWorker'
+    'common/Terrain',
+    'common/Globals',
+    'common/HeightmapSectionFetcher',
+    'common/RequireWorker'
   ],
   function(Base, Terrain, Globals, HeightmapSectionFetcher, RequireWorker) {
     return Base.extend({

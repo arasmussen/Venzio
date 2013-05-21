@@ -2,8 +2,8 @@
 
 define([
     'basejs',
-    'shared/primitives/Cylinder',
-    'shared/primitives/Sphere'
+    'common/primitives/Cylinder',
+    'common/primitives/Sphere'
   ],
   function(Base, Cylinder, Sphere) {
     return Base.extend({

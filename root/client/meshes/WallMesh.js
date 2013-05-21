@@ -2,7 +2,7 @@
 
 define([
     'client/Mesh',
-    'shared/Wall'
+    'common/Wall'
   ],
   function(Mesh, Wall) {
     return Mesh.extend({

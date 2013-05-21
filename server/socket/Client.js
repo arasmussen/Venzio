@@ -3,7 +3,7 @@
 define([
     'basejs',
     'server/SInputManager',
-    'shared/Player'
+    'common/Player'
   ], function(Base, InputManager, Player) {
     return Base.extend({
       constructor: function(socket, terrainManager, wallManager) {

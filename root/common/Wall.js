@@ -2,7 +2,7 @@
 
 define([
     'basejs',
-    'shared/assert'
+    'common/assert'
   ],
   function(Base, assert) {
     return Base.extend({

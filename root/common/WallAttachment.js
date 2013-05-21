@@ -2,7 +2,7 @@
 
 define([
     'basejs',
-    'shared/Wall'
+    'common/Wall'
   ],
   function(Base, Wall) {
     return Base.extend({

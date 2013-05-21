@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/TerrainManager',
+    'common/TerrainManager',
     'module',
     'path',
     'webworker-threads'

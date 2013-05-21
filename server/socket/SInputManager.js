@@ -1,8 +1,8 @@
 define([
     'basejs',
-    'shared/InputGlobals'
+    'common/InputGlobals'
   ], function(Base, InputGlobals) {
-    // TODO: make a base class in shared that both client and server input
+    // TODO: make a base class in common that both client and server input
     // managers both extend
     return Base.extend({
       constructor: function() {

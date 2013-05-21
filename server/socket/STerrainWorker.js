@@ -6,11 +6,11 @@ require({
     baseUrl: '../..',
     paths: {
       basejs: 'root/client/lib/Base',
-      shared: 'root/shared',
+      common: 'root/common',
       server: 'server/socket'
     }
   },
-  ['shared/HeightmapSectionFetcher'],
+  ['common/HeightmapSectionFetcher'],
   function(HeightmapSectionFetcher) {
     postMessage({
       type: 'require'

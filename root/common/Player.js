@@ -1,9 +1,9 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/WallAttachment',
-    'shared/InputGlobals',
-    'shared/Globals',
+    'common/WallAttachment',
+    'common/InputGlobals',
+    'common/Globals',
     'basejs'
   ],
   function(WallAttachment, InputGlobals, Globals, Base) {

@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/Globals',
+    'common/Globals',
     'client/Peer',
     'client/lib/socket.io',
     'basejs'

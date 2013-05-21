@@ -4,8 +4,8 @@ define([
     'basejs',
     'pngjs',
     'url',
-    'shared/HeightmapSectionFetcher',
-    'shared/Globals'
+    'common/HeightmapSectionFetcher',
+    'common/Globals'
   ],
   function(Base, pngjs, url, HeightmapSectionFetcher, Globals) {
     var PNG = pngjs.PNG;

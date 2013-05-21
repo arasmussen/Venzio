@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/primitives/Sphere',
+    'common/primitives/Sphere',
     'client/meshes/PrimitiveMesh'
   ],
   function(Sphere, PrimitiveMesh) {

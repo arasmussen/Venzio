@@ -1,7 +1,7 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'shared/Terrain',
+    'common/Terrain',
     'client/Mesh'
   ],
   function(Terrain, Mesh) {

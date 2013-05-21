@@ -7,8 +7,8 @@ requirejs.config({
     basejs: 'client/lib/Base',
     client: 'client',
     lib: 'client/lib',
-    physics: 'shared/physics',
-    shared: 'shared'
+    physics: 'common/physics',
+    common: 'common'
   }
 });
 
