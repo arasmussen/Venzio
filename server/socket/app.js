@@ -12,5 +12,6 @@ requirejs.config({
 });
 
 requirejs(['server/server'], function(server) {
+  process.chdir(__dirname);
   server.main();
 });

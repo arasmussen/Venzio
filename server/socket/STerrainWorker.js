@@ -1,6 +1,6 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
-importScripts('../../root/client/lib/require.js');
+importScripts('../../node_modules/requirejs/require.js');
 
 require({
     baseUrl: '../..',

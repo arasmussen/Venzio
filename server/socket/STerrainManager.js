@@ -6,10 +6,10 @@ define([
     'path',
     'webworker-threads'
   ],
-  function(TerrainManager, module, path, webworker) {
+  function(TerrainManager, module, path, webworker_threads) {
     return TerrainManager.extend({
       getWorker: function() {
-        return webworker.Worker;
+        return webworker_threads.Worker;
       },
 
       getWorkerPath: function() {

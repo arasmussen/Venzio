@@ -6,11 +6,11 @@ define([
     'server/STerrainManager',
     'shared/WallManager'
   ],
-  function(io, db, ClientManager, PhysicsManager, TerrainManager, WallManager) {
+  function(io, db, ClientManager, PhysicsManager, STerrainManager, WallManager) {
     return {
       main: function() {
         // generate the terrain
-        this.terrainManager = new TerrainManager(this.start.bind(this));
+        this.terrainManager = new STerrainManager(this.start.bind(this));
       },
 
       start: function() {
