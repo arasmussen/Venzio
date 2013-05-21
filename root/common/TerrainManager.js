@@ -18,7 +18,7 @@ define([
           seed: 123,
           distance: 20,
           amount: 11,
-          contrast: 16
+          contrast: 11
         };
 
         var numWorkers = 2;
