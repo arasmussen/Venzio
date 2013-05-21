@@ -59,16 +59,31 @@ define([
           return new Float32Array(colors);
         } else if (attrib == 'TextureCoord') {
           var texCoords = [];
+          var offset = {
+            x: 0.0,
+            z: 0.0
+          };
+          var factor = 8;
           for (var i = 0; i < this.terrain.width; i++) {
             for (var j = 0; j < this.terrain.length; j++) {
               texCoords.push(
-                0.0, 0.0,
-                1.0, 0.0,
-                0.0, 1.0,
-                0.0, 1.0,
-                1.0, 0.0,
-                1.0, 1.0
+                offset.x, offset.z,
+                offset.x + 1 / factor, offset.z,
+                offset.x, offset.z + 1 / factor,
+                offset.x, offset.z + 1 / factor,
+                offset.x + 1 / factor, offset.z,
+                offset.x + 1 / factor, offset.z + 1 / factor
               );
+              if (j % factor == factor - 1) {
+                offset.z = 0;
+              } else {
+                offset.z += 1 / factor;
+              }
+            }
+            if (i % factor == factor - 1) {
+              offset.x = 0;
+            } else {
+              offset.x += 1 / factor;
             }
           }
           return new Float32Array(texCoords);

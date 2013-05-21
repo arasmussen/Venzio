@@ -5,7 +5,7 @@ define(function() {
     address: '/',
     port: 8080,
 
-    // must be even!
+    // should be divisible by 4 for seamless textures
     terrainLength: 32,
     terrainOffset: 6,
 
