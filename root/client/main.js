@@ -78,7 +78,7 @@ define([
       } else if (pass == 2) {
         console.log('Couldn\'t connect to the server');
         loadingHeader.html('Failed, starting single player game');
-        updateLoadingBar(imageWidth);
+        updateLoadingBar(imageWidth * 0.75);
         setTimeout(main.bind(null, true), 0); // play anyways...
       } else {
         console.log('Unknown error occurred');

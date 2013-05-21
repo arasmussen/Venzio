@@ -5,7 +5,7 @@ importScripts('../client/lib/require.js');
 require({
     baseUrl: '..',
     paths: {
-      basejs: 'client/lib/Base'
+      basejs: 'common/lib/third-party/Base'
     }
   },
   ['common/HeightmapSectionFetcher'],

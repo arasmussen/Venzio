@@ -5,7 +5,7 @@ importScripts('../../node_modules/requirejs/require.js');
 require({
     baseUrl: '../..',
     paths: {
-      basejs: 'root/client/lib/Base',
+      basejs: 'root/common/lib/third-party/Base',
       common: 'root/common',
       server: 'server/socket'
     }

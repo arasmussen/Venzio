@@ -4,11 +4,8 @@ requirejs.config({
   baseUrl: '.',
   urlArgs: 'bust=' + (new Date()).getTime(),
   paths: {
-    basejs: 'client/lib/Base',
-    client: 'client',
-    lib: 'client/lib',
-    physics: 'common/physics',
-    common: 'common'
+    basejs: 'common/lib/third-party/Base',
+    lib: 'client/lib'
   }
 });
 
