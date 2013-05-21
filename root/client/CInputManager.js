@@ -34,8 +34,8 @@ define([
     onMouseMoved: function(e) {
       if (this.pointerLocked === true) {
         var movement = {
-          x: e.movementX || e.mozMovementX || e.webkitMovementX,
-          y: e.movementY || e.mozMovementY || e.webkitMovementY
+          x: e.movementX || e.mozMovementX || e.webkitMovementX || 0,
+          y: e.movementY || e.mozMovementY || e.webkitMovementY || 0
         };
         this.mouseDelta.x += movement.x;
         this.mouseDelta.y += movement.y;
