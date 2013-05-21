@@ -112,12 +112,12 @@ define([
               var minHeight = 0;
               var maxHeight = mountainStartHeight;
               var percentage = matrix[idx] / mountainThreshold;
-              height = 255 - parseInt(minHeight + (maxHeight - minHeight) * percentage);
+              height = 255 - (minHeight + (maxHeight - minHeight) * percentage);
             } else { // >= mountainThreshold
               var minHeight = mountainStartHeight;
               var maxHeight = 255;
               var percentage = (matrix[idx] - mountainThreshold) / (1 - mountainThreshold);
-              height = 255 - parseInt(minHeight + (maxHeight - minHeight) * percentage);
+              height = 255 - (minHeight + (maxHeight - minHeight) * percentage);
             }
 
             terrainMatrix.push(height);
