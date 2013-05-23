@@ -13,6 +13,10 @@ define(function() {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
   }
 
+  function Distance(v1, v2) {
+    return Math.sqrt(Math.pow(v2.x - v1.x, 2) + Math.pow(v2.y - v1.y, 2) + Math.pow(v2.z - v1.z, 2));
+  }
+
   return function(aVerts, bVerts) {
     var aCenter = {x: 0.0, y: 0.0, z: 0.0};
     var bCenter = {x: 0.0, y: 0.0, z: 0.0};
@@ -65,14 +69,14 @@ define(function() {
     }
 
     var aHalfWidth = {
-      x: (aVerts[4].x - aVerts[0].x) / 2,
-      y: (aVerts[2].y - aVerts[0].y) / 2,
-      z: (aVerts[1].z - aVerts[0].z) / 2
+      x: Distance(aVerts[0], aVerts[4]) / 2,
+      y: Distance(aVerts[0], aVerts[2]) / 2,
+      z: Distance(aVerts[0], aVerts[1]) / 2
     };
     var bHalfWidth = {
-      x: (bVerts[4].x - bVerts[0].x) / 2,
-      y: (bVerts[2].y - bVerts[0].y) / 2,
-      z: (bVerts[1].z - bVerts[0].z) / 2
+      x: Distance(bVerts[0], bVerts[4]) / 2,
+      y: Distance(bVerts[0], bVerts[2]) / 2,
+      z: Distance(bVerts[0], bVerts[1]) / 2
     };
 
     var axes = [
