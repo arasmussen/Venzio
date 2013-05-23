@@ -25,10 +25,14 @@ define([
           this.processQueue.push(InputGlobals.TOGGLE_CAMERA);
         }
       }
+
+      // eat spacebar so it doesn't scroll down
+      return !(e.keyCode == 32);
     },
 
     onKeyUp: function(e) {
       this.keys[e.keyCode] = false;
+      return true;
     },
 
     onMouseMoved: function(e) {
