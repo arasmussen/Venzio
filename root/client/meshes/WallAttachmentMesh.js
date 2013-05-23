@@ -6,8 +6,8 @@ define([
   ],
   function(WallAttachment, WallMesh) {
     return WallAttachment.extend({
-      getWall: function(terrainManager) {
-        return new WallMesh(terrainManager, {x: 0.0, y: 0.0, z: 0.0}, {pitch: 0.0, yaw: 0.0});
+      newWall: function() {
+        this.wall = new WallMesh(this.terrainManager, {x: 0.0, y: 0.0, z: 0.0}, {pitch: 0.0, yaw: 0.0});
       }
     });
   }

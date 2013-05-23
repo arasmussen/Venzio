@@ -97,7 +97,7 @@ define([
       handleBuildInput: function() {
         var mouseClicks = this.inputManager.getMouseClicks();
         if (this.buildMode && mouseClicks > 0) {
-          this.build();
+          this.buildObject.build();
         }
       },
 

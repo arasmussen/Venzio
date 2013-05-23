@@ -12,16 +12,22 @@ define([
         this.wallManager = wallManager;
         this.maxDistance = 4.0;
 
-        this.getNewWall();
+        this.newWall();
         this.update();
       },
 
-      getNewWall: function() {
-        this.wall = this.getWall(this.terrainManager);
+      newWall: function() {
+        this.wall = new Wall(this.terrainManager, {x: 0.0, y: 0.0, z: 0.0}, {pitch: 0.0, yaw: 0.0});
       },
 
-      getWall: function(terrainManager) {
-        return new Wall(terrainManager, {x: 0.0, y: 0.0, z: 0.0}, {pitch: 0.0, yaw: 0.0});
+      build: function() {
+        // do not build the wall if it collides with another wall
+        if (this.wallManager.collides(this.wall)) {
+          return;
+        }
+
+        this.wallManager.add(this.wall);
+        this.newWall();
       },
 
       update: function() {
@@ -87,9 +93,6 @@ define([
           yaw: -this.attachee.rotation.yaw
         });
         // this.wallManager.tryToSnapWall(this.wall);
-        if (this.wallManager.collides(this.wall)) {
-          console.log('COLLISION!!!');
-        }
 
         this.wall.updatePositionData();
       },
