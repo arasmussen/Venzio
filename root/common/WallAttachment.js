@@ -26,6 +26,7 @@ define([
           return;
         }
 
+        this.wall.setBuilt(true);
         this.wallManager.add(this.wall);
         this.newWall();
       },
@@ -92,6 +93,11 @@ define([
           pitch: 0.0,
           yaw: -this.attachee.rotation.yaw
         });
+        if (this.wallManager.collides(this.wall)) {
+          this.wall.setBuildable(false);
+        } else {
+          this.wall.setBuildable(true);
+        }
         // this.wallManager.tryToSnapWall(this.wall);
 
         this.wall.updatePositionData();

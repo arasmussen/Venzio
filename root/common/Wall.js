@@ -14,6 +14,8 @@ define([
         this.position = {};
         this.rotation = {pitch: 0.0, yaw: 0.0};
 
+        this.built = false;
+
         this.setPosition(position);
         this.setRotation(rotation);
 
@@ -29,6 +31,14 @@ define([
       setRotation: function(rotation) {
         this.yaw = rotation.yaw;
         this.pitch = rotation.pitch;
+      },
+
+      setBuildable: function(buildable) {
+        this.buildable = buildable;
+      },
+
+      setBuilt: function(built) {
+        this.built = built;
       },
 
       getSnapData: function() {

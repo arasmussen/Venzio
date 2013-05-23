@@ -21,6 +21,14 @@ define([
         this.wall.setRotation(rotation);
       },
 
+      setBuildable: function(buildable) {
+        this.wall.setBuildable(buildable);
+      },
+
+      setBuilt: function(built) {
+        this.wall.setBuilt(built);
+      },
+
       getPosition: function() {
         return this.wall.position;
       },

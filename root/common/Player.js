@@ -113,11 +113,6 @@ define([
         }
       },
 
-      build: function() {
-        this.wallManager.add(this.buildObject.wall);
-        this.buildObject.getNewWall();
-      },
-
       getState: function() {
         return (
           0x0001 * this.buildMode +
