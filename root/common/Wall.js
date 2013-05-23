@@ -50,13 +50,9 @@ define([
         };
       },
 
-      updatePositionData: function() {
-        var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
-        assert(this.position.y >= terrainHeight, "built a wall below terrain level");
-
+      getCorners: function() {
         var width = 1.0;
         var depth = 0.1;
-        var height = 1.0;
 
         var widthComponents = {
           x: (width * Math.cos(this.yaw)) / 2.0,
@@ -67,49 +63,80 @@ define([
           z: (depth * -Math.cos(this.yaw)) / 2.0
         };
 
-        var front_left = {
-          x: -widthComponents.x - depthComponents.x,
-          z: -widthComponents.z - depthComponents.z
+        return {
+          front_left: {
+            x: -widthComponents.x - depthComponents.x,
+            z: -widthComponents.z - depthComponents.z
+          },
+          front_right: {
+            x: widthComponents.x - depthComponents.x,
+            z: widthComponents.z - depthComponents.z
+          },
+          back_left: {
+            x: -widthComponents.x + depthComponents.x,
+            z: -widthComponents.z + depthComponents.z
+          },
+          back_right: {
+            x: widthComponents.x + depthComponents.x,
+            z: widthComponents.z + depthComponents.z
+          }
         };
-        var front_right = {
-          x: widthComponents.x - depthComponents.x,
-          z: widthComponents.z - depthComponents.z
-        };
-        var back_left = {
-          x: -widthComponents.x + depthComponents.x,
-          z: -widthComponents.z + depthComponents.z
-        };
-        var back_right = {
-          x: widthComponents.x + depthComponents.x,
-          z: widthComponents.z + depthComponents.z
-        };
+      },
 
-        front_left.y = this.terrainManager.getTerrainHeight({
-          x: this.position.x + front_left.x,
-          z: this.position.z + front_left.z
+      getPhysicsVertices: function() {
+        var height = 1.0;
+
+        var corners = this.getCorners();
+
+        var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
+        var y = this.position.y - terrainHeight;
+
+        return [
+          {x: this.position.x + corners.front_left.x,  y: y,          z: this.position.z + corners.front_left.z},
+          {x: this.position.x + corners.back_left.x,   y: y,          z: this.position.z + corners.back_left.z},
+          {x: this.position.x + corners.front_left.x,  y: y + height, z: this.position.z + corners.front_left.z},
+          {x: this.position.x + corners.back_left.x,   y: y + height, z: this.position.z + corners.back_left.z},
+          {x: this.position.x + corners.front_right.x, y: y,          z: this.position.z + corners.front_right.z},
+          {x: this.position.x + corners.back_right.x,  y: y,          z: this.position.z + corners.back_right.z},
+          {x: this.position.x + corners.front_right.x, y: y + height, z: this.position.z + corners.front_right.z},
+          {x: this.position.x + corners.back_right.x,  y: y + height, z: this.position.z + corners.back_right.z}
+        ];
+      },
+
+
+      updatePositionData: function() {
+        var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
+        assert(this.position.y >= terrainHeight, "built a wall below terrain level");
+
+        var height = 1.0;
+
+        var corners = this.getCorners();
+        corners.front_left.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + corners.front_left.x,
+          z: this.position.z + corners.front_left.z
         }) - terrainHeight;
-        front_right.y = this.terrainManager.getTerrainHeight({
-          x: this.position.x + front_right.x,
-          z: this.position.z + front_right.z
+        corners.front_right.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + corners.front_right.x,
+          z: this.position.z + corners.front_right.z
         }) - terrainHeight;
-        back_left.y = this.terrainManager.getTerrainHeight({
-          x: this.position.x + back_left.x,
-          z: this.position.z + back_left.z
+        corners.back_left.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + corners.back_left.x,
+          z: this.position.z + corners.back_left.z
         }) - terrainHeight;
-        back_right.y = this.terrainManager.getTerrainHeight({
-          x: this.position.x + back_right.x,
-          z: this.position.z + back_right.z
+        corners.back_right.y = this.terrainManager.getTerrainHeight({
+          x: this.position.x + corners.back_right.x,
+          z: this.position.z + corners.back_right.z
         }) - terrainHeight;
 
         this.positionData = new Float32Array([
-          front_left.x, front_left.y, front_left.z,
-          back_left.x, back_left.y, back_left.z,
-          front_left.x, front_left.y + height, front_left.z,
-          back_left.x, back_left.y + height, back_left.z,
-          front_right.x, front_right.y, front_right.z,
-          back_right.x, back_right.y, back_right.z,
-          front_right.x, front_right.y + height, front_right.z,
-          back_right.x, back_right.y + height, back_right.z
+          corners.front_left.x,  corners.front_left.y,           corners.front_left.z,
+          corners.back_left.x,   corners.back_left.y,            corners.back_left.z,
+          corners.front_left.x,  corners.front_left.y + height,  corners.front_left.z,
+          corners.back_left.x,   corners.back_left.y + height,   corners.back_left.z,
+          corners.front_right.x, corners.front_right.y,          corners.front_right.z,
+          corners.back_right.x,  corners.back_right.y,           corners.back_right.z,
+          corners.front_right.x, corners.front_right.y + height, corners.front_right.z,
+          corners.back_right.x,  corners.back_right.y + height,  corners.back_right.z
         ]);
       }
     });

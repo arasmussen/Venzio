@@ -2,9 +2,10 @@
 
 define([
     'basejs',
-    'common/Globals'
+    'common/Globals',
+    'common/OBBCollide'
   ],
-  function(Base, Globals) {
+  function(Base, Globals, OBBCollide) {
     return Base.extend({
       constructor: function() {
         this.walls = [];
@@ -14,6 +15,16 @@ define([
 
       add: function(wall) {
         this.walls.push(wall);
+      },
+
+      collides: function(wall) {
+        var vertices = [];
+        for (var i in this.walls) {
+          if (OBBCollide(wall.getPhysicsVertices(), this.walls[i].getPhysicsVertices())) {
+            return true;
+          }
+        }
+        return false;
       },
 
       tryToSnapWall: function(wall) {

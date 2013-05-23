@@ -33,6 +33,10 @@ define([
         return this.wall.getSnapData();
       },
 
+      getPhysicsVertices: function() {
+        return this.wall.getPhysicsVertices();
+      },
+
       updatePositionData: function() {
         this.wall.updatePositionData();
       },

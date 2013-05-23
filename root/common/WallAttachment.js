@@ -87,6 +87,9 @@ define([
           yaw: -this.attachee.rotation.yaw
         });
         // this.wallManager.tryToSnapWall(this.wall);
+        if (this.wallManager.collides(this.wall)) {
+          console.log('COLLISION!!!');
+        }
 
         this.wall.updatePositionData();
       },
