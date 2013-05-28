@@ -10,10 +10,14 @@ define([
       initialize: function() {
         this.buffers = {};
         this.textures = {};
+        this.uniforms = {};
 
         this.initializeShaders();
         this.initializeBuffers();
         this.initializeTextures();
+
+        this.setUniform('uMVMatrix', mvMatrix);
+        this.setUniform('uPMatrix', pMatrix);
       },
 
       initializeShaders: function() {
@@ -58,7 +62,7 @@ define([
           this.textures[name] = {};
           this.textures[name].data = TextureManager.getTexture(name, filetype);
           this.textures[name].offset = offset++;
-          this.textures[name].location = this.shader.getUniform(name + '_texture');
+          this.textures[name].location = this.shader.getTexture(name + '_texture');
         }
       },
 
@@ -94,6 +98,20 @@ define([
         }
       },
 
+      bindUniforms: function() {
+        for (var uniform in this.shader.uniforms) {
+          this.shader.uniforms[uniform].type.call(
+            this,
+            this.shader.getUniform(uniform),
+            this.uniforms[uniform]
+          );
+        }
+      },
+
+      setUniform: function(name, value) {
+        this.uniforms[name] = value;
+      },
+
       areTexturesLoaded: function() {
         for (var name in this.textures) {
           if (!this.textures[name].data.loaded) {
@@ -110,9 +128,6 @@ define([
 
         this.preDraw();
 
-        this.bindTextures();
-        this.bindAttributes();
-
         if (this.isUsingIndices()) {
           gl.drawElements(
             this.getDrawMode(), this.getNumItems(), gl.UNSIGNED_SHORT, 0
@@ -125,12 +140,18 @@ define([
       },
 
       preDraw: function() {
+        // get shader/camera ready
         this.transform();
         this.shader.preDraw();
-        this.setMatrixUniforms();
+
+        // bind stuff to shader
+        this.bindTextures();
+        this.bindAttributes();
+        this.bindUniforms();
       },
 
       postDraw: function() {
+        // cleanup shader/camera
         this.shader.postDraw();
         this.untransform();
       },
@@ -151,11 +172,6 @@ define([
         mat4.rotate(mvMatrix, -rotation.pitch, [1, 0, 0]);
         mat4.rotate(mvMatrix, -rotation.yaw, [0, 1, 0]);
         mat4.translate(mvMatrix, translate);
-      },
-
-      setMatrixUniforms: function() {
-        gl.uniformMatrix4fv(this.shader.getUniform('uPMatrix'), false, pMatrix);
-        gl.uniformMatrix4fv(this.shader.getUniform('uMVMatrix'), false, mvMatrix);
       },
 
       getDrawMode: function() {

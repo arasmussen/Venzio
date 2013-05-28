@@ -22,11 +22,37 @@ define([
       },
 
       setBuildable: function(buildable) {
+        var update = false;
+        if (this.wall.buildable != buildable) {
+          update = true;
+        }
         this.wall.setBuildable(buildable);
+        if (update) {
+          this.updateBuildState();
+        }
       },
 
       setBuilt: function(built) {
+        var update = false;
+        if (this.wall.built != built) {
+          update = true;
+        }
         this.wall.setBuilt(built);
+        if (update) {
+          this.updateBuildState();
+        }
+      },
+
+      updateBuildState: function() {
+        if (this.wall.built) {
+          this.setUniform('build_state', 0); // built, no changes
+        } else {
+          if (this.wall.buildable) {
+            this.setUniform('build_state', 1); // not built but buildable, transparenty
+          } else {
+            this.setUniform('build_state', 2); // not built or buildable, transparenty red
+          }
+        }
       },
 
       getPosition: function() {
@@ -99,7 +125,7 @@ define([
       },
 
       getShaderName: function() {
-        return 'cube';
+        return 'wall';
       }
     });
   }

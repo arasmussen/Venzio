@@ -6,6 +6,7 @@ define(['basejs'], function(Base) {
       this.program = program;
       this.attributes = [];
       this.uniforms = [];
+      this.textures = [];
     },
 
     getAttribute: function(attr) {
@@ -13,7 +14,11 @@ define(['basejs'], function(Base) {
     },
 
     getUniform: function(uni) {
-      return this.program[uni];
+      return this.program[uni].location;
+    },
+
+    getTexture: function(texture) {
+      return this.program[texture];
     },
 
     use: function() {
@@ -51,10 +56,21 @@ define(['basejs'], function(Base) {
 
     addUniforms: function(uniforms) {
       this.use();
-      uniforms.forEach(function(uniform) {
-        this.program[uniform] = gl.getUniformLocation(this.program, uniform);
-      }, this);
+      for (var uniform in uniforms) {
+        this.program[uniform] = {
+          location: gl.getUniformLocation(this.program, uniform),
+          type: uniform.type
+        };
+      }
       this.uniforms = uniforms;
+    },
+
+    addTextures: function(textures) {
+      this.use();
+      textures.forEach(function(texture) {
+        this.program[texture] = gl.getUniformLocation(this.program, texture);
+      }, this);
+      this.textures = textures;
     }
   });
 });

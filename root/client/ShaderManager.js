@@ -28,6 +28,7 @@ define([
         this.shaders[name] = new Shader(program);
         this.shaders[name].addAttributes(ShaderData[name].attributes);
         this.shaders[name].addUniforms(ShaderData[name].uniforms);
+        this.shaders[name].addTextures(ShaderData[name].textures);
       },
 
       getSource: function(url) {
