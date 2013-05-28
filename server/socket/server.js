@@ -27,7 +27,7 @@ define([
           updateClient: setInterval(this.updateClients.bind(this), 20)
         };
 
-        this.wallManager = new WallManager();
+        this.wallManager = new WallManager(this.terrainManager);
         this.physicsManager = new PhysicsManager(this.terrainManager);
         this.clientManager = new ClientManager(
           this.terrainManager,

@@ -15,7 +15,7 @@ define([
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
         this.physicsManager = new PhysicsManager(this.terrainManager);
-        this.wallManager = new WallManager();
+        this.wallManager = new WallManager(this.terrainManager);
         this.player = new CPlayer(InputManager, this.terrainManager, this.wallManager);
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;

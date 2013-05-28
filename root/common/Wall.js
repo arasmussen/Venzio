@@ -43,20 +43,20 @@ define([
       },
 
       getSnapData: function() {
-        var width = {
-          x: (this.width * Math.cos(this.yaw)) / 2,
-          z: (this.width * Math.sin(this.yaw)) / 2
+        var widthComponents = {
+          x: (Globals.walls.width * Math.cos(this.yaw)) / 2,
+          z: (Globals.walls.width * Math.sin(this.yaw)) / 2
         };
         return {
           left: {
-            x: this.position.x - width.x,
-            y: this.position.y + this.height / 2.0,
-            z: this.position.z - width.z
+            x: this.position.x - widthComponents.x,
+            y: this.position.y + Globals.walls.height / 2.0,
+            z: this.position.z - widthComponents.z
           },
           right: {
-            x: this.position.x + width.x,
-            y: this.position.y + this.height / 2.0,
-            z: this.position.z + width.z
+            x: this.position.x + widthComponents.x,
+            y: this.position.y + Globals.walls.height / 2.0,
+            z: this.position.z + widthComponents.z
           }
         };
       },
