@@ -2,9 +2,10 @@
 
 define([
     'basejs',
-    'common/lib/first-party/assert'
+    'common/lib/first-party/assert',
+    'common/Globals'
   ],
-  function(Base, assert) {
+  function(Base, assert, Globals) {
     return Base.extend({
       // position is the center of the bottom face of the wall
       // therefore its y should be above the terrain for those x/z coordinates
@@ -61,8 +62,8 @@ define([
       },
 
       getCorners: function() {
-        var width = 1.0;
-        var depth = 0.1;
+        var width = Globals.walls.width;
+        var depth = Globals.walls.depth;
 
         var widthComponents = {
           x: (width * Math.cos(this.yaw)) / 2.0,
@@ -94,7 +95,7 @@ define([
       },
 
       getPhysicsVertices: function() {
-        var height = 1.0;
+        var height = Globals.walls.height;
 
         var corners = this.getCorners();
 
@@ -118,7 +119,7 @@ define([
         var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
         assert(this.position.y >= terrainHeight, "built a wall below terrain level");
 
-        var height = 1.0;
+        var height = Globals.walls.height;
 
         var corners = this.getCorners();
         corners.front_left.y = this.terrainManager.getTerrainHeight({

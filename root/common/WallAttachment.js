@@ -2,15 +2,17 @@
 
 define([
     'basejs',
-    'common/Wall'
+    'common/Wall',
+    'common/Globals'
   ],
-  function(Base, Wall) {
+  function(Base, Wall, Globals) {
     return Base.extend({
       constructor: function(attachee, terrainManager, wallManager) {
         this.attachee = attachee;
         this.terrainManager = terrainManager;
         this.wallManager = wallManager;
-        this.maxDistance = 4.0;
+
+        this.maxDistance = Globals.buildDistance;
 
         this.newWall();
         this.update();
@@ -98,7 +100,7 @@ define([
         } else {
           this.wall.setBuildable(true);
         }
-        // this.wallManager.tryToSnapWall(this.wall);
+        this.wallManager.tryToSnapWall(this.wall);
 
         this.wall.updatePositionData();
       },

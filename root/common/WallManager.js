@@ -9,8 +9,8 @@ define([
     return Base.extend({
       constructor: function() {
         this.walls = [];
-        this.snappingThreshold = 0.3;
-        this.candidateThreshold = this.snappingThreshold + 1.0;
+        this.snappingThreshold = Globals.buildSnapThreshold;
+        this.candidateThreshold = this.snappingThreshold + Globals.walls.width + Globals.walls.depth;
       },
 
       add: function(wall) {

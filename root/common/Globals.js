@@ -9,6 +9,16 @@ define(function() {
     terrainLength: 32,
     terrainOffset: 6,
 
+    // walls
+    walls: {
+      width: 1.0,
+      depth: 0.1,
+      height: 1.0
+    },
+
+    buildDistance: 4.0,
+    buildSnapThreshold: 0.3,
+
     normalize: function(vec3) {
       if (vec3.x == 0.0 && vec3.y == 0.0 && vec3.z == 0.0) {
         return vec3;
