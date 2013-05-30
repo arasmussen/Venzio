@@ -42,21 +42,32 @@ define([
         this.built = built;
       },
 
+      getPositionOffGround: function() {
+        var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
+        return {
+          x: this.position.x,
+          y: this.position.y - terrainHeight,
+          z: this.position.z
+        };
+      },
+
       getSnapData: function() {
         var widthComponents = {
           x: (Globals.walls.width * Math.cos(this.yaw)) / 2,
           z: (Globals.walls.width * Math.sin(this.yaw)) / 2
         };
+        var position = this.getPositionOffGround();
+
         return {
           left: {
-            x: this.position.x - widthComponents.x,
-            y: this.position.y + Globals.walls.height / 2.0,
-            z: this.position.z - widthComponents.z
+            x: position.x - widthComponents.x,
+            y: position.y + Globals.walls.height / 2.0,
+            z: position.z - widthComponents.z
           },
           right: {
-            x: this.position.x + widthComponents.x,
-            y: this.position.y + Globals.walls.height / 2.0,
-            z: this.position.z + widthComponents.z
+            x: position.x + widthComponents.x,
+            y: position.y + Globals.walls.height / 2.0,
+            z: position.z + widthComponents.z
           }
         };
       },
@@ -99,18 +110,17 @@ define([
 
         var corners = this.getCorners();
 
-        var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
-        var y = this.position.y - terrainHeight;
+        var position = this.getPositionOffGround();
 
         return [
-          {x: this.position.x + corners.front_left.x,  y: y,          z: this.position.z + corners.front_left.z},
-          {x: this.position.x + corners.back_left.x,   y: y,          z: this.position.z + corners.back_left.z},
-          {x: this.position.x + corners.front_left.x,  y: y + height, z: this.position.z + corners.front_left.z},
-          {x: this.position.x + corners.back_left.x,   y: y + height, z: this.position.z + corners.back_left.z},
-          {x: this.position.x + corners.front_right.x, y: y,          z: this.position.z + corners.front_right.z},
-          {x: this.position.x + corners.back_right.x,  y: y,          z: this.position.z + corners.back_right.z},
-          {x: this.position.x + corners.front_right.x, y: y + height, z: this.position.z + corners.front_right.z},
-          {x: this.position.x + corners.back_right.x,  y: y + height, z: this.position.z + corners.back_right.z}
+          {x: position.x + corners.front_left.x,  y: position.y,          z: position.z + corners.front_left.z},
+          {x: position.x + corners.back_left.x,   y: position.y,          z: position.z + corners.back_left.z},
+          {x: position.x + corners.front_left.x,  y: position.y + height, z: position.z + corners.front_left.z},
+          {x: position.x + corners.back_left.x,   y: position.y + height, z: position.z + corners.back_left.z},
+          {x: position.x + corners.front_right.x, y: position.y,          z: position.z + corners.front_right.z},
+          {x: position.x + corners.back_right.x,  y: position.y,          z: position.z + corners.back_right.z},
+          {x: position.x + corners.front_right.x, y: position.y + height, z: position.z + corners.front_right.z},
+          {x: position.x + corners.back_right.x,  y: position.y + height, z: position.z + corners.back_right.z}
         ];
       },
 

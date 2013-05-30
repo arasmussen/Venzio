@@ -76,7 +76,7 @@ define([
             });
             if (attacheePosition.y + distance * looking.y + 2.0 <= terrainHeight) {
               upper = distance;
-            } else if (attacheePosition.y + distance * looking.y + 2.0 - terrainHeight <= 0.01) {
+            } else if (attacheePosition.y + distance * looking.y + 2.0 - terrainHeight <= 0.001) {
               break;
             } else {
               lower = distance;

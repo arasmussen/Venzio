@@ -32,7 +32,7 @@ define([
         var candidates = [];
         for (var i in this.walls) {
           var testWall = this.walls[i];
-          if (Globals.distance(wall.position, testWall.position) < this.candidateThreshold) {
+          if (Globals.distance(wall.getPositionOffGround(), testWall.getPositionOffGround()) < this.candidateThreshold) {
             candidates.push(testWall);
           }
         }

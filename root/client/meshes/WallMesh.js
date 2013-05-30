@@ -71,6 +71,10 @@ define([
         return this.wall.getPhysicsVertices();
       },
 
+      getPositionOffGround: function() {
+        return this.wall.getPositionOffGround();
+      },
+
       updatePositionData: function() {
         this.wall.updatePositionData();
       },
