@@ -35,7 +35,10 @@ define([
       },
 
       checkBuildability: function(wall) {
-        if (this.collides(wall)) {
+        var onGround = (wall.getPosition().y - this.terrainManager.getTerrainHeight(wall.getPosition()) <= 0.01);
+        var isSnapping = (wall.snappedWalls.length > 0);
+
+        if ((!onGround && !isSnapping) || this.collides(wall)) {
           wall.setBuildable(false);
         } else {
           wall.setBuildable(true);
