@@ -96,7 +96,7 @@ define([
           yaw: -this.attachee.rotation.yaw
         });
 
-        this.wallManager.tryToSnapWall(this.wall);
+        this.wallManager.snapWall(this.wall);
         this.wallManager.checkBuildability(this.wall);
 
         this.wall.updatePositionData();

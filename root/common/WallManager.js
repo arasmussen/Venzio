@@ -21,6 +21,12 @@ define([
       collides: function(wall) {
         var vertices = [];
         for (var i in this.walls) {
+          if (wall.snappedWalls.indexOf(this.walls[i]) != -1) {
+            continue;
+          }
+          if (Globals.distance(wall.getPositionOffGround(), this.walls[i].getPositionOffGround()) > this.candidateThreshold) {
+            continue;
+          }
           if (OBBCollide(wall.getPhysicsVertices(), this.walls[i].getPhysicsVertices())) {
             return true;
           }
@@ -36,7 +42,7 @@ define([
         }
       },
 
-      tryToSnapWall: function(wall) {
+      snapWall: function(wall) {
         var candidates = [];
         for (var i in this.walls) {
           var testWall = this.walls[i];
@@ -45,8 +51,11 @@ define([
           }
         }
 
+        wall.snappedWalls = [];
+
         var snap = false;
         var sides = wall.getSnapData();
+        var bestPosition = {};
         for (var i in candidates) {
           var testWall = candidates[i];
           var testSides = testWall.getSnapData();
@@ -63,14 +72,25 @@ define([
                 };
                 minDistance = distance;
 
-                var bestPosition = {
+                var snapPosition = {
                   x: wall.position.x + diff.x,
                   z: wall.position.z + diff.z
                 };
-                var testHeightOffGround = testWall.position.y - this.terrainManager.getTerrainHeight(testWall.position);
-                bestPosition.y = this.terrainManager.getTerrainHeight(bestPosition) + testHeightOffGround;
 
+                var testHeightOffGround = testWall.position.y - this.terrainManager.getTerrainHeight(testWall.position);
+                snapPosition.y = this.terrainManager.getTerrainHeight(snapPosition) + testHeightOffGround;
+
+                if (snap) {
+                  if (Globals.distance(bestPosition, snapPosition) <= 0.01) {
+                    wall.snappedWalls.push(testWall);
+                    continue;
+                  }
+                }
                 snap = true;
+                bestPosition.x = snapPosition.x;
+                bestPosition.y = snapPosition.y;
+                bestPosition.z = snapPosition.z;
+                wall.snappedWalls = [testWall];
               }
             }
           }
