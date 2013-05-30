@@ -95,12 +95,9 @@ define([
           pitch: 0.0,
           yaw: -this.attachee.rotation.yaw
         });
-        if (this.wallManager.collides(this.wall)) {
-          this.wall.setBuildable(false);
-        } else {
-          this.wall.setBuildable(true);
-        }
+
         this.wallManager.tryToSnapWall(this.wall);
+        this.wallManager.checkBuildability(this.wall);
 
         this.wall.updatePositionData();
       },

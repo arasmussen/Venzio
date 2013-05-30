@@ -28,6 +28,14 @@ define([
         return false;
       },
 
+      checkBuildability: function(wall) {
+        if (this.collides(wall)) {
+          wall.setBuildable(false);
+        } else {
+          wall.setBuildable(true);
+        }
+      },
+
       tryToSnapWall: function(wall) {
         var candidates = [];
         for (var i in this.walls) {
@@ -37,11 +45,7 @@ define([
           }
         }
 
-        var bestPosition = {
-          x: wall.position.x,
-          y: wall.position.y,
-          z: wall.position.z
-        };
+        var snap = false;
         var sides = wall.getSnapData();
         for (var i in candidates) {
           var testWall = candidates[i];
@@ -59,18 +63,25 @@ define([
                 };
                 minDistance = distance;
 
-                bestPosition.x = wall.position.x + diff.x;
-                bestPosition.z = wall.position.z + diff.z;
-
+                var bestPosition = {
+                  x: wall.position.x + diff.x,
+                  z: wall.position.z + diff.z
+                };
                 var testHeightOffGround = testWall.position.y - this.terrainManager.getTerrainHeight(testWall.position);
                 bestPosition.y = this.terrainManager.getTerrainHeight(bestPosition) + testHeightOffGround;
+
+                snap = true;
               }
             }
           }
         }
-        wall.position.x = bestPosition.x;
-        wall.position.y = bestPosition.y;
-        wall.position.z = bestPosition.z;
+        if (snap) {
+          wall.position.x = bestPosition.x;
+          wall.position.y = bestPosition.y;
+          wall.position.z = bestPosition.z;
+          return true;
+        }
+        return false;
       },
 
       drawWalls: function() {
