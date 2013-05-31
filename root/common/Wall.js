@@ -42,6 +42,10 @@ define([
         this.built = built;
       },
 
+      getYaw: function() {
+        return this.yaw;
+      },
+
       getPositionOffGround: function() {
         var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
         return {
@@ -53,21 +57,31 @@ define([
 
       getSnapData: function() {
         var widthComponents = {
-          x: (Globals.walls.width * Math.cos(this.yaw)) / 2,
-          z: (Globals.walls.width * Math.sin(this.yaw)) / 2
+          x: (Globals.walls.width * Math.cos(this.yaw)),
+          z: (Globals.walls.width * Math.sin(this.yaw))
         };
         var position = this.getPositionOffGround();
 
         return {
           left: {
-            x: position.x - widthComponents.x,
+            x: position.x - widthComponents.x / 2.0,
             y: position.y + Globals.walls.height / 2.0,
-            z: position.z - widthComponents.z
+            z: position.z - widthComponents.z / 2.0
           },
           right: {
-            x: position.x + widthComponents.x,
+            x: position.x + widthComponents.x / 2.0,
             y: position.y + Globals.walls.height / 2.0,
-            z: position.z + widthComponents.z
+            z: position.z + widthComponents.z / 2.0
+          },
+          bottom: {
+            x: position.x,
+            y: position.y,
+            z: position.z
+          },
+          top: {
+            x: position.x,
+            y: position.y + Globals.walls.height,
+            z: position.z
           }
         };
       },

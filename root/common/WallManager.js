@@ -39,10 +39,9 @@ define([
         var isSnapping = (wall.snappedWalls.length > 0);
 
         if ((!onGround && !isSnapping) || this.collides(wall)) {
-          wall.setBuildable(false);
-        } else {
-          wall.setBuildable(true);
+          return false;
         }
+        return true;
       },
 
       snapWall: function(wall) {
@@ -57,42 +56,90 @@ define([
         wall.snappedWalls = [];
 
         var snap = false;
-        var sides = wall.getSnapData();
+        var wallSides = wall.getSnapData();
         var bestPosition = {};
+        var bestYaw = wall.getYaw();
+        var minDistance;
         for (var i in candidates) {
           var testWall = candidates[i];
-          var testSides = testWall.getSnapData();
-          var sideNames = ['left', 'right'];
-          for (var j in sideNames) {
-            var side1 = sideNames[j];
-            for (var k in sideNames) {
-              var side2 = sideNames[k];
-              var distance = Globals.distance(sides[side1], testSides[side2]);
+          var testWallSides = testWall.getSnapData();
+
+          var sides = ['left', 'right'];
+          for (var i in sides) {
+            var side1 = sides[i];
+            for (var j in sides) {
+              var side2 = sides[j];
+
+              var distance = Globals.distance(wallSides[side1], testWallSides[side2]);
               if (distance < this.snappingThreshold) {
                 var diff = {
-                  x: testSides[side2].x - sides[side1].x,
-                  z: testSides[side2].z - sides[side1].z
+                  x: testWallSides[side2].x - wallSides[side1].x,
+                  z: testWallSides[side2].z - wallSides[side1].z
                 };
-                minDistance = distance;
 
                 var snapPosition = {
                   x: wall.position.x + diff.x,
                   z: wall.position.z + diff.z
                 };
 
-                var testHeightOffGround = testWall.position.y - this.terrainManager.getTerrainHeight(testWall.position);
-                snapPosition.y = this.terrainManager.getTerrainHeight(snapPosition) + testHeightOffGround;
+                var heightOffTerrain = testWall.getPosition().y - this.terrainManager.getTerrainHeight(testWall.getPosition());
+                snapPosition.y = heightOffTerrain + this.terrainManager.getTerrainHeight(snapPosition);
 
-                if (snap) {
-                  if (Globals.distance(bestPosition, snapPosition) <= 0.01) {
-                    wall.snappedWalls.push(testWall);
-                    continue;
-                  }
+                if (snap && Globals.distance(bestPosition, snapPosition) <= 0.05) {
+                  wall.snappedWalls.push(testWall);
+                  continue;
                 }
+
+                minDistance = distance;
                 snap = true;
                 bestPosition.x = snapPosition.x;
                 bestPosition.y = snapPosition.y;
                 bestPosition.z = snapPosition.z;
+                bestYaw = wall.getYaw();
+                wall.snappedWalls = [testWall];
+              }
+            }
+          }
+
+          var sides = ['top', 'bottom'];
+          for (var i in sides) {
+            var side1 = sides[i];
+            for (var j in sides) {
+              var side2 = sides[j];
+
+              if (side1 == side2) {
+                continue;
+              }
+
+              var distance = Globals.distance(wallSides[side1], testWallSides[side2]);
+              if (distance < this.snappingThreshold) {
+                var snapPosition = {
+                  x: testWall.position.x,
+                  z: testWall.position.z
+                };
+
+                // wall being built snaps on bottom side
+                if (side1 == 'bottom') {
+                  snapPosition.y = testWall.position.y + Globals.walls.height;
+                } else {
+                  snapPosition.y = testWall.position.y - Globals.walls.height;
+
+                  if (snapPosition.y < this.terrainManager.getTerrainHeight(snapPosition)) {
+                    continue;
+                  }
+                }
+
+                if (snap && Globals.distance(bestPosition, snapPosition) <= 0.05) {
+                  wall.snappedWalls.push(testWall);
+                  continue;
+                }
+
+                minDistance = distance;
+                snap = true;
+                bestPosition.x = snapPosition.x;
+                bestPosition.y = snapPosition.y;
+                bestPosition.z = snapPosition.z;
+                bestYaw = testWall.getYaw();
                 wall.snappedWalls = [testWall];
               }
             }
@@ -102,6 +149,7 @@ define([
           wall.position.x = bestPosition.x;
           wall.position.y = bestPosition.y;
           wall.position.z = bestPosition.z;
+          wall.setRotation({yaw: bestYaw, pitch: 0.0});
           return true;
         }
         return false;

@@ -75,6 +75,10 @@ define([
         return this.wall.getPositionOffGround();
       },
 
+      getYaw: function() {
+        return this.wall.yaw;
+      },
+
       updatePositionData: function() {
         this.wall.updatePositionData();
       },

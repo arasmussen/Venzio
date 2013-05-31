@@ -24,7 +24,7 @@ define([
 
       build: function() {
         // do not build the wall if it collides with another wall
-        if (this.wallManager.collides(this.wall)) {
+        if (!this.wallManager.checkBuildability(this.wall)) {
           return;
         }
 
@@ -97,7 +97,7 @@ define([
         });
 
         this.wallManager.snapWall(this.wall);
-        this.wallManager.checkBuildability(this.wall);
+        this.wall.setBuildable(this.wallManager.checkBuildability(this.wall));
 
         this.wall.updatePositionData();
       },
