@@ -16,8 +16,16 @@ define(function() {
       height: 1.0
     },
 
-    buildDistance: 4.0,
-    buildSnapThreshold: 0.3,
+    // how far build object can be built from the player
+    buildDistance: 5.0,
+
+    // how close a wall has to be to snap to another wall
+    verticalSnapThreshold: 0.4,
+    horizontalSnapThreshold: 0.2,
+
+    // how close a wall has to be to another wall to assume that they
+    // are already snapped without moving them
+    snapEpsilon: 0.05,
 
     normalize: function(vec3) {
       if (vec3.x == 0.0 && vec3.y == 0.0 && vec3.z == 0.0) {

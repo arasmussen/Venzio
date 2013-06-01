@@ -42,10 +42,6 @@ define([
         this.built = built;
       },
 
-      getYaw: function() {
-        return this.yaw;
-      },
-
       getPositionOffGround: function() {
         var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
         return {

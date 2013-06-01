@@ -3,15 +3,16 @@
 define([
     'basejs',
     'common/Globals',
-    'common/OBBCollide'
+    'common/OBBCollide',
+    'common/WallSnapper'
   ],
-  function(Base, Globals, OBBCollide) {
+  function(Base, Globals, OBBCollide, WallSnapper) {
     return Base.extend({
       constructor: function(terrainManager) {
         this.walls = [];
-        this.snappingThreshold = Globals.buildSnapThreshold;
-        this.candidateThreshold = this.snappingThreshold + Globals.walls.width + Globals.walls.depth;
+        this.candidateThreshold = Globals.horizontalSnapThreshold + Globals.walls.width + Globals.walls.depth;
         this.terrainManager = terrainManager;
+        this.wallSnapper = new WallSnapper(this.terrainManager);
       },
 
       add: function(wall) {
@@ -53,103 +54,7 @@ define([
           }
         }
 
-        wall.snappedWalls = [];
-
-        var snap = false;
-        var wallSides = wall.getSnapData();
-        var bestPosition = {};
-        var bestYaw = wall.getYaw();
-        var minDistance;
-        for (var i in candidates) {
-          var testWall = candidates[i];
-          var testWallSides = testWall.getSnapData();
-
-          var sides = ['left', 'right'];
-          for (var i in sides) {
-            var side1 = sides[i];
-            for (var j in sides) {
-              var side2 = sides[j];
-
-              var distance = Globals.distance(wallSides[side1], testWallSides[side2]);
-              if (distance < this.snappingThreshold) {
-                var diff = {
-                  x: testWallSides[side2].x - wallSides[side1].x,
-                  z: testWallSides[side2].z - wallSides[side1].z
-                };
-
-                var snapPosition = {
-                  x: wall.position.x + diff.x,
-                  z: wall.position.z + diff.z
-                };
-
-                var heightOffTerrain = testWall.getPosition().y - this.terrainManager.getTerrainHeight(testWall.getPosition());
-                snapPosition.y = heightOffTerrain + this.terrainManager.getTerrainHeight(snapPosition);
-
-                if (snap && Globals.distance(bestPosition, snapPosition) <= 0.05) {
-                  wall.snappedWalls.push(testWall);
-                  continue;
-                }
-
-                minDistance = distance;
-                snap = true;
-                bestPosition.x = snapPosition.x;
-                bestPosition.y = snapPosition.y;
-                bestPosition.z = snapPosition.z;
-                bestYaw = wall.getYaw();
-                wall.snappedWalls = [testWall];
-              }
-            }
-          }
-
-          var sides = ['top', 'bottom'];
-          for (var i in sides) {
-            var side1 = sides[i];
-            for (var j in sides) {
-              var side2 = sides[j];
-
-              if (side1 == side2) {
-                continue;
-              }
-
-              var distance = Globals.distance(wallSides[side1], testWallSides[side2]);
-              if (distance < this.snappingThreshold) {
-                var snapPosition = {
-                  x: testWall.position.x,
-                  z: testWall.position.z
-                };
-
-                // wall being built snaps on bottom side
-                if (side1 == 'bottom') {
-                  snapPosition.y = testWall.position.y + Globals.walls.height;
-                } else {
-                  snapPosition.y = testWall.position.y - Globals.walls.height;
-
-                  if (snapPosition.y < this.terrainManager.getTerrainHeight(snapPosition)) {
-                    continue;
-                  }
-                }
-
-                if (snap && Globals.distance(bestPosition, snapPosition) <= 0.05) {
-                  wall.snappedWalls.push(testWall);
-                  continue;
-                }
-
-                minDistance = distance;
-                snap = true;
-                bestPosition.x = snapPosition.x;
-                bestPosition.y = snapPosition.y;
-                bestPosition.z = snapPosition.z;
-                bestYaw = testWall.getYaw();
-                wall.snappedWalls = [testWall];
-              }
-            }
-          }
-        }
-        if (snap) {
-          wall.position.x = bestPosition.x;
-          wall.position.y = bestPosition.y;
-          wall.position.z = bestPosition.z;
-          wall.setRotation({yaw: bestYaw, pitch: 0.0});
+        if (this.wallSnapper.snapWall(wall, candidates)) {
           return true;
         }
         return false;

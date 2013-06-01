@@ -10,6 +10,7 @@ define([
         this.base();
         this.wall = new Wall(terrainManager, position, rotation);
         this.position = this.wall.position;
+        this.rotation = this.wall.rotation;
         this.initialize();
       },
 
@@ -63,6 +64,10 @@ define([
         return this.wall.rotation;
       },
 
+      getYaw: function() {
+        return this.wall.yaw;
+      },
+
       getSnapData: function() {
         return this.wall.getSnapData();
       },
@@ -73,10 +78,6 @@ define([
 
       getPositionOffGround: function() {
         return this.wall.getPositionOffGround();
-      },
-
-      getYaw: function() {
-        return this.wall.yaw;
       },
 
       updatePositionData: function() {
