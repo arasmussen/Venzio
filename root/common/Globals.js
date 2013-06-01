@@ -20,8 +20,8 @@ define(function() {
     buildDistance: 5.0,
 
     // how close a wall has to be to snap to another wall
-    verticalSnapThreshold: 0.4,
-    horizontalSnapThreshold: 0.2,
+    verticalSnapThreshold: 0.5,
+    horizontalSnapThreshold: 0.3,
 
     // how close a wall has to be to another wall to assume that they
     // are already snapped without moving them
