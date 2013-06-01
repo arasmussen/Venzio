@@ -70,7 +70,7 @@ define([
             var distance = Globals.distance(this.wall.sides[wallSide], candidate.sides[candidateSide]);
 
             if (!options.moveWall) {
-              if (distance < Globals.buildSnapEpsilon) {
+              if (distance < Globals.snapEpsilon) {
                 this.wall.snappedWalls.push(candidate);
                 return;
               }
@@ -129,7 +129,7 @@ define([
               }
             }
 
-            if (this.foundSnaps() && Globals.distance(this.bestPosition, snapPosition) <= 0.05) {
+            if (this.foundSnaps() && Globals.distance(this.bestPosition, snapPosition) <= Globals.snapEpsilon) {
               this.bestPosition.x = snapPosition.x;
               this.bestPosition.y = snapPosition.y;
               this.bestPosition.z = snapPosition.z;
