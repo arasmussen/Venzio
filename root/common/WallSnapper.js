@@ -49,6 +49,7 @@ define([
           if (this.foundSnaps()) {
             this.wall.setPosition(this.bestPosition);
             this.wall.setRotation(this.bestRotation);
+            this.wall.sides = wall.getSnapData();
           }
         }
 
