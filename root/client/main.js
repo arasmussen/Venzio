@@ -7,9 +7,10 @@ define([
     'client/CTerrainManager',
     'client/Game',
     'client/util/Framerate',
-    'client/util/Ping'
+    'client/util/Ping',
+    'client/TextureManager'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, Framerate, Ping) {
+  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, Framerate, Ping, TextureManager) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -56,24 +57,25 @@ define([
         updateLoadingBar(imageWidth * 0.1);
         loadingHeader.html('Setting up WebGL context');
       } else if (pass == 1) {
-        updateLoadingBar(imageWidth * 0.5);
+        updateLoadingBar(imageWidth * 0.4);
         loadingHeader.html('Connecting to server');
       } else if (pass == 2) {
-        updateLoadingBar(imageWidth * 0.75);
-        loadingHeader.html('Initializing terrain');
+        updateLoadingBar(imageWidth * 0.6);
+        loadingHeader.html('Initializing textures');
       } else if (pass == 3) {
+        updateLoadingBar(imageWidth * 0.8);
+        loadingHeader.html('Initializing terrain');
+      } else if (pass == 4) {
         updateLoadingBar(imageWidth);
         loadingHeader.html('Initializing game and player');
-      } else if (pass == 4) {
+      } else if (pass == 5) {
         loadingHeader.html('Starting game');
         setTimeout(function() { $('#loading').remove(); }, 20);
       }
     }
 
     var handleFailure = function(pass) {
-      if (pass == 0) {
-        console.log('main was called with a value of false');
-      } else if (pass == 1) {
+      if (pass == 1) {
         console.log('WebGL context couldn\'t be created');
       } else if (pass == 2) {
         console.log('Couldn\'t connect to the server');
@@ -106,9 +108,11 @@ define([
       } else if (pass == 2) {
         connectSocket(networkManager, main);
       } else if (pass == 3) {
+        TextureManager.initialize(main.bind(null, true));
+      } else if (pass == 4) {
         InputManager.initialize(canvas);
         terrainManager = new CTerrainManager(main);
-      } else if (pass == 4) {
+      } else if (pass == 5) {
         game = new Game(networkManager, terrainManager);
         setTimeout(main.bind(null, true), 0);
       } else {
