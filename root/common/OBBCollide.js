@@ -108,7 +108,7 @@ define(function() {
         Math.abs(bHalfWidth.y * DotProduct(bUnitVectors.y, axis)) +
         Math.abs(bHalfWidth.z * DotProduct(bUnitVectors.z, axis))
       );
-      if (leftSide > rightSide) {
+      if (leftSide >= rightSide) {
         return false;
       }
     }
