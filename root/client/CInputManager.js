@@ -6,7 +6,7 @@ define([
   return {
     canvas: null,
     keys: [],
-    mouseClicks: 0,
+    mouseClicks: {left: 0, right: 0},
     mouseDelta: {x: 0, y: 0},
     pointerLocked: false,
     processQueue: [],
@@ -35,6 +35,20 @@ define([
       return true;
     },
 
+    onMouseUp: function(e) {
+      if (this.pointerLocked === true) {
+        if (e.button == 0) {
+          this.mouseClicks.left++;
+        } else if (e.button == 1) {
+          this.mouseClicks.right++;
+        }
+      }
+    },
+
+    onMouseDown: function(e) {
+      // we'll need this soon
+    },
+
     onMouseMoved: function(e) {
       if (this.pointerLocked === true) {
         var movement = {
@@ -43,12 +57,6 @@ define([
         };
         this.mouseDelta.x += movement.x;
         this.mouseDelta.y += movement.y;
-      }
-    },
-
-    onMouseUp: function(e) {
-      if (this.pointerLocked === true) {
-        this.mouseClicks++;
       }
     },
 
@@ -115,6 +123,7 @@ define([
       document.onkeyup = this.onKeyUp.bind(this);
 
       // mouse stuff
+      document.onmousedown = this.onMouseDown.bind(this);
       document.onmouseup = this.onMouseUp.bind(this);
       document.onmousemove = this.onMouseMoved.bind(this);
 
@@ -137,8 +146,12 @@ define([
     },
 
     getMouseClicks: function() {
-      var clicks = this.mouseClicks;
-      this.mouseClicks = 0;
+      var clicks = {
+        left: this.mouseClicks.left,
+        right: this.mouseClicks.right
+      };
+      this.mouseClicks.left = 0;
+      this.mouseClicks.right = 0;
       return clicks;
     },
 

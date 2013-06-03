@@ -14,7 +14,6 @@ define(function() {
     ],
 
     initialize: function(callback) {
-      debugger;
       this.initCallback = callback;
       this.initLoadCount = this.initialTextures.length;
       for (var i in this.initialTextures) {

@@ -27,7 +27,7 @@ define(function() {
 
     setupWebGL: function(canvas) {
       if (!window.WebGLRenderingContext) {
-        return BAD_BROWSER; // http://get.webgl.org
+        return this.statusCodes.BAD_BROWSER; // http://get.webgl.org
       }
 
       gl = null;
