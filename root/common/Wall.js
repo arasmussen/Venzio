@@ -42,6 +42,18 @@ define([
         this.built = built;
       },
 
+      getYaw: function() {
+        return this.yaw;
+      },
+
+      getPosition: function() {
+        return {
+          x: this.position.x,
+          y: this.position.y,
+          z: this.position.z
+        };
+      },
+
       getPositionOffGround: function() {
         var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
         return {
