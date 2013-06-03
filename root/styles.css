@@ -1,19 +1,38 @@
 body, html {
   margin: 0;
+}
+
+#top-bar {
   width: 100%;
-  height: 100%;
+  height: 30px;
+  padding: 5px 0;
+  background-color: #2992fd;
+  box-shadow: inset 0 -7px 7px -7px #000000;
+  margin-bottom: 20px;
+}
+
+#top-bar #nav {
+  width: 950px;
+  height: 30px;
+  margin: 0 auto;
+  padding: 0 5px;
 }
 
 #center {
-  width: 800px;
+  width: 960px;
   margin: 0 auto;
+}
+
+#canvas-wrapper {
+  width: 960px;
+  height: 720px;
   position: relative;
 }
 
 #canvas {
   background-color: #fff;
-  height: 600px;
-  width: 800px;
+  height: 720px;
+  width: 960px;
 }
 
 #framerate {
@@ -31,8 +50,8 @@ body, html {
 }
 
 #loading {
-  width: 800px;
-  height: 400px;
+  width: 960px;
+  height: 520px;
   background: #000;
   position: absolute;
   top: 0px;
@@ -70,7 +89,8 @@ body, html {
 }
 
 #instructions {
-  width: 800px;
+  margin-top: 20px;
+  width: 960px;
   text-align: center;
 }
 

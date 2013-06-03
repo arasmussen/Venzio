@@ -3,6 +3,7 @@
   <head>
     <title>Venzio</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="/reset.css" />
     <link rel="stylesheet" href="/styles.css" />
     <script type="text/javascript" src="/client/lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="/client/lib/jquery-1.8.3.min.js"></script>
@@ -11,16 +12,25 @@
     <script type="text/javascript" src="/client/lib/analytics.js"></script>
   </head>
   <body>
+    <div id="top-bar">
+      <ul id="nav">
+        <li><a href="/"><img src="/headerLogo.png" alt="logo" /></a></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
     <div id="center">
-      <canvas id="canvas" width="800" height="600"></canvas>
-      <div id="framerate"></div>
-      <div id="ping"></div>
-      <div id="loading">
-        <h3></h3>
-        <div id="loading-wrapper">
-          <div id="loading-done"></div>
-          <div id="loading-todo"></div>
-          <img src="/venzio.png" alt="venzio loading bar" />
+      <div id="canvas-wrapper">
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="framerate"></div>
+        <div id="ping"></div>
+        <div id="loading">
+          <h3></h3>
+          <div id="loading-wrapper">
+            <div id="loading-done"></div>
+            <div id="loading-todo"></div>
+            <img src="/loadingLogo.png" alt="loading bar" />
+          </div>
         </div>
       </div>
       <div id="instructions">
@@ -30,8 +40,8 @@
           <li>Press 'C' to toggle between free float camera</li>
           <li>Press 'B' to toggle build mode</li>
         </ul>
-        <p>It's also multiplayer! At least it is when I've got the server running, which is pretty rarely nowadays unless I'm working on it. :P</p>
-        <p>Made by <a href="http://www.rasmuzen.com">Andrew Rasmussen</a></p>
+      </div>
+      <div id="footer">
       </div>
     </div>
   </body>
