@@ -14,23 +14,23 @@ define([
         this.blurDistance = options.distance;
         this.blurAmount = options.amount;
         this.contrast = options.contrast;
-        // this.cachedSectionData = {};
+        this.cachedSectionData = {};
 
         this.calculateBlurMatrix();
       },
 
       fetch: function(coords) {
-        // var sectionKey = coords.x + ' ' + coords.z;
-        // if (this.cachedSectionData.hasOwnProperty(sectionKey)) {
-        //   return this.cachedSectionData[sectionKey];
-        // }
+        var sectionKey = coords.x + ' ' + coords.z;
+        if (this.cachedSectionData.hasOwnProperty(sectionKey)) {
+          return this.cachedSectionData[sectionKey];
+        }
 
         var matrix = this.getNoiseMatrix(coords);
         matrix = this.applyBlur(matrix);
         matrix = this.applyContrast(matrix);
         matrix = this.applyTerrain(matrix);
 
-        // this.cachedSectionData[sectionKey] = matrix;
+        this.cachedSectionData[sectionKey] = matrix;
         return matrix;
       },
 
