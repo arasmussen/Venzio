@@ -36,7 +36,9 @@ requirejs([
     };
 
     var redirects = {
-      '/': '/index.html'
+      '/': '/index.html',
+      '/about': '/about.html',
+      '/jobs': '/jobs.html'
     };
 
     function getExtension(url) {
@@ -57,6 +59,9 @@ requirejs([
       // strip get params if there are any
       return url.substr(0, url.indexOf('?'));
     }
+
+    var header = fs.readFileSync(__dirname + '/header.html', 'utf8');
+    var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
 
     http.createServer(function(request, response) {
       var url = getFilepath(request.url);
@@ -86,6 +91,12 @@ requirejs([
       var extension = getExtension(url);
       response.writeHead(200, {'Content-Type': extension.contentType});
       var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
+
+      // if it's an html page, add the header and footer templates
+      if (extension.contentType == 'text/html') {
+        contents = header + contents + footer;
+      }
+
       response.end(contents, extension.binary ? 'binary' : 'utf8');
     }).listen(8001);
   }

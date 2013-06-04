@@ -18,6 +18,32 @@ body, html {
   padding: 0 5px;
 }
 
+#top-bar #logo {
+  width: 106px;
+  height: 30px;
+  float: left;
+}
+
+#top-bar #nav ul {
+  height: 25px;
+  float: left;
+  margin-left: 36px;
+  margin-top: 5px;
+}
+
+#top-bar #nav li {
+  height: 30px;
+  float: left;
+}
+
+#top-bar #nav ul li a {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  text-decoration: none;
+  color: #fff;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
 #center {
   width: 960px;
   margin: 0 auto;
