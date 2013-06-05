@@ -2,41 +2,39 @@ body, html {
   margin: 0;
 }
 
-#top-bar {
+#header {
   width: 100%;
   height: 30px;
-  padding: 5px 0;
+  padding: 10px 0;
   background-color: #2992fd;
   box-shadow: inset 0 -7px 7px -7px #000000;
-  margin-bottom: 20px;
 }
 
-#top-bar #nav {
+#header #topbar {
   width: 950px;
   height: 30px;
   margin: 0 auto;
-  padding: 0 5px;
 }
 
-#top-bar #logo {
+#header #topbar #logo {
   width: 106px;
   height: 30px;
   float: left;
 }
 
-#top-bar #nav ul {
+#header #topbar ul {
   height: 25px;
   float: left;
   margin-left: 36px;
   margin-top: 5px;
 }
 
-#top-bar #nav li {
+#header #topbar li {
   height: 30px;
   float: left;
 }
 
-#top-bar #nav ul li a {
+#header #topbar ul li a {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   text-decoration: none;
   color: #fff;
@@ -44,7 +42,34 @@ body, html {
   margin-right: 15px;
 }
 
-#center {
+#footer {
+  width: 100%;
+  height: 16px;
+  background: #2992fd;
+  padding: 22px 0;
+  box-shadow: inset 0 7px 7px -7px #000000;
+}
+
+#footer #copyright {
+  width: 960px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#footer #copyright span {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #fff;
+}
+
+#content {
+  background-color: #bce;
+  width: 100%;
+  height: 100%;
+  padding: 40px 0;
+  min-height: 600px;
+}
+
+#content #center {
   width: 960px;
   margin: 0 auto;
 }
@@ -53,6 +78,9 @@ body, html {
   width: 960px;
   height: 720px;
   position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); /* this fixes the overflow:hidden in Chrome/Opera */
 }
 
 #canvas {

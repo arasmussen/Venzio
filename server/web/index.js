@@ -60,9 +60,6 @@ requirejs([
       return url.substr(0, url.indexOf('?'));
     }
 
-    var header = fs.readFileSync(__dirname + '/header.html', 'utf8');
-    var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
-
     http.createServer(function(request, response) {
       var url = getFilepath(request.url);
 
@@ -94,6 +91,8 @@ requirejs([
 
       // if it's an html page, add the header and footer templates
       if (extension.contentType == 'text/html') {
+        var header = fs.readFileSync(__dirname + '/header.html', 'utf8');
+        var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
         contents = header + contents + footer;
       }
 
