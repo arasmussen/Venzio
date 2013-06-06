@@ -64,13 +64,17 @@ define(function() {
     terrain: {
       attributes: [
         'Position',
-        'TextureCoord'
+        'TextureCoord',
+        'Normal'
       ],
       uniforms: {
         'uMVMatrix': {
           type: uniformMatrix4fvNoTranspose
         },
         'uPMatrix': {
+          type: uniformMatrix4fvNoTranspose
+        },
+        'uNormalMatrix': {
           type: uniformMatrix4fvNoTranspose
         }
       },

@@ -195,6 +195,8 @@ define([
           return 2;
         } else if (attrib == 'Layer') {
           return 1;
+        } else if (attrib == 'Normal') {
+          return 3;
         }
       },
 

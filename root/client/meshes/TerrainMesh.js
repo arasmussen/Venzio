@@ -10,6 +10,19 @@ define([
         this.base();
         this.terrain = new Terrain(coord, heights);
         this.initialize();
+        this.uNormalMatrix = mat4.create();
+        this.updateNormalMatrix();
+        this.setUniform('uNormalMatrix', this.uNormalMatrix);
+      },
+
+      updateNormalMatrix: function() {
+        mat4.inverse(mvMatrix, this.uNormalMatrix);
+        mat4.transpose(this.uNormalMatrix, this.uNormalMatrix);
+      },
+
+      draw: function() {
+        this.updateNormalMatrix();
+        Mesh.prototype.draw.bind(this)();
       },
 
       getPosition: function() {
@@ -87,6 +100,41 @@ define([
             }
           }
           return new Float32Array(texCoords);
+        } else if (attrib == 'Normal') {
+          var Normalize = function(vec) {
+            var factor = Math.sqrt(
+              Math.pow(vec.x, 2) +
+              Math.pow(vec.y, 2) +
+              Math.pow(vec.z, 2)
+            );
+            vec.x /= factor;
+            vec.y /= factor;
+            vec.z /= factor;
+          };
+          var normals = [];
+          for (var x = 0; x < this.terrain.width; x++) {
+            for (var z = 0; z < this.terrain.length; z++) {
+              var idx = [
+                {x: x, z: z},
+                {x: x + 1, z: z},
+                {x: x, z: z + 1},
+                {x: x, z: z + 1},
+                {x: x + 1, z: z},
+                {x: x + 1, z: z + 1}
+              ];
+              for (var i in idx) {
+                var j = idx[i];
+                var normal = {
+                  x: (this.terrain.heights[j.x - 1][j.z] - this.terrain.heights[j.x + 1][j.z]) / 2,
+                  y: 1,
+                  z: (this.terrain.heights[j.x][j.z - 1] - this.terrain.heights[j.x][j.z + 1]) / 2
+                };
+                Normalize(normal);
+                normals.push(normal.x, normal.y, normal.z);
+              }
+            }
+          }
+          return new Float32Array(normals);
         }
       },
 

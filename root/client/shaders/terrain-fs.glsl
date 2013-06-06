@@ -8,6 +8,7 @@ uniform sampler2D snow_texture;
 
 varying vec2 texCoord;
 varying float y;
+varying vec3 lighting;
 
 void main(void) {
   vec4 dirt = texture2D(dirt_texture, texCoord);
@@ -25,4 +26,6 @@ void main(void) {
   } else {
     gl_FragColor = snow;
   }
+
+  gl_FragColor = vec4(gl_FragColor.rgb * lighting, gl_FragColor.a);
 }

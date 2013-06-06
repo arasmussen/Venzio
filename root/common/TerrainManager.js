@@ -4,10 +4,9 @@ define([
     'basejs',
     'common/Terrain',
     'common/Globals',
-    'common/HeightmapSectionFetcher',
     'common/RequireWorker'
   ],
-  function(Base, Terrain, Globals, HeightmapSectionFetcher, RequireWorker) {
+  function(Base, Terrain, Globals, RequireWorker) {
     return Base.extend({
       constructor: function(callback) {
         this.length = Globals.terrainLength;
@@ -16,9 +15,10 @@ define([
 
         var options = {
           seed: 123,
-          distance: 20,
+          blurDistance: 20,
           amount: 11,
-          contrast: 11
+          contrast: 11,
+          normalDistance: 1
         };
 
         var numWorkers = 2;

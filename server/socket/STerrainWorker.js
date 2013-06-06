@@ -23,19 +23,17 @@ require({
         sectionFetcher = new HeightmapSectionFetcher(e.data.options);
       } else if (type == 'fetch') {
         var length = sectionFetcher.terrainLength;
+        var normalDistance = sectionFetcher.normalDistance;
 
         var heights = sectionFetcher.fetch(e.data.coords);
-        var heightMatrix = [];
-        for (var i = 0; i < length + 1; i++) {
-          heightMatrix[i] = [];
-          for (var j = 0; j < length + 1; j++) {
-            var idx = i * (length + 1) + j;
-            heightMatrix[i][j] = (255 - heights[idx]) / 6 - 8;
+        for (var x = -normalDistance; x <= length + normalDistance; x++) {
+          for (var z = -normalDistance; z <= length + normalDistance; z++) {
+            heights[x][z] = (255 - heights[x][z]) / 6 - 8;
           }
         }
         postMessage({
           coords: e.data.coords,
-          heights: heightMatrix
+          heights: heights
         });
       } else {
         // assert not reached
