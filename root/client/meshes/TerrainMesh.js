@@ -20,9 +20,9 @@ define([
         mat4.transpose(this.uNormalMatrix, this.uNormalMatrix);
       },
 
-      draw: function() {
+      preDraw: function() {
+        Mesh.prototype.preDraw.bind(this)();
         this.updateNormalMatrix();
-        Mesh.prototype.draw.bind(this)();
       },
 
       getPosition: function() {

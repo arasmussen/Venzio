@@ -128,6 +128,11 @@ define([
 
         this.preDraw();
 
+        // bind stuff to shader
+        this.bindTextures();
+        this.bindAttributes();
+        this.bindUniforms();
+
         if (this.isUsingIndices()) {
           gl.drawElements(
             this.getDrawMode(), this.getNumItems(), gl.UNSIGNED_SHORT, 0
@@ -143,11 +148,6 @@ define([
         // get shader/camera ready
         this.transform();
         this.shader.preDraw();
-
-        // bind stuff to shader
-        this.bindTextures();
-        this.bindAttributes();
-        this.bindUniforms();
       },
 
       postDraw: function() {
