@@ -66,7 +66,7 @@ define([
           for (var j in sides) {
             var wallSide = sides[i];
             var candidateSide = sides[j];
-            
+
             var distance = Globals.distance(this.wall.sides[wallSide], candidate.sides[candidateSide]);
 
             if (!options.moveWall) {
@@ -120,9 +120,9 @@ define([
             };
 
             if (wallSide == 'bottom') {
-              snapPosition.y = candidate.position.y + Globals.walls.height;
+              snapPosition.y = candidate.position.y + Globals.walls.height + 0.0001;
             } else {
-              snapPosition.y = candidate.position.y - Globals.walls.height;
+              snapPosition.y = candidate.position.y - Globals.walls.height - 0.0001;
 
               if (snapPosition.y < this.terrainManager.getTerrainHeight(snapPosition)) {
                 continue;
