@@ -31,10 +31,14 @@ require({
             heights[x][z] = (255 - heights[x][z]) / 6 - 8;
           }
         }
-        postMessage({
-          coords: e.data.coords,
-          heights: heights
-        });
+
+        for (var x = -normalDistance; x <= length + normalDistance; x++) {
+          postMessage({
+            coords: e.data.coords,
+            row: x,
+            heights: heights[x]
+          });
+        }
       } else {
         // assert not reached
       }

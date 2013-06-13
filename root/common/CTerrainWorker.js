@@ -16,6 +16,10 @@ require({
 
     var sectionFetcher;
     onmessage = function(e) {
+      var sendMessage = function(message) {
+        postMessage(message);
+      };
+
       var type = e.data.type;
       if (type == 'init') {
         sectionFetcher = new HeightmapSectionFetcher(e.data.options);
@@ -29,10 +33,15 @@ require({
             heights[x][z] = (255 - heights[x][z]) / 6 - 8;
           }
         }
-        postMessage({
-          coords: e.data.coords,
-          heights: heights
-        });
+
+        for (var x = 0; x <= length + 2 * normalDistance; x++) {
+          var row = x - normalDistance;
+          setTimeout(sendMessage.bind(null, {
+            coords: e.data.coords,
+            row: row,
+            heights: heights[row]
+          }), 10 * x);
+        }
       } else {
         // assert not reached
       }

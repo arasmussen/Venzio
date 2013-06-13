@@ -59,7 +59,7 @@ define([
 
       applyBlur: function(noise) {
         var extra = this.blurDistance + this.normalDistance;
-        
+
         // blur columns
         var blurredColumns = [];
         for (var x = -extra; x <= this.terrainLength + extra; x++) {

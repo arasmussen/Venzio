@@ -50,6 +50,11 @@ define([
       },
 
       generateTerrain: function(coords) {
+        if (this.terrains[coords.x] == null) {
+          this.terrains[coords.x] = {};
+        }
+        this.terrains[coords.x][coords.z] = this.newTerrain(coords);
+
         // assert this.workers.length > 0
         var hash = Math.abs(coords.x + coords.z) % this.workers.length;
         this.workers[hash].postMessage({
@@ -65,22 +70,25 @@ define([
       onTerrainGenerated: function(i, e) {
         var coords = e.data.coords;
         var heights = e.data.heights;
-        if (this.terrains[coords.x] == null) {
-          this.terrains[coords.x] = {};
-        }
-        this.terrains[coords.x][coords.z] = this.newTerrain(coords, heights);
-        this.workers[i].count--;
+        var row = e.data.row;
 
-        if (this.initializing) {
-          for (var i = 0; i < this.workers.length; i++) {
-            if (this.workers[i].count != 0) {
-              return;
+        this.terrains[coords.x][coords.z].setHeights(row, heights);
+        if (this.terrains[coords.x][coords.z].hasAllData()) {
+          this.terrains[coords.x][coords.z].deploy();
+
+          this.workers[i].count--;
+          delete this.generateQueue[this.keyForCoords(coords)];
+
+          if (this.initializing) {
+            for (var i = 0; i < this.workers.length; i++) {
+              if (this.workers[i].count != 0) {
+                return;
+              }
             }
+            this.initializing = false;
+            setTimeout(this.callback.bind(null, true), 0);
           }
-          this.initializing = false;
-          setTimeout(this.callback.bind(null, true), 0);
         }
-        delete this.generateQueue[this.keyForCoords(coords)];
       },
 
       newTerrain: function(coords, heights) {

@@ -6,13 +6,9 @@ define([
   ],
   function(Terrain, Mesh) {
     return Mesh.extend({
-      constructor: function(coord, heights) {
+      constructor: function(coords) {
         this.base();
-        this.terrain = new Terrain(coord, heights);
-        this.initialize();
-        this.uNormalMatrix = mat4.create();
-        this.updateNormalMatrix();
-        this.setUniform('uNormalMatrix', this.uNormalMatrix);
+        this.terrain = new Terrain(coords);
       },
 
       updateNormalMatrix: function() {
@@ -25,6 +21,17 @@ define([
         this.updateNormalMatrix();
       },
 
+      hasAllData: function() {
+        return this.terrain.hasAllData();
+      },
+
+      deploy: function() {
+        this.initialize();
+        this.uNormalMatrix = mat4.create();
+        this.updateNormalMatrix();
+        this.setUniform('uNormalMatrix', this.uNormalMatrix);
+      },
+
       getPosition: function() {
         return this.terrain.position;
       },
@@ -35,6 +42,10 @@ define([
 
       getHeight: function(position) {
         return this.terrain.getHeight(position);
+      },
+
+      setHeights: function(row, heights) {
+        this.terrain.setHeights(row, heights);
       },
 
       getAttribData: function(attrib) {

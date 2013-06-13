@@ -6,12 +6,29 @@ define([
   ],
   function(Globals, Base) {
     return Base.extend({
-      constructor: function(coord, heights) {
+      constructor: function(coords) {
         this.width = Globals.terrainLength;
         this.length = Globals.terrainLength;
-        this.position = {x: coord.x * this.length, y: 0, z: coord.z * this.length};
+        this.position = {x: coords.x * this.length, y: 0, z: coords.z * this.length};
         this.rotation = {yaw: 0.0, pitch: 0.0};
-        this.heights = heights;
+        this.heights = [];
+        this.ungeneratedRows = this.length + 3;
+        this.generated = false;
+      },
+
+      deploy: function() {
+        // empty because we use this in the child
+      },
+
+      hasAllData: function() {
+        return this.generated;
+      },
+
+      setHeights: function(row, heights) {
+        this.heights[row] = heights;
+        if (--this.ungeneratedRows == 0) {
+          this.generated = true;
+        }
       },
 
       getHeight: function(position) {

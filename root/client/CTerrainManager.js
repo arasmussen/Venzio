@@ -29,7 +29,7 @@ define([
         };
         for (var x = min.x; x <= max.x; x++) {
           for (var z = min.z; z <= max.z; z++) {
-            if (this.terrains[x] != null && this.terrains[x][z] != null) {
+            if (this.terrains[x] != null && this.terrains[x][z] != null && this.terrains[x][z].hasAllData()) {
               this.terrains[x][z].draw();
             }
           }
