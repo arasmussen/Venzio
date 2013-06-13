@@ -40,7 +40,7 @@ require({
             coords: e.data.coords,
             row: row,
             heights: heights[row]
-          }), 10 * x);
+          }), 25 * x);
         }
       } else {
         // assert not reached
