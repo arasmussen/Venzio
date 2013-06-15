@@ -48,7 +48,7 @@ define([
         gl.shaderSource(shader, source);
         gl.compileShader(shader);
         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-          console.log('Compile failed: ' + name);
+          console.log('Compile failed: ' + gl.getShaderInfoLog(shader));
           return null;
         }
         return shader;
