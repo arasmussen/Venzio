@@ -41,6 +41,23 @@ define(function() {
       },
       textures: []
     },
+    cursor: {
+      attributes: [
+        'Position',
+        'TextureCoord'
+      ],
+      uniforms: {
+        'uMVMatrix': {
+          type: uniformMatrix4fvNoTranspose
+        },
+        'uPMatrix': {
+          type: uniformMatrix4fvNoTranspose
+        },
+      },
+      textures: [
+        'cursor_texture'
+      ]
+    },
     wall: {
       attributes: [
         'Position',

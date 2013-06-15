@@ -8,9 +8,10 @@ define([
     'basejs',
     'client/meshes/GrassMesh',
     'client/meshes/WallMesh',
+    'client/meshes/CursorMesh',
     'common/WallManager'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Grass, Wall, WallManager) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Grass, Wall, Cursor, WallManager) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -20,6 +21,7 @@ define([
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
+        this.cursor = new Cursor();
       },
 
       mainLoop: function(tslf) {
@@ -53,11 +55,20 @@ define([
         mat4.identity(mvMatrix);
 
         this.camera.transform();
+
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
         this.networkManager.drawPeers();
         this.wallManager.drawWalls();
+
+        this.camera.untransform();
+
+        gl.disable(gl.DEPTH_TEST);
+        if (!this.player.buildMode) {
+          this.cursor.draw();
+        }
+        gl.enable(gl.DEPTH_TEST);
       },
 
       setID: function(data) {
