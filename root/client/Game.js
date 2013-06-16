@@ -6,12 +6,11 @@ define([
     'client/CInputManager',
     'common/PhysicsManager',
     'basejs',
-    'client/meshes/GrassMesh',
     'client/meshes/WallMesh',
     'client/meshes/CursorMesh',
     'common/WallManager'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Grass, Wall, Cursor, WallManager) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, Cursor, WallManager) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
