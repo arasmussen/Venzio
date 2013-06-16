@@ -2,12 +2,12 @@
 
 precision mediump float;
 
-uniform sampler2D cursor_texture;
+uniform sampler2D uCursorTexture;
 
-varying vec2 texCoord;
+varying vec2 vTextureCoord;
 
 void main(void) {
-  if (texture2D(cursor_texture, texCoord).w > 0.21) {
+  if (texture2D(uCursorTexture, vTextureCoord).w > 0.21) {
     gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
   } else {
     gl_FragColor = vec4(0.0, 0.0, 0.0, 0.0);

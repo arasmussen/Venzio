@@ -122,8 +122,8 @@ define([
 
       worldToSectionCoords: function(worldPos) {
         return {
-          x: Math.floor((worldPos.x + this.length / 2) / this.length),
-          z: Math.floor((worldPos.z + this.length / 2) / this.length)
+          x: Math.floor((worldPos.x) / this.length),
+          z: Math.floor((worldPos.z) / this.length)
         };
       },
 

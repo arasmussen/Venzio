@@ -2,9 +2,10 @@
 
 define([
     'common/Terrain',
-    'client/Mesh'
+    'client/Mesh',
+    'common/Globals'
   ],
-  function(Terrain, Mesh) {
+  function(Terrain, Mesh, Globals) {
     return Mesh.extend({
       constructor: function(coords) {
         this.base();
@@ -29,7 +30,8 @@ define([
         this.initialize();
         this.uNormalMatrix = mat4.create();
         this.updateNormalMatrix();
-        this.setUniform('uNormalMatrix', this.uNormalMatrix);
+        this.setUniform('NormalMatrix', this.uNormalMatrix);
+        this.setUniform('TerrainQuality', Globals.terrainQuality);
       },
 
       getPosition: function() {
@@ -51,66 +53,12 @@ define([
       getAttribData: function(attrib) {
         if (attrib == 'Position') {
           var vertices = [];
-          for (var x = 0; x < this.terrain.width; x++) {
-            for (var z = 0; z < this.terrain.length; z++) {
-              vertices.push(
-                x - this.terrain.width / 2, this.terrain.heights[x][z], z - this.terrain.length / 2,
-                x + 1 - this.terrain.width / 2, this.terrain.heights[x + 1][z], z - this.terrain.length / 2,
-                x - this.terrain.width / 2, this.terrain.heights[x][z + 1], z + 1 - this.terrain.length / 2,
-                x - this.terrain.width / 2, this.terrain.heights[x][z + 1], z + 1 - this.terrain.length / 2,
-                x + 1 - this.terrain.width / 2, this.terrain.heights[x + 1][z], z - this.terrain.length / 2,
-                x + 1 - this.terrain.width / 2, this.terrain.heights[x + 1][z + 1], z + 1 - this.terrain.length / 2
-              );
+          for (var x = 0; x <= this.terrain.length; x++) {
+            for (var z = 0; z <= this.terrain.length; z++) {
+              vertices.push(x, this.terrain.heights[x][z], z);
             }
           }
           return new Float32Array(vertices);
-        } else if (attrib == 'Color') {
-          var colors = [];
-          for (var i = 0; i < this.terrain.width; i++) {
-            for (var j = 0; j < this.terrain.length; j++) {
-              var x = this.terrain.position.x + i;
-              var z = this.terrain.position.z + j;
-              colors.push(
-                Math.sin(x), Math.sin(x + z), Math.sin(z), 1.0,
-                Math.sin(x + 1.0), Math.sin(x + z + 1), Math.sin(z), 1.0,
-                Math.sin(x), Math.sin(x + z + 1), Math.sin(z + 1), 1.0,
-                Math.sin(x), Math.sin(x + z + 1), Math.sin(z + 1), 1.0,
-                Math.sin(x + 1.0), Math.sin(x + z + 1), Math.sin(z), 1.0,
-                Math.sin(x + 1.0), Math.sin(x + z + 2), Math.sin(z + 1), 1.0
-              );
-            }
-          }
-          return new Float32Array(colors);
-        } else if (attrib == 'TextureCoord') {
-          var texCoords = [];
-          var offset = {
-            x: 0.0,
-            z: 0.0
-          };
-          var factor = 8;
-          for (var i = 0; i < this.terrain.width; i++) {
-            for (var j = 0; j < this.terrain.length; j++) {
-              texCoords.push(
-                offset.x, offset.z,
-                offset.x + 1 / factor, offset.z,
-                offset.x, offset.z + 1 / factor,
-                offset.x, offset.z + 1 / factor,
-                offset.x + 1 / factor, offset.z,
-                offset.x + 1 / factor, offset.z + 1 / factor
-              );
-              if (j % factor == factor - 1) {
-                offset.z = 0;
-              } else {
-                offset.z += 1 / factor;
-              }
-            }
-            if (i % factor == factor - 1) {
-              offset.x = 0;
-            } else {
-              offset.x += 1 / factor;
-            }
-          }
-          return new Float32Array(texCoords);
         } else if (attrib == 'Normal') {
           var Normalize = function(vec) {
             var factor = Math.sqrt(
@@ -123,34 +71,57 @@ define([
             vec.z /= factor;
           };
           var normals = [];
-          for (var x = 0; x < this.terrain.width; x++) {
-            for (var z = 0; z < this.terrain.length; z++) {
-              var idx = [
-                {x: x, z: z},
-                {x: x + 1, z: z},
-                {x: x, z: z + 1},
-                {x: x, z: z + 1},
-                {x: x + 1, z: z},
-                {x: x + 1, z: z + 1}
-              ];
-              for (var i in idx) {
-                var j = idx[i];
-                var normal = {
-                  x: (this.terrain.heights[j.x - 1][j.z] - this.terrain.heights[j.x + 1][j.z]) / 2,
-                  y: 1,
-                  z: (this.terrain.heights[j.x][j.z - 1] - this.terrain.heights[j.x][j.z + 1]) / 2
-                };
-                Normalize(normal);
-                normals.push(normal.x, normal.y, normal.z);
-              }
+          for (var x = 0; x <= this.terrain.length; x++) {
+            for (var z = 0; z <= this.terrain.length; z++) {
+              var normal = {
+                x: (this.terrain.heights[x - 1][z] - this.terrain.heights[x + 1][z]) / 2,
+                y: 1,
+                z: (this.terrain.heights[x][z - 1] - this.terrain.heights[x][z + 1]) / 2
+              };
+              Normalize(normal);
+              normals.push(normal.x, normal.y, normal.z);
             }
           }
           return new Float32Array(normals);
         }
       },
 
+      isUsingIndices: function() {
+        return true;
+      },
+
+      getIndexData: function() {
+        var indices = [];
+        for (var x = 0; x < this.terrain.length; x++) {
+          for (var z = 0; z < this.terrain.length; z++) {
+            var idx = x * (this.terrain.length + 1) + z;
+            var even = ((x + z) % 2 == 0);
+            if (even) {
+              indices.push(
+                idx,
+                idx + 1,
+                idx + this.terrain.length + 1,
+                idx + this.terrain.length + 1,
+                idx + 1,
+                idx + this.terrain.length + 2
+              );
+            } else {
+              indices.push(
+                idx,
+                idx + 1,
+                idx + this.terrain.length + 2,
+                idx,
+                idx + this.terrain.length + 2,
+                idx + this.terrain.length + 1
+              );
+            }
+          }
+        }
+        return new Uint16Array(indices);
+      },
+
       getNumItems: function() {
-        return 6 * (this.terrain.width) * (this.terrain.length);
+        return 6 * this.terrain.length * this.terrain.length;
       },
 
       getShaderName: function() {

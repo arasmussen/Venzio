@@ -149,7 +149,7 @@ define([
 
       updatePositionData: function() {
         var terrainHeight = this.terrainManager.getTerrainHeight(this.position);
-        assert(this.position.y >= terrainHeight, "built a wall below terrain level");
+        // assert(this.position.y >= terrainHeight, "built a wall below terrain level");
 
         var height = Globals.walls.height;
 

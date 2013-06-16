@@ -48,17 +48,19 @@ define(['basejs'], function(Base) {
 
     addAttributes: function(attributes) {
       this.use();
-      attributes.forEach(function(attribute) {
-        this.program[attribute] = gl.getAttribLocation(this.program, attribute);
-      }, this);
+      for (var i = 0; i < attributes.length; i++) {
+        var attribute = attributes[i];
+        this.program[attribute] = gl.getAttribLocation(this.program, 'a' + attribute);
+      }
       this.attributes = attributes;
     },
 
     addUniforms: function(uniforms) {
       this.use();
-      for (var uniform in uniforms) {
-        this.program[uniform] = {
-          location: gl.getUniformLocation(this.program, uniform),
+      for (var i = 0; i < uniforms.length; i++) {
+        var uniform = uniforms[i];
+        this.program[uniform.name] = {
+          location: gl.getUniformLocation(this.program, 'u' + uniform.name),
           type: uniform.type
         };
       }
@@ -67,9 +69,11 @@ define(['basejs'], function(Base) {
 
     addTextures: function(textures) {
       this.use();
-      textures.forEach(function(texture) {
-        this.program[texture] = gl.getUniformLocation(this.program, texture);
-      }, this);
+      for (var i = 0; i < textures.length; i++) {
+        var texture = textures[i];
+        var name = 'u' + texture.charAt(0).toUpperCase() + texture.slice(1) + 'Texture';
+        this.program[texture] = gl.getUniformLocation(this.program, name);
+      }
       this.textures = textures;
     }
   });

@@ -33,8 +33,8 @@ define([
 
       getHeight: function(position) {
         var offsetWithinTerrain = {
-          x: position.x - (this.position.x - this.width / 2),
-          z: position.z - (this.position.z - this.width / 2)
+          x: position.x - (this.position.x),
+          z: position.z - (this.position.z)
         };
         var indexOfTriangles = {
           x: Math.floor(offsetWithinTerrain.x),

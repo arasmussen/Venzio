@@ -46,12 +46,12 @@ define([
 
       updateBuildState: function() {
         if (this.wall.built) {
-          this.setUniform('build_state', 0); // built, no changes
+          this.setUniform('BuildState', 0); // built, no changes
         } else {
           if (this.wall.buildable) {
-            this.setUniform('build_state', 1); // not built but buildable, transparenty
+            this.setUniform('BuildState', 1); // not built but buildable, transparenty
           } else {
-            this.setUniform('build_state', 2); // not built or buildable, transparenty red
+            this.setUniform('BuildState', 2); // not built or buildable, transparenty red
           }
         }
       },

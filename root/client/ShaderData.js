@@ -9,6 +9,10 @@ var uniform1i = function(location, values) {
   gl.uniform1i(location, values);
 };
 
+var uniform1f = function(location, values) {
+  gl.uniform1f(location, values);
+};
+
 define(function() {
   return {
     color: {
@@ -16,14 +20,14 @@ define(function() {
         'Position',
         'Color'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         }
-      },
+      ],
       textures: []
     },
     cube: {
@@ -31,14 +35,16 @@ define(function() {
         'Position',
         'TextureCoord'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-      },
+      ],
       textures: []
     },
     cursor: {
@@ -46,16 +52,18 @@ define(function() {
         'Position',
         'TextureCoord'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-      },
+      ],
       textures: [
-        'cursor_texture'
+        'cursor'
       ]
     },
     wall: {
@@ -63,42 +71,51 @@ define(function() {
         'Position',
         'TextureCoord'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'build_state': {
+        {
+          name: 'BuildState',
           type: uniform1i
         }
-      },
+      ],
       textures: [
-        'wood_texture'
+        'wood'
       ]
     },
     terrain: {
       attributes: [
         'Position',
-        'TextureCoord',
         'Normal'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uNormalMatrix': {
+        {
+          name: 'NormalMatrix',
           type: uniformMatrix4fvNoTranspose
+        },
+        {
+          name: 'TerrainQuality',
+          type: uniform1f
         }
-      },
+      ],
       textures: [
-        'dirt_texture',
-        'grass_texture',
-        'snow_texture'
+        'dirt',
+        'grass',
+        'snow'
       ]
     },
     grass: {
@@ -107,16 +124,18 @@ define(function() {
         'TextureCoord',
         'Layer'
       ],
-      uniforms: {
-        'uMVMatrix': {
+      uniforms: [
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        'uPMatrix': {
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
-        },
-      },
+        }
+      ],
       textures: [
-        'grass_texture'
+        'grass'
       ]
     }
   };

@@ -16,8 +16,8 @@ define([
         this.initializeBuffers();
         this.initializeTextures();
 
-        this.setUniform('uMVMatrix', mvMatrix);
-        this.setUniform('uPMatrix', pMatrix);
+        this.setUniform('MVMatrix', mvMatrix);
+        this.setUniform('PMatrix', pMatrix);
       },
 
       initializeShaders: function() {
@@ -62,7 +62,7 @@ define([
           this.textures[name] = {};
           this.textures[name].data = TextureManager.getTexture(name, filetype);
           this.textures[name].offset = offset++;
-          this.textures[name].location = this.shader.getTexture(name + '_texture');
+          this.textures[name].location = this.shader.getTexture(name);
         }
       },
 
@@ -99,11 +99,12 @@ define([
       },
 
       bindUniforms: function() {
-        for (var uniform in this.shader.uniforms) {
-          this.shader.uniforms[uniform].type.call(
+        for (var i in this.shader.uniforms) {
+          var uniform = this.shader.uniforms[i];
+          uniform.type.call(
             this,
-            this.shader.getUniform(uniform),
-            this.uniforms[uniform]
+            this.shader.getUniform(uniform.name),
+            this.uniforms[uniform.name]
           );
         }
       },
