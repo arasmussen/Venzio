@@ -98,24 +98,33 @@ body, html {
   -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); /* this fixes the overflow:hidden in Chrome/Opera */
 }
 
-#canvas {
+#canvas-wrapper #canvas {
   background-color: #fff;
   height: 720px;
   width: 960px;
 }
 
-#framerate {
+#canvas-wrapper #framerate {
   position: absolute;
   top: 10px;
   left: 10px;
   color: #fff;
 }
 
-#ping {
+#canvas-wrapper #ping {
   position: absolute;
   top: 26px;
   left: 10px;
   color: #fff;
+}
+
+#canvas-wrapper #cursor {
+  display: none;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 352px;
+  left: 472px;
 }
 
 #loading {

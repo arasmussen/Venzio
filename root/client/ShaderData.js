@@ -47,25 +47,6 @@ define(function() {
       ],
       textures: []
     },
-    cursor: {
-      attributes: [
-        'Position',
-        'TextureCoord'
-      ],
-      uniforms: [
-        {
-          name: 'MVMatrix',
-          type: uniformMatrix4fvNoTranspose
-        },
-        {
-          name: 'PMatrix',
-          type: uniformMatrix4fvNoTranspose
-        },
-      ],
-      textures: [
-        'cursor'
-      ]
-    },
     wall: {
       attributes: [
         'Position',

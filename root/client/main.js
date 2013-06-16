@@ -6,11 +6,9 @@ define([
     'client/CInputManager',
     'client/CTerrainManager',
     'client/Game',
-    'client/util/Framerate',
-    'client/util/Ping',
     'client/TextureManager'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, Framerate, Ping, TextureManager) {
+  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, TextureManager) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -116,8 +114,6 @@ define([
         game = new Game(networkManager, terrainManager);
         setTimeout(main.bind(null, true), 0);
       } else {
-        var framerate = new Framerate('framerate');
-        var ping = new Ping('ping', networkManager);
         var lastFrameTime = new Date();
         game.start();
 
@@ -129,7 +125,6 @@ define([
           }
           lastFrameTime = currentTime;
 
-          framerate.snapshot();
           game.mainLoop(tslf);
           window.requestAnimFrame(baseLoop, canvas);
         };

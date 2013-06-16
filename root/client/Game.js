@@ -7,10 +7,12 @@ define([
     'common/PhysicsManager',
     'basejs',
     'client/meshes/WallMesh',
-    'client/meshes/CursorMesh',
-    'common/WallManager'
+    'common/WallManager',
+    'client/ui/Framerate',
+    'client/ui/Ping',
+    'client/ui/Cursor'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, Cursor, WallManager) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -20,13 +22,17 @@ define([
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
-        this.cursor = new Cursor();
+
+        this.framerate = new Framerate('framerate');
+        this.ping = new Ping('ping', networkManager);
+        this.cursor = new Cursor('cursor');
       },
 
       mainLoop: function(tslf) {
         this.handleInput();
         this.updateWorld(tslf);
         this.drawWorld();
+        this.updateUI();
       },
 
       start: function() {
@@ -60,14 +66,11 @@ define([
 
         this.networkManager.drawPeers();
         this.wallManager.drawWalls();
+      },
 
-        this.camera.untransform();
-
-        gl.disable(gl.DEPTH_TEST);
-        if (!this.player.buildMode) {
-          this.cursor.draw();
-        }
-        gl.enable(gl.DEPTH_TEST);
+      updateUI: function() {
+        this.framerate.snapshot();
+        this.cursor.update(!this.player.buildMode);
       },
 
       setID: function(data) {
