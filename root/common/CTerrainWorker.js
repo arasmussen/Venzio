@@ -30,7 +30,7 @@ require({
         var heights = sectionFetcher.fetch(e.data.coords);
         for (var x = -normalDistance; x <= length + normalDistance; x++) {
           for (var z = -normalDistance; z <= length + normalDistance; z++) {
-            heights[x][z] = (255 - heights[x][z]) / 6 - 8;
+            heights[x][z] = (255 - heights[x][z]) / 9 - 6;
           }
         }
 

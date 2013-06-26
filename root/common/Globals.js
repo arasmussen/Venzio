@@ -4,6 +4,7 @@ define(function() {
   return {
     address: '/',
     port: 8080,
+    multiplayer: false,
 
     terrainLength: 32, // must be even and divisible by terrainQuality
     terrainOffset: 6,

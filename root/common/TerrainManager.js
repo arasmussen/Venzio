@@ -15,9 +15,9 @@ define([
 
         var options = {
           seed: 123,
-          blurDistance: 20,
-          amount: 11,
-          contrast: 11,
+          blurDistance: 18,
+          amount: 8,
+          contrast: 8,
           normalDistance: 1
         };
 

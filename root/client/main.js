@@ -6,9 +6,10 @@ define([
     'client/CInputManager',
     'client/CTerrainManager',
     'client/Game',
-    'client/TextureManager'
+    'client/TextureManager',
+    'common/Globals'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, TextureManager) {
+  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, TextureManager, Globals) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -28,16 +29,8 @@ define([
              window.clearTimeout;
     })();
 
-    var createGLContext = function(canvas, callback) {
-      if (GraphicsManager.initialize(canvas) == GraphicsManager.statusCodes.SUCCESS) {
-        setTimeout(callback.bind(null, true), 0);
-      } else {
-        setTimeout(callback.bind(null, false), 0);
-      }
-    }
-
-    var connectSocket = function(networkManager, callback) {
-      networkManager.connect(callback);
+    var createGLContext = function(canvas) {
+      return (GraphicsManager.initialize(canvas) == GraphicsManager.statusCodes.SUCCESS);
     }
 
     var loadingHeader = $('#loading h3');
@@ -45,78 +38,112 @@ define([
     var loadingToDo = $('#loading-todo');
     var imageWidth = 265;
 
-    var updateLoadingBar = function(width) {
+    var updateMessage = function(message) {
+      loadingHeader.html(message);
+    }
+
+    var updateLoadingBar = function(amount) { // amount is between 0 and 1
+      var width = amount * imageWidth;
       loadingDone.animate({width: width + 'px'}, 120);
       loadingToDo.animate({width: (imageWidth - width) + 'px', left: width + 'px'}, 120);
     }
 
-    var handleSuccess = function(pass) {
-      if (pass == 0) {
-        updateLoadingBar(imageWidth * 0.1);
-        loadingHeader.html('Setting up WebGL context');
-      } else if (pass == 1) {
-        updateLoadingBar(imageWidth * 0.4);
-        loadingHeader.html('Connecting to server');
-      } else if (pass == 2) {
-        updateLoadingBar(imageWidth * 0.6);
-        loadingHeader.html('Initializing textures');
-      } else if (pass == 3) {
-        updateLoadingBar(imageWidth * 0.8);
-        loadingHeader.html('Initializing terrain');
-      } else if (pass == 4) {
-        updateLoadingBar(imageWidth);
-        loadingHeader.html('Initializing game and player');
-      } else if (pass == 5) {
-        loadingHeader.html('Starting game');
-        setTimeout(function() { $('#loading').remove(); }, 20);
-      }
-    }
-
-    var handleFailure = function(pass) {
-      if (pass == 1) {
-        console.log('WebGL context couldn\'t be created');
-      } else if (pass == 2) {
-        console.log('Couldn\'t connect to the server');
-        loadingHeader.html('Failed, starting single player game');
-        updateLoadingBar(imageWidth * 0.4);
-        setTimeout(main.bind(null, true), 0); // play anyways...
-      } else {
-        console.log('Unknown error occurred');
-        loadingHeader.html('Unknown error occurred');
-      }
-    }
-
-    var pass = 0;
     var canvas = document.getElementById('canvas');
     var networkManager = new NetworkManager();
     var terrainManager;
     var game;
 
+    var steps = [
+      {
+        func: function() {
+          var gotWebGL = GraphicsManager.initialize(canvas);
+          if (gotWebGL == GraphicsManager.statusCodes.SUCCESS) {
+            setTimeout(main.bind(null, true), 0);
+          } else {
+            setTimeout(main.bind(null, false), 0);
+          }
+        },
+        initMessage: 'Creating WebGL context...',
+        successMessage: 'WebGL context created',
+        failureMessage: 'Couldn\'t create WebGL context'
+      },
+      {
+        func: function() {
+          if (Globals.multiplayer) {
+            networkManager.connect(callback);
+          } else {
+            setTimeout(main.bind(null, true), 0);
+          }
+        },
+        initMessage: 'Connecting to server...',
+        successMessage: 'Connected to server',
+        failureMessage: 'Couldn\'t connect to server'
+      },
+      {
+        func: function() {
+          TextureManager.initialize(main.bind(null, true));
+        },
+        initMessage: 'Loading textures...',
+        successMessage: 'Textures loaded',
+        failureMessage: 'Couldn\'t load textures'
+      },
+      {
+        func: function() {
+          InputManager.initialize(canvas);
+          setTimeout(main.bind(null, true), 0);
+        },
+        initMessage: 'Initializing input...',
+        successMessage: 'Input initialized',
+        failureMessage: 'Couldn\'t initialize input'
+      },
+      {
+        func: function() {
+          terrainManager = new CTerrainManager(main);
+        },
+        initMessage: 'Initializing terrain...',
+        successMessage: 'Terrain initialized',
+        failureMessage: 'Couldn\'t initialize terrain'
+      },
+      {
+        func: function() {
+          game = new Game(networkManager, terrainManager);
+          setTimeout(main.bind(null, true), 0);
+        },
+        initMessage: 'Initializing game...',
+        successMessage: 'Game initialized',
+        failureMessage: 'Couldn\'t initialize game'
+      },
+      {
+        func: function() {
+          game.start();
+          setTimeout(main.bind(null, true), 0);
+        },
+        initMessage: 'Starting game...',
+        successMessage: 'Game started',
+        failureMessage: 'Couldn\'t start game'
+      }
+    ];
+
+    var step = 0;
     var main = function(success) {
-      if (!success) {
-        handleFailure(pass);
-        return;
+      if (step > 0 || success != undefined) {
+        if (success) {
+          updateMessage(steps[step].successMessage);
+          step++;
+        } else {
+          updateMessage(steps[step].failureMessage);
+          return; // exit
+        }
       }
 
-      handleSuccess(pass);
-      pass++;
-
-      if (pass == 1) {
-        createGLContext(canvas, main);
-      } else if (pass == 2) {
-        connectSocket(networkManager, main);
-      } else if (pass == 3) {
-        TextureManager.initialize(main.bind(null, true));
-      } else if (pass == 4) {
-        InputManager.initialize(canvas);
-        terrainManager = new CTerrainManager(main);
-      } else if (pass == 5) {
-        game = new Game(networkManager, terrainManager);
-        setTimeout(main.bind(null, true), 0);
+      if (step < steps.length) {
+        updateMessage(steps[step].initMessage);
+        updateLoadingBar((step + 1) / steps.length);
+        steps[step].func();
       } else {
-        var lastFrameTime = new Date();
-        game.start();
+        $('#loading').remove(); // kill load screen
 
+        var lastFrameTime = new Date();
         var baseLoop = function() {
           var currentTime = new Date();
           var tslf = (currentTime.getTime() - lastFrameTime.getTime()) / 1000;
@@ -131,6 +158,7 @@ define([
         baseLoop();
       }
     }
+
     return main;
   }
 );
