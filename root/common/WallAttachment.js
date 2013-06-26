@@ -88,7 +88,7 @@ define([
 
         this.wall.setPosition({
           x: attacheePosition.x + distance * looking.x,
-          y: attacheePosition.y + distance * looking.y + 2.0,
+          y: attacheePosition.y + distance * looking.y + 2.0 - this.wall.height / 2.0,
           z: attacheePosition.z + distance * looking.z
         });
         this.wall.setRotation({
