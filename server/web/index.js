@@ -12,11 +12,12 @@ requirejs.config({
 });
 
 requirejs([
+    'ejs',
     'fs',
     'http',
     'server/HeightmapRequestHandler'
   ],
-  function(fs, http, HeightmapRequestHandler) {
+  function(ejs, fs, http, HeightmapRequestHandler) {
     var webroot = __dirname + '/../../root';
 
     var extensions = {
@@ -83,6 +84,8 @@ requirejs([
         return;
       }
 
+      var game = (url == '/index.html');
+
       // otherwise just serve that file. this is probably a huge security issue
       // (for example if the user somehow requests http://venz.io/../../../../../etc/passwd)
       var extension = getExtension(url);
@@ -91,7 +94,10 @@ requirejs([
 
       // if it's an html page, add the header and footer templates
       if (extension.contentType == 'text/html') {
-        var header = fs.readFileSync(__dirname + '/header.html', 'utf8');
+        var header = ejs.render(
+          fs.readFileSync(__dirname + '/header.html.ejs', 'utf8'),
+          {game: game}
+        );
         var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
         contents = header + contents + footer;
       }

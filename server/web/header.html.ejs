@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/reset.css" />
     <link rel="stylesheet" href="/styles.css" />
-    <script type="text/javascript" src="/client/lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="/client/lib/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="/client/lib/analytics.js"></script>
+<% if (game) { %>
+    <script type="text/javascript" src="/client/lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="/client/ClientGlobals.js"></script>
     <script data-main="/app.js" src="/client/lib/require.js"></script>
-    <script type="text/javascript" src="/client/lib/analytics.js"></script>
+<% } %>
   </head>
   <body>
     <div id="header">
