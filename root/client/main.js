@@ -40,6 +40,7 @@ define([
 
     var updateMessage = function(message) {
       loadingHeader.html(message);
+      console.log(message);
     }
 
     var updateLoadingBar = function(amount) { // amount is between 0 and 1

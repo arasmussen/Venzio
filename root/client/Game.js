@@ -10,9 +10,10 @@ define([
     'common/WallManager',
     'client/ui/Framerate',
     'client/ui/Ping',
-    'client/ui/Cursor'
+    'client/ui/Cursor',
+    'common/Globals'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -24,8 +25,11 @@ define([
         InputManager.networkManager = this.networkManager;
 
         this.framerate = new Framerate('framerate');
-        this.ping = new Ping('ping', networkManager);
         this.cursor = new Cursor('cursor');
+
+        if (Globals.multiplayer) {
+          this.ping = new Ping('ping', networkManager);
+        }
       },
 
       mainLoop: function(tslf) {
@@ -36,7 +40,9 @@ define([
       },
 
       start: function() {
-        this.networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
+        if (Globals.multiplayer) {
+          this.networkManager.startGame(this.player, this.terrainManager, this.physicsManager);
+        }
       },
 
       handleInput: function() {
@@ -49,7 +55,9 @@ define([
         this.terrainManager.update(this.player.position);
 
         this.physicsManager.movePlayer(this.player, tslf);
-        this.networkManager.snapshot(tslf);
+        if (Globals.multiplayer) {
+          this.networkManager.snapshot(tslf);
+        }
       },
 
       drawWorld: function() {
@@ -64,7 +72,9 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        this.networkManager.drawPeers();
+        if (Globals.multiplayer) {
+          this.networkManager.drawPeers();
+        }
         this.wallManager.drawWalls();
       },
 

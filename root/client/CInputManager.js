@@ -2,7 +2,8 @@
 
 define([
     'common/InputGlobals',
-  ], function(InputGlobals) {
+    'common/Globals'
+  ], function(InputGlobals, Globals) {
   return {
     canvas: null,
     keys: [],
@@ -83,6 +84,10 @@ define([
     },
 
     sendServerMessage: function() {
+      if (!Globals.multiplayer) {
+        return;
+      }
+
       // TODO: refactor
       var bitArray =
         InputGlobals.UP * this.isKeyPressed(40, 83) +
