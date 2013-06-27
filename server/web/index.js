@@ -15,9 +15,10 @@ requirejs([
     'ejs',
     'fs',
     'http',
-    'server/HeightmapRequestHandler'
+    'server/HeightmapRequestHandler',
+    'server/PaymentRequestHandler'
   ],
-  function(ejs, fs, http, HeightmapRequestHandler) {
+  function(ejs, fs, http, HeightmapRequestHandler, PaymentRequestHandler) {
     var webroot = __dirname + '/../../root';
 
     var extensions = {
@@ -33,7 +34,8 @@ requirejs([
     };
 
     var keywords = {
-      '/heightmap': HeightmapRequestHandler
+      '/heightmap': HeightmapRequestHandler,
+      '/charge': PaymentRequestHandler
     };
 
     var redirects = {
