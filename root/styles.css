@@ -45,14 +45,14 @@ body, html {
 
 #footer {
   width: 100%;
-  height: 16px;
+  height: 12px;
   background: #39f;
-  padding: 22px 0;
+  padding: 20px 0;
   box-shadow: inset 0 7px 7px -7px #000000;
 }
 
 #footer #bottombar li {
-  height: 30px;
+  height: 12px;
   float: right;
 }
 
@@ -69,11 +69,13 @@ body, html {
 #footer #bottombar #copyright span {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   color: #fff;
+  font-size: 12px;
 }
 
 #footer #bottombar #social {
   width: 300px;
   float: right;
+  font-size: 12px;
 }
 
 #content {
