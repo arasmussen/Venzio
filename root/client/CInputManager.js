@@ -2,7 +2,7 @@
 
 define([
     'common/InputGlobals',
-    'common/Globals',
+    'common/Globals'
   ], function(InputGlobals, Globals) {
   return {
     canvas: null,
