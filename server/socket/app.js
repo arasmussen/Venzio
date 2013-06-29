@@ -7,7 +7,8 @@ requirejs.config({
   baseUrl: __dirname + '/../..',
   paths: {
     server: 'server/socket',
-    common: 'root/common'
+    common: 'root/common',
+    db: 'server/db'
   }
 });
 

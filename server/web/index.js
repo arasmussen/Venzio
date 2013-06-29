@@ -7,18 +7,26 @@ requirejs.config({
   baseUrl: __dirname + '/../..',
   paths: {
     server: 'server/web',
-    common: 'root/common'
+    common: 'root/common',
+    model: 'server/model',
+    db: 'server/db',
+    endpoint: 'server/endpoint'
   }
 });
 
 requirejs([
+    'db/db',
     'ejs',
     'fs',
     'http',
-    'server/HeightmapRequestHandler',
-    'server/PaymentRequestHandler'
+    'endpoint/Heightmap',
+    'endpoint/Payment',
+    'endpoint/PlayerLogin',
+    'endpoint/CreatePlayer'
   ],
-  function(ejs, fs, http, HeightmapRequestHandler, PaymentRequestHandler) {
+  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint) {
+    db.connect();
+
     var webroot = __dirname + '/../../root';
 
     var extensions = {
@@ -34,8 +42,10 @@ requirejs([
     };
 
     var keywords = {
-      '/heightmap': HeightmapRequestHandler,
-      '/charge': PaymentRequestHandler
+      '/heightmap': HeightmapEndpoint,
+      '/charge': PaymentEndpoint,
+      '/playerLogin': LoginPlayerEndpoint,
+      '/createPlayer': CreatePlayerEndpoint
     };
 
     var redirects = {

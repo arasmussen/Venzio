@@ -1,16 +1,13 @@
 define(['mongoose'], function(mongoose) {
   return {
     db: null,
+    mongoose: mongoose,
 
     connect: function() {
-      mongoose.connect('mongodb://localhost/gfx');
+      mongoose.connect('mongodb://localhost/venzio');
       this.db = mongoose.connection;
-      this.db.on('error', this.error.bind(this));
+      this.db.on('error', console.error.bind(console, 'connection error:'));
       this.db.once('open', this.success.bind(this));
-    },
-
-    error: function(msg) {
-      console.error('connection error:', msg);
     },
 
     success: function() {

@@ -1,6 +1,6 @@
 define([
     'socket.io',
-    'server/db',
+    'db/db',
     'server/ClientManager',
     'common/PhysicsManager',
     'server/STerrainManager',
