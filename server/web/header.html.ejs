@@ -36,13 +36,13 @@
         </div>
 <% } else { %>
         <div id="login_menu">
-          <form>
+          <form method="get" action="/playerLogin">
             <div id="login_menu_inputs">
               <div class="rounded_input">
-                <input placeholder="email/username" id="email_or_username" type="text" />
+                <input placeholder="email/username" id="email_or_username" name="email_or_username" type="text" />
               </div>
               <div class="rounded_input">
-                <input placeholder="password" id="password" type="password" />
+                <input placeholder="password" id="password" name="password" type="password" />
               </div>
             </div>
             <input id="submit" type="submit" value="log in" />

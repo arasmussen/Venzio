@@ -9,13 +9,13 @@ define([
     return Base.extend({
       constructor: function(request, response) {
         urlParams = url.parse(request.url, true).query;
-        this.email = urlParams.email;
+        this.emailOrUsername = urlParams.email_or_username;
         this.password = urlParams.password;
         this.response = response;
       },
 
       handle: function() {
-        player.login(this.email, this.password, this.respond.bind(this));
+        player.login(this.emailOrUsername, this.password, this.respond.bind(this));
       },
 
       respond: function(response) {
