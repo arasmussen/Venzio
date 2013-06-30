@@ -9,7 +9,7 @@
     <script type="text/javascript" src="https://checkout.stripe.com/v2/checkout.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="/client/lib/analytics.js"></script>
-<% if (game) { %>
+<% if (is_game) { %>
     <script type="text/javascript" src="/client/lib/glMatrix-0.9.5.min.js"></script>
     <script type="text/javascript" src="/client/ClientGlobals.js"></script>
     <script data-main="/app.js" src="/client/lib/require.js"></script>
@@ -21,12 +21,36 @@
         <div id="logo">
           <a href="/"><img src="/headerLogo.png" alt="logo" /></a>
         </div>
-        <ul>
-          <li><a href="/">demo</a></li>
-          <li><a href="/about">about</a></li>
-          <li><a href="/jobs">jobs</a></li>
-          <li><a href="mailto:contact@venz.io">contact</a></li>
-        </ul>
+        <div id="nav">
+          <ul>
+            <li><a href="/demo">demo</a></li>
+            <li><a href="/about">about</a></li>
+            <li><a href="/jobs">jobs</a></li>
+            <li><a href="mailto:contact@venz.io">contact</a></li>
+          </ul>
+        </div>
+<% if (logged_in) { %>
+        <div id="user_menu">
+          <a id="profile_link" href="/profile"><%= username %></a>
+          <a id="signout_link" href="/logout">log out</a>
+        </div>
+<% } else { %>
+        <div id="login_menu">
+          <form>
+            <div id="login_menu_inputs">
+              <div class="rounded_input">
+                <input placeholder="email/username" id="email_or_username" type="text" />
+              </div>
+              <div class="rounded_input">
+                <input placeholder="password" id="password" type="password" />
+              </div>
+            </div>
+            <input id="submit" type="submit" value="log in" />
+          </form>
+          <a id="signup_link" href="/signup">signup</a>
+          <a id="forgot_link" href="/forgot">forgot your password</a>
+        </div>
+<% } %>
       </div>
     </div>
     <div id="content">

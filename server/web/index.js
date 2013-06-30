@@ -50,6 +50,7 @@ requirejs([
 
     var redirects = {
       '/': '/index.html',
+      '/demo': '/demo.html',
       '/about': '/about.html',
       '/jobs': '/jobs.html'
     };
@@ -96,7 +97,7 @@ requirejs([
         return;
       }
 
-      var game = (url == '/index.html');
+      var is_game = (url == '/demo.html');
 
       // otherwise just serve that file. this is probably a huge security issue
       // (for example if the user somehow requests http://venz.io/../../../../../etc/passwd)
@@ -108,7 +109,7 @@ requirejs([
       if (extension.contentType == 'text/html') {
         var header = ejs.render(
           fs.readFileSync(__dirname + '/header.html.ejs', 'utf8'),
-          {game: game}
+          {is_game: is_game, logged_in: false}
         );
         var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
         contents = header + contents + footer;
