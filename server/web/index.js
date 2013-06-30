@@ -52,7 +52,8 @@ requirejs([
       '/': '/index.html',
       '/demo': '/demo.html',
       '/about': '/about.html',
-      '/jobs': '/jobs.html'
+      '/jobs': '/jobs.html',
+      '/signup': '/signup.html'
     };
 
     function getExtension(url) {
