@@ -14,7 +14,7 @@ define(['db/db', 'password-hash'], function(db, passwordhash) {
   return {
     model: playerModel,
 
-    create: function(email, password, name, username, callback) {
+    create: function(username, name, email, password, callback) {
       if (!this.checkEmail(email)) {
         callback('CREATE_PLAYER_EMAIL_BAD_FORMAT');
       } else if (!this.checkPassword(password)) {

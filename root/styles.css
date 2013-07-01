@@ -372,7 +372,8 @@ body, html {
   margin: 5px auto 0 auto;
 }
 
-#signup input[type="text"] {
+#signup input[type="text"],
+#signup input[type="password"] {
   border: none;
   margin: 0 10px 0 10px;
   padding: none;

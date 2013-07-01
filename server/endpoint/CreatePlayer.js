@@ -9,14 +9,15 @@ define([
     return Base.extend({
       constructor: function(request, response) {
         urlParams = url.parse(request.url, true).query;
+        this.username = urlParams.name;
+        this.name = urlParams.name;
         this.email = urlParams.email;
         this.password = urlParams.password;
-        this.name = urlParams.name;
         this.response = response;
       },
 
       handle: function() {
-        player.create(this.email, this.password, this.name, this.respond.bind(this));
+        player.create(this.username, this.name, this.email, this.password, this.respond.bind(this));
       },
 
       respond: function(response) {
