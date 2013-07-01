@@ -324,74 +324,84 @@ body, html {
   color: #666;
 }
 
-#signup {
-  width: 500px;
-  height: 350px;
-  margin: 0 auto;
+#signup,
+#login {
+  width: 480px;
+  height: auto;
+  margin: 40px auto 0 auto;
   border: 1px solid #aac;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  font-size: 0;
 }
 
-#signup form {
-  display: block;
-  width: 500px;
-  height: 278px;
+#signup form,
+#login form {
+  display: inline-block;
+  font-size: 12px;
 }
 
-#signup h2 {
+#signup h2,
+#login h2 {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   display: block;
-  margin: 20px 0;
+  margin: 30px 0;
   font-size: 32px;
   text-align: center;
   color: #3af;
 }
 
-#signup form label {
+#signup form label,
+#login form label {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   display: block;
-  width: 100px;
-  margin-top: 14px;
-  margin-right: 10px;
+  width: 140px;
+  margin-top: 17px;
+  margin-right: 20px;
   height: 20px;
   float: left;
   text-align: right;
   color: #666;
+  font-size: 16px;
 }
 
-#signup .rounded_input {
+#signup .rounded_input,
+#login .rounded_input {
   float: left;
-  width: 300px;
+  width: 240px;
   height: 40px;
   background-color: #fff;
   overflow: hidden;
   border: 1px solid #aac;
   border-radius: 8px;
-  margin: 5px auto 0 auto;
+  margin: 6px auto 0 auto;
 }
 
 #signup input[type="text"],
-#signup input[type="password"] {
-  border: none;
+#signup input[type="password"],
+#login input[type="text"],
+#login input[type="password"] {
+  border: 0;
   margin: 0 10px 0 10px;
-  padding: none;
-  width: 280px;
+  padding: 0;
+  width: 230px;
   height: 40px;
-  font-size: 24px;
+  font-size: 20px;
 }
 
-#signup #signup_button_container {
-  margin-top: 20px;
+#signup #signup_button_container,
+#login #login_button_container {
+  margin: 30px 0;
   float: left;
   display: block;
-  width: 500px;
-  height: 50px;
+  width: 100%;
+  height: 40px;
   text-align: center;
 }
 
-#signup input[type="submit"] {
+#signup input[type="submit"],
+#login input[type="submit"] {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   color: #666;
   border: 1px solid #aac;
@@ -399,6 +409,6 @@ body, html {
   padding: 0;
   margin: 0;
   background-color: #fff;
-  width: 200px;
+  width: 100px;
   height: 40px;
 }
