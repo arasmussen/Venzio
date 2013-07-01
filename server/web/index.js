@@ -48,12 +48,8 @@ requirejs([
       '/createPlayer': CreatePlayerEndpoint
     };
 
-    var redirects = {
-      '/': '/index.html',
-      '/demo': '/demo.html',
-      '/about': '/about.html',
-      '/jobs': '/jobs.html',
-      '/signup': '/signup.html'
+    var aliases = {
+      '/': '/index',
     };
 
     function getExtension(url) {
@@ -85,14 +81,17 @@ requirejs([
         return;
       }
 
-      // if it's a redirect then fix the url
-      if (redirects.hasOwnProperty(url)) {
-        url = redirects[url];
+      // if it's an alias then fix the url
+      if (aliases.hasOwnProperty(url)) {
+        url = aliases[url];
       }
 
       // if the file doesn't exist return a 404
       var filepath = webroot + url;
-      if (!fs.existsSync(filepath)) {
+      if (!fs.existsSync(filepath) && fs.existsSync(filepath + '.html')) {
+        filepath += '.html';
+        url += '.html';
+      } else if (!fs.existsSync(filepath)) {
         response.writeHead(404);
         response.end();
         return;
