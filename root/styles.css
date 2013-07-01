@@ -32,77 +32,18 @@ body, html {
   margin: 0 auto;
 }
 
-#header #topbar #login_menu {
+#header #topbar #guest_menu,
+#header #topbar #user_menu {
   float: right;
-  width: 290px;
-  height: 40px;
 }
 
-#header #topbar form {
-  float: left;
-  width: 160px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-#header #topbar #login_menu_inputs {
+#header #topbar #guest_menu a,
+#header #topbar #user_menu a {
   float: left;
   width: 100px;
-  height: 40px;
-  margin-right: 10px;
-}
-
-#header #topbar #login_menu .rounded_input {
-  width: 100px;
-  height: 15px;
-  margin-top: 2px;
-  background-color: #39f;
-  border: 1px solid #fff;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-#header #topbar #login_menu input[type="text"]::-webkit-input-placeholder,
-#header #topbar #login_menu input[type="password"]::-webkit-input-placeholder {
-  color: #fff;
-}
-
-#header #topbar #login_menu input[type="text"],
-#header #topbar #login_menu input[type="password"] {
-  width: 90px;
-  height: 15px;
-  float: left;
-  font-size: 12px;
-  border: 0;
-  padding: 0;
-  margin: 0 0 0 5px;
-  color: #fff;
-  background-color: #39f;
-}
-
-#header #topbar #login_menu input[type="submit"] {
-  width: 50px;
-  height: 36px;
-  margin: 2px 0 0 0;
-  padding: 0;
-  border: 1px solid #fff;
-  background-color: #39f;
-  border-radius: 5px;
-  color: #fff;
-}
-
-#header #topbar #login_menu input[type="submit"]:hover {
-  color: #22a;
-  border-color: #22a;
-}
-
-#header #topbar #signup_link,
-#header #topbar #forgot_link {
-  float: left;
-  width: 120px;
-  font-size: 12px;
+  font-size: 16px;
   text-align: center;
-  margin-top: 2px;
+  margin-top: 10px;
   margin-bottom: 6px;
 }
 
@@ -352,11 +293,18 @@ body, html {
   color: #3af;
 }
 
+#signup form label {
+  width: 120px;
+}
+
+#login form label {
+  width: 155px;
+}
+
 #signup form label,
 #login form label {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   display: block;
-  width: 140px;
   margin-top: 17px;
   margin-right: 20px;
   height: 20px;

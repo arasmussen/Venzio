@@ -35,20 +35,9 @@
           <a id="signout_link" href="/logout">log out</a>
         </div>
 <% } else { %>
-        <div id="login_menu">
-          <form method="get" action="/playerLogin">
-            <div id="login_menu_inputs">
-              <div class="rounded_input">
-                <input placeholder="email/username" id="login_email_or_username" name="email_or_username" type="text" />
-              </div>
-              <div class="rounded_input">
-                <input placeholder="password" id="login_password" name="password" type="password" />
-              </div>
-            </div>
-            <input id="submit" type="submit" value="log in" />
-          </form>
+        <div id="guest_menu">
+          <a id="login_link" href="/login">login</a>
           <a id="signup_link" href="/signup">signup</a>
-          <a id="forgot_link" href="/forgot">forgot your password</a>
         </div>
 <% } %>
       </div>
