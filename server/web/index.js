@@ -29,6 +29,9 @@ requirejs([
 
     var webroot = __dirname + '/../../root';
 
+    var headerFile = __dirname + '/../template/header.html.ejs';
+    var footerFile = __dirname + '/../template/footer.html';
+
     var extensions = {
       'html': {contentType: 'text/html', binary: false},
       'css': {contentType: 'text/css', binary: false},
@@ -108,10 +111,10 @@ requirejs([
       // if it's an html page, add the header and footer templates
       if (extension.contentType == 'text/html') {
         var header = ejs.render(
-          fs.readFileSync(__dirname + '/header.html.ejs', 'utf8'),
+          fs.readFileSync(headerFile, 'utf8'),
           {is_game: is_game, logged_in: false}
         );
-        var footer = fs.readFileSync(__dirname + '/footer.html', 'utf8');
+        var footer = fs.readFileSync(footerFile, 'utf8');
         contents = header + contents + footer;
       }
 
