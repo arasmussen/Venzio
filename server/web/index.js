@@ -23,9 +23,10 @@ requirejs([
     'endpoint/Payment',
     'endpoint/PlayerLogin',
     'endpoint/CreatePlayer',
+    'endpoint/Logout',
     'model/player'
   ],
-  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, playerModel) {
+  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, LogoutEndpoint, playerModel) {
     db.connect();
 
     var webroot = __dirname + '/../../root';
@@ -49,7 +50,8 @@ requirejs([
       '/heightmap': HeightmapEndpoint,
       '/charge': PaymentEndpoint,
       '/playerLogin': LoginPlayerEndpoint,
-      '/createPlayer': CreatePlayerEndpoint
+      '/createPlayer': CreatePlayerEndpoint,
+      '/logout': LogoutEndpoint
     };
 
     var aliases = {
