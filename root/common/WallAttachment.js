@@ -57,7 +57,7 @@ define([
             x: attacheePosition.x + distance * looking.x,
             z: attacheePosition.z + distance * looking.z
           });
-          if (terrainHeight > attacheePosition.y + distance * looking.y + 2.0) {
+          if (terrainHeight > attacheePosition.y + distance * looking.y + 2.0 - Globals.walls.height / 2.0) {
             // wall collides with ground, need to binary search
             interpolate = true;
             break;
@@ -74,9 +74,9 @@ define([
               x: attacheePosition.x + distance * looking.x,
               z: attacheePosition.z + distance * looking.z
             });
-            if (attacheePosition.y + distance * looking.y + 2.0 <= terrainHeight) {
+            if (attacheePosition.y + distance * looking.y + 2.0 - Globals.walls.height / 2.0 <= terrainHeight) {
               upper = distance;
-            } else if (attacheePosition.y + distance * looking.y + 2.0 - terrainHeight <= 0.001) {
+            } else if (attacheePosition.y + distance * looking.y + 2.0 - Globals.walls.height / 2.0 - terrainHeight <= 0.001) {
               break;
             } else {
               lower = distance;
@@ -88,7 +88,7 @@ define([
 
         this.wall.setPosition({
           x: attacheePosition.x + distance * looking.x,
-          y: attacheePosition.y + distance * looking.y + 2.0 - this.wall.height / 2.0,
+          y: attacheePosition.y + distance * looking.y + 2.0 - Globals.walls.height / 2.0,
           z: attacheePosition.z + distance * looking.z
         });
         this.wall.setRotation({
