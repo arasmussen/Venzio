@@ -186,6 +186,7 @@ body, html {
 }
 
 #loading-done, #loading-todo, #loading img {
+  margin-top: 10px;
   height: 75px;
   position: absolute;
   top: 0px;
