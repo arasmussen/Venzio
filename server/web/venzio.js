@@ -100,7 +100,7 @@ requirejs([
 
       // if it's a special keyword then call that function
       if (keywords.hasOwnProperty(url)) {
-        var handler = new keywords[url](request, response);
+        var handler = new keywords[url](request, response, player);
         handler.handle();
         return;
       }
@@ -119,38 +119,46 @@ requirejs([
         return;
       }
 
-      // if the file doesn't exist return a 404
       var filepath = webroot + url;
-      if (!fs.existsSync(filepath) && fs.existsSync(filepath + '.html')) {
-        filepath += '.html';
-        url += '.html';
-      } else if (!fs.existsSync(filepath)) {
-        response.writeHead(404);
-        response.end();
-        return;
-      }
-
-      // otherwise just serve that file. this is probably a huge security issue
-      // (for example if the user somehow requests http://venz.io/../../../../../etc/passwd)
-      var extension = getExtension(url);
-      response.writeHead(200, {'Content-Type': extension.contentType});
-      var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
-
-      // if it's an html page, add the header and footer templates
-      if (extension.contentType == 'text/html') {
+      var extension;
+      if (fs.existsSync(filepath)) {
+        var extension = getExtension(url);
+        var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
+      } else if (fs.existsSync(filepath + '.html')) {
+        var extension = extensions['html'];
         var data = {
-          is_game: (url == '/demo.html'),
+          is_game: (url == '/demo'),
           player: player
         };
-
         var header = ejs.render(
           fs.readFileSync(headerFile, 'utf8'),
           data
         );
-        var footer = fs.readFileSync(footerFile, 'utf8');
+        var footer = fs.readFileSync(footerFile);
+        var contents = fs.readFileSync(filepath + '.html', 'utf8')
         contents = header + contents + footer;
+      } else if (fs.existsSync(filepath + '.html.ejs')) {
+        var extension = extensions['html'];
+        var data = {
+          is_game: (url == '/demo'),
+          player: player
+        };
+        var header = ejs.render(
+          fs.readFileSync(headerFile, 'utf8'),
+          data
+        );
+        var footer = fs.readFileSync(footerFile);
+        var contents = ejs.render(
+          fs.readFileSync(filepath + '.html.ejs', 'utf8'),
+          data
+        );
+        contents = header + contents + footer;
+      } else {
+        response.writeHead(404);
+        response.end();
+        return;
       }
-
+      response.writeHead(200, {'Content-Type': extension.contentType});
       response.end(contents, extension.binary ? 'binary' : 'utf8');
     }
   }

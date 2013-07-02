@@ -1,0 +1,9 @@
+        <div id="profile">
+          <div id="bubble">
+<% if (player) { %>
+            <p>You're logged in as <%= player.username %>.</p>
+<% } else { %>
+            <p>You don't seem to be logged in.</p>
+<% } %>
+          </div>
+        </div>
