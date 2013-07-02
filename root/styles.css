@@ -1,4 +1,5 @@
 body, html {
+  background-color: #39f;
   margin: 0;
 }
 
@@ -8,6 +9,11 @@ body, html {
   padding: 10px 0;
   background-color: #39f;
   box-shadow: inset 0 -7px 7px -7px #000000;
+}
+
+#content * {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #22a;
 }
 
 #header *,
@@ -110,7 +116,7 @@ body, html {
   width: 100%;
   height: 100%;
   padding: 40px 0;
-  min-height: 800px;
+  min-height: 600px;
 }
 
 #content #center {
@@ -207,14 +213,12 @@ body, html {
 }
 
 #jobs h1 {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 24px;
   color: #39f;
   margin-bottom: 12px;
 }
 
 #jobs > p {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 14px;
   color: #666;
   margin-bottom: 12px;
@@ -227,21 +231,18 @@ body, html {
 
 #jobs li.position h2 {
   display: inline-block;
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 18px;
   color: #666;
   margin-bottom: 16px;
 }
 
 #jobs li.position h3 {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 14px;
   color: #666;
   margin: 8px 0;
 }
 
 #jobs li.position li {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 14px;
   color: #666;
 }
@@ -255,12 +256,10 @@ body, html {
 #jobs li.position a {
   display: inline-block;
   margin-top: 10px;
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 14px;
 }
 
 #jobs li.position p {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   font-size: 14px;
   color: #666;
 }
@@ -285,7 +284,6 @@ body, html {
 
 #signup h2,
 #login h2 {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   display: block;
   margin: 30px 0;
   font-size: 32px;
@@ -303,7 +301,6 @@ body, html {
 
 #signup form label,
 #login form label {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   display: block;
   margin-top: 17px;
   margin-right: 20px;
@@ -350,7 +347,6 @@ body, html {
 
 #signup input[type="submit"],
 #login input[type="submit"] {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
   color: #666;
   border: 1px solid #aac;
   border-radius: 5px;
@@ -359,4 +355,72 @@ body, html {
   background-color: #fff;
   width: 100px;
   height: 40px;
+}
+
+#developers {
+  text-align: center;
+}
+
+#developers h1 {
+  font-size: 28px;
+  text-align: center;
+}
+
+#developers #bubble {
+  width: 760px;
+  margin: 20px 0;
+  display: inline-block;
+  padding: 0 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  border: 1px solid #aac;
+  text-align: left;
+}
+
+#developers #bubble h2 {
+  display: inline-block;
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+#developers #bubble h2:first-child {
+  margin-top: 20px;
+}
+
+#developers #bubble p.padBottom {
+  margin-bottom: 20px;
+}
+
+#developers #bubble ul {
+  margin-left: 20px;
+  list-style: disc;
+}
+
+#developers #bubble li {
+  margin-top: 10px;
+}
+
+#developers #bubble #minibubbles {
+  display: inline-block;
+  width: 760px;
+}
+
+#developers #bubble .minibubble {
+  border: 1px solid #aac;
+  border-radius: 8px;
+  float: left;
+  padding: 12px;
+  width: 214px;
+  height: 150px;
+  margin-left: 20px;
+}
+
+#developers #bubble .minibubble h3 {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+#developers #bubble .minibubble:first-child {
+  margin-left: 0;
 }

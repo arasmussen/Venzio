@@ -55,7 +55,11 @@ requirejs([
     };
 
     var aliases = {
-      '/': '/index',
+    //  '/': '/index',
+    };
+
+    var redirects = {
+      '/': '/developers'
     };
 
     function getExtension(url) {
@@ -102,6 +106,15 @@ requirejs([
       // if it's an alias then fix the url
       if (aliases.hasOwnProperty(url)) {
         url = aliases[url];
+      }
+
+      if (redirects.hasOwnProperty(url)) {
+        response.writeHead(302, {
+          'Content-Type': 'text/plain',
+          'Location': redirects[url]
+        });
+        response.end();
+        return;
       }
 
       // if the file doesn't exist return a 404
