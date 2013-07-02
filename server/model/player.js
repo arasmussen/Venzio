@@ -1,6 +1,6 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
-define(['db/db', 'password-hash'], function(db, passwordhash) {
+define(['db', 'password-hash'], function(db, passwordhash) {
   var schema = db.mongoose.Schema({
     email: String,
     password: String,
@@ -8,21 +8,49 @@ define(['db/db', 'password-hash'], function(db, passwordhash) {
     username: String,
     cardToken: String,
     authorizedGames: [String],
-    created: Date
+    created: Date,
+    sessid: String
   });
+  schema.methods.getSessionID = function() {
+    if (this.sessid) {
+      return this.sessid;
+    }
+
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      };
+      return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    this.sessid = guid();
+    this.save();
+    return this.sessid;
+  };
   var playerModel = db.mongoose.model('player', schema);
   return {
     model: playerModel,
 
+    playerFromSessID: function(sessid, callback) {
+      playerModel
+        .findOne()
+        .where('sessid').equals(sessid)
+        .exec(function(err, player) {
+          callback(player);
+        });
+    },
+
     create: function(username, name, email, password, callback) {
       if (!this.checkEmail(email)) {
-        callback('CREATE_PLAYER_EMAIL_BAD_FORMAT');
+        callback('CREATE_PLAYER_EMAIL_BAD_FORMAT', null);
       } else if (!this.checkPassword(password)) {
-        callback('CREATE_PLAYER_PASSWORD_BAD_FORMAT');
+        callback('CREATE_PLAYER_PASSWORD_BAD_FORMAT', null);
       } else if (!this.checkName(name)) {
-        callback('CREATE_PLAYER_NAME_BAD_FORMAT');
+        callback('CREATE_PLAYER_NAME_BAD_FORMAT', null);
       } else if (!this.checkUsername(username)) {
-        callback('CREATE_PLAYER_USERNAME_BAD_FORMAT');
+        callback('CREATE_PLAYER_USERNAME_BAD_FORMAT', null);
       } else {
         var player = new playerModel();
         player.email = email;
@@ -32,13 +60,14 @@ define(['db/db', 'password-hash'], function(db, passwordhash) {
         player.cardToken = null;
         player.authorizedGames = [];
         player.created = new Date();
+        player.sessid = null;
 
         player.save(function(err) {
           if (err) {
             console.error(err);
-            callback('CREATE_PLAYER_FAILED');
+            callback('CREATE_PLAYER_FAILED', null);
           } else {
-            callback('CREATE_PLAYER_SUCCESS');
+            callback('CREATE_PLAYER_SUCCESS', player);
           }
         });
       }
@@ -47,20 +76,20 @@ define(['db/db', 'password-hash'], function(db, passwordhash) {
     login: function(emailOrUsername, password, callback) {
       var isEmail = this.checkEmail(emailOrUsername);
       if (!isEmail && !this.checkUsername(emailOrUsername)) {
-        callback('PLAYER_LOGIN_EMAILUSERNAME_BAD_FORMAT');
+        callback('PLAYER_LOGIN_EMAILUSERNAME_BAD_FORMAT', null);
       } else if (!this.checkPassword(password)) {
-        callback('PLAYER_LOGIN_PASSWORD_BAD_FORMAT');
+        callback('PLAYER_LOGIN_PASSWORD_BAD_FORMAT', null);
       } else {
         playerModel
           .findOne()
           .where((isEmail ? 'email' : 'username')).equals(emailOrUsername)
           .exec(function(err, player) {
             if (!player) {
-              callback('PLAYER_LOGIN_EMAIL_DOESNT_EXIST');
+              callback('PLAYER_LOGIN_EMAIL_DOESNT_EXIST', null);
             } else if (passwordhash.verify(password, player.password)) {
-              callback('PLAYER_LOGIN_SUCCESS');
+              callback('PLAYER_LOGIN_SUCCESS', player);
             } else {
-              callback('PLAYER_LOGIN_WRONG_PASSWORD');
+              callback('PLAYER_LOGIN_WRONG_PASSWORD', null);
             }
           });
       }

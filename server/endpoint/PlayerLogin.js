@@ -2,10 +2,11 @@
 
 define([
     'basejs',
+    'db',
     'url',
     'model/player'
   ],
-  function(Base, url, player) {
+  function(Base, db, url, playerModel) {
     return Base.extend({
       constructor: function(request, response) {
         urlParams = url.parse(request.url, true).query;
@@ -15,12 +16,23 @@ define([
       },
 
       handle: function() {
-        player.login(this.emailOrUsername, this.password, this.respond.bind(this));
+        playerModel.login(this.emailOrUsername, this.password, this.respond.bind(this));
       },
 
-      respond: function(response) {
-        this.response.writeHead(200, {'Content-Type': 'text/plain'});
-        this.response.end(response);
+      respond: function(msg, player) {
+        if (player) {
+          this.response.writeHead(302, {
+            'Content-Type': 'text/plain',
+            'Location': '/',
+            'Set-Cookie': 'sessid=' + player.getSessionID()
+          });
+        } else {
+          this.response.writeHead(302, {
+            'Content-Type': 'text/plain',
+            'Location': '/login?failed=true&username=' + encodeURIComponent(this.emailOrUsername)
+          });
+        }
+        this.response.end();
       }
     });
   }

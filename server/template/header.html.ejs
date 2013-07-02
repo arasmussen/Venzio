@@ -29,9 +29,9 @@
             <li><a href="mailto:contact@venz.io">contact</a></li>
           </ul>
         </div>
-<% if (logged_in) { %>
+<% if (player) { %>
         <div id="user_menu">
-          <a id="profile_link" href="/profile"><%= username %></a>
+          <a id="profile_link" href="/profile"><%= player.username %></a>
           <a id="signout_link" href="/logout">log out</a>
         </div>
 <% } else { %>

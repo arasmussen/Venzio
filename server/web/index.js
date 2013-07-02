@@ -9,22 +9,23 @@ requirejs.config({
     server: 'server/web',
     common: 'root/common',
     model: 'server/model',
-    db: 'server/db',
+    db: 'server/db/db',
     endpoint: 'server/endpoint'
   }
 });
 
 requirejs([
-    'db/db',
+    'db',
     'ejs',
     'fs',
     'http',
     'endpoint/Heightmap',
     'endpoint/Payment',
     'endpoint/PlayerLogin',
-    'endpoint/CreatePlayer'
+    'endpoint/CreatePlayer',
+    'model/player'
   ],
-  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint) {
+  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, playerModel) {
     db.connect();
 
     var webroot = __dirname + '/../../root';
@@ -75,6 +76,18 @@ requirejs([
     }
 
     http.createServer(function(request, response) {
+      var cookies = {};
+      request.headers.cookie && request.headers.cookie.split(';').forEach(function(cookie) {
+        var parts = cookie.split('=');
+        cookies[parts[0].trim()] = (parts[1] || '').trim();
+      });
+      if (cookies.hasOwnProperty('sessid')) {
+        var callback = processRequest.bind(null, request, response);
+        playerModel.playerFromSessID(cookies['sessid'], callback);
+      }
+    }).listen(8001);
+
+    function processRequest(request, response, player) {
       var url = getFilepath(request.url);
 
       // if it's a special keyword then call that function
@@ -100,8 +113,6 @@ requirejs([
         return;
       }
 
-      var is_game = (url == '/demo.html');
-
       // otherwise just serve that file. this is probably a huge security issue
       // (for example if the user somehow requests http://venz.io/../../../../../etc/passwd)
       var extension = getExtension(url);
@@ -110,15 +121,20 @@ requirejs([
 
       // if it's an html page, add the header and footer templates
       if (extension.contentType == 'text/html') {
+        var data = {
+          is_game: (url == '/demo.html'),
+          player: player
+        };
+
         var header = ejs.render(
           fs.readFileSync(headerFile, 'utf8'),
-          {is_game: is_game, logged_in: false}
+          data
         );
         var footer = fs.readFileSync(footerFile, 'utf8');
         contents = header + contents + footer;
       }
 
       response.end(contents, extension.binary ? 'binary' : 'utf8');
-    }).listen(8001);
+    }
   }
 );
