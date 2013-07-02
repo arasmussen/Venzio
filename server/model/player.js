@@ -9,7 +9,8 @@ define(['db', 'password-hash'], function(db, passwordhash) {
     cardToken: String,
     authorizedGames: [String],
     created: Date,
-    sessid: String
+    sessid: String,
+    activated: Boolean
   });
   schema.methods.getSessionID = function() {
     if (this.sessid) {
@@ -61,6 +62,7 @@ define(['db', 'password-hash'], function(db, passwordhash) {
         player.authorizedGames = [];
         player.created = new Date();
         player.sessid = null;
+        player.activated = false;
 
         player.save(function(err) {
           if (err) {
