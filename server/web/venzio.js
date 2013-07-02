@@ -90,6 +90,8 @@ requirejs([
       if (cookies.hasOwnProperty('sessid')) {
         var callback = processRequest.bind(null, request, response);
         playerModel.playerFromSessID(cookies['sessid'], callback);
+      } else {
+        processRequest(request, response, null);
       }
     }).listen(8001);
 
