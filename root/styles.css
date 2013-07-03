@@ -13,7 +13,7 @@ body, html {
 
 #content * {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #22a;
+  color: #555;
 }
 
 #header *,
