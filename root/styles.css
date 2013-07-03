@@ -451,3 +451,20 @@ body, html {
 #developers #bubble .minibubble:first-child {
   margin-left: 0;
 }
+
+#thanks,
+#sorry {
+  width: 320px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid #aac;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  margin: 0 auto;
+}
+
+#thanks h2,
+#sorry h2 {
+  margin-bottom: 10px;
+  text-align: center;
+}
