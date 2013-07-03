@@ -266,7 +266,8 @@ body, html {
 }
 
 #signup,
-#login {
+#login,
+#subscribe {
   width: 480px;
   height: auto;
   margin: 40px auto 0 auto;
@@ -278,13 +279,15 @@ body, html {
 }
 
 #signup form,
-#login form {
+#login form,
+#subscribe form {
   display: inline-block;
   font-size: 12px;
 }
 
 #signup h2,
-#login h2 {
+#login h2,
+#subscribe h2 {
   display: block;
   margin: 30px 0;
   font-size: 32px;
@@ -300,8 +303,13 @@ body, html {
   width: 155px;
 }
 
+#subscribe form label {
+  width: 120px;
+}
+
 #signup form label,
-#login form label {
+#login form label,
+#subscribe form label {
   display: block;
   margin-top: 17px;
   margin-right: 20px;
@@ -313,7 +321,8 @@ body, html {
 }
 
 #signup .rounded_input,
-#login .rounded_input {
+#login .rounded_input,
+#subscribe .rounded_input {
   float: left;
   width: 240px;
   height: 40px;
@@ -327,7 +336,8 @@ body, html {
 #signup input[type="text"],
 #signup input[type="password"],
 #login input[type="text"],
-#login input[type="password"] {
+#login input[type="password"],
+#subscribe input[type="text"] {
   border: 0;
   margin: 0 10px 0 10px;
   padding: 0;
@@ -337,7 +347,8 @@ body, html {
 }
 
 #signup #signup_button_container,
-#login #login_button_container {
+#login #login_button_container,
+#subscribe #subscribe_button_container {
   margin: 30px 0;
   float: left;
   display: block;
@@ -347,7 +358,8 @@ body, html {
 }
 
 #signup input[type="submit"],
-#login input[type="submit"] {
+#login input[type="submit"],
+#subscribe input[type="submit"] {
   color: #666;
   border: 1px solid #aac;
   border-radius: 5px;
