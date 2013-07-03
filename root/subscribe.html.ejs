@@ -1,0 +1,20 @@
+      <div id="subscribe">
+        <h2>subscribe</h2>
+<% if (locals.failed) { %>
+        <p>This isn't a valid email</p>
+<% } else if (locals.error) { %>
+        <p>Unknown error occurred</p>
+<% } else if (locals.exists) { %>
+        <p>This email is already subscribed</p>
+<% } %>
+        <form method="get" action="/developerSubscribe">
+          <label for="subscribe_email">email</label>
+          <div class="rounded_input">
+            <input id="subscribe_email" name="email" <% if (locals.email) { %>value=<%= email %> <% } %> type="text" />
+          </div>
+          <input name="subscribe" type="hidden" value="true" />
+          <div id="subscribe_button_container">
+            <input id="subscribe_button" value="subscribe" type="submit" />
+          </div>
+        </form>
+      </div>

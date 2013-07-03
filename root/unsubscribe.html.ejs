@@ -1,0 +1,19 @@
+      <div id="unsubscribe">
+        <h2>Unsubscribe</h2>
+<% if (locals.failed) { %>
+        <p>This isn't a valid email</p>
+<% } else if (locals.error) { %>
+        <p>Unknown error occurred</p>
+<% } else if (locals.exists) { %>
+        <p>This email isn't subscribed</p>
+<% } %>
+        <form method="get" action="/developerSubscribe">
+          <label for="unsubscribe_email">email</label>
+          <div class="rounded_input">
+            <input id="unsubscribe_email" name="email" <% if (locals.email) { %>value=<%= email %> <% } %> type="text" />
+          </div>
+          <div id="unsubscribe_button_container">
+            <input id="unsubscribe_button" value="unsubscribe" type="submit" />
+          </div>
+        </form>
+      </div>

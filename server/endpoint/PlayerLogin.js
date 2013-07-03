@@ -2,11 +2,10 @@
 
 define([
     'basejs',
-    'db',
     'url',
     'model/player'
   ],
-  function(Base, db, url, playerModel) {
+  function(Base, url, playerModel) {
     return Base.extend({
       constructor: function(request, response) {
         urlParams = url.parse(request.url, true).query;

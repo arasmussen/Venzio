@@ -19,14 +19,16 @@ requirejs([
     'ejs',
     'fs',
     'http',
+    'url',
     'endpoint/Heightmap',
     'endpoint/Payment',
     'endpoint/PlayerLogin',
     'endpoint/CreatePlayer',
     'endpoint/Logout',
+    'endpoint/DeveloperSubscribe',
     'model/player'
   ],
-  function(db, ejs, fs, http, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, LogoutEndpoint, playerModel) {
+  function(db, ejs, fs, http, url, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, LogoutEndpoint, DeveloperSubscribeEndpoint, playerModel) {
     db.connect();
 
     var webroot = __dirname + '/../../root';
@@ -51,7 +53,8 @@ requirejs([
       '/charge': PaymentEndpoint,
       '/playerLogin': LoginPlayerEndpoint,
       '/createPlayer': CreatePlayerEndpoint,
-      '/logout': LogoutEndpoint
+      '/logout': LogoutEndpoint,
+      '/developerSubscribe': DeveloperSubscribeEndpoint
     };
 
     var aliases = {
@@ -62,23 +65,23 @@ requirejs([
       '/': '/developers'
     };
 
-    function getExtension(url) {
-      var lastDot = url.lastIndexOf('.') + 1;
-      var questionMark = url.indexOf('?');
+    function getExtension(uri) {
+      var lastDot = uri.lastIndexOf('.') + 1;
+      var questionMark = uri.indexOf('?');
       if (questionMark != -1) {
-        var extension = url.substr(lastDot, questionMark - lastDot);
+        var extension = uri.substr(lastDot, questionMark - lastDot);
       } else {
-        var extension = url.substr(lastDot);
+        var extension = uri.substr(lastDot);
       }
       return extensions[extension] || extensions['other'];
     }
 
-    function getFilepath(url) {
-      if (url.indexOf('?') == -1) {
-        return url;
+    function getFilepath(uri) {
+      if (uri.indexOf('?') == -1) {
+        return uri;
       }
       // strip get params if there are any
-      return url.substr(0, url.indexOf('?'));
+      return uri.substr(0, uri.indexOf('?'));
     }
 
     http.createServer(function(request, response) {
@@ -96,38 +99,38 @@ requirejs([
     }).listen(8001);
 
     function processRequest(request, response, player) {
-      var url = getFilepath(request.url);
+      var uri = getFilepath(request.url);
 
       // if it's a special keyword then call that function
-      if (keywords.hasOwnProperty(url)) {
-        var handler = new keywords[url](request, response, player);
+      if (keywords.hasOwnProperty(uri)) {
+        var handler = new keywords[uri](request, response, player);
         handler.handle();
         return;
       }
 
-      // if it's an alias then fix the url
-      if (aliases.hasOwnProperty(url)) {
-        url = aliases[url];
+      // if it's an alias then fix the uri
+      if (aliases.hasOwnProperty(uri)) {
+        uri = aliases[uri];
       }
 
-      if (redirects.hasOwnProperty(url)) {
+      if (redirects.hasOwnProperty(uri)) {
         response.writeHead(302, {
           'Content-Type': 'text/plain',
-          'Location': redirects[url]
+          'Location': redirects[uri]
         });
         response.end();
         return;
       }
 
-      var filepath = webroot + url;
+      var filepath = webroot + uri;
       var extension;
       if (fs.existsSync(filepath)) {
-        var extension = getExtension(url);
+        var extension = getExtension(uri);
         var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
       } else if (fs.existsSync(filepath + '.html')) {
         var extension = extensions['html'];
         var data = {
-          is_game: (url == '/demo'),
+          is_game: (uri == '/demo'),
           player: player
         };
         var header = ejs.render(
@@ -140,9 +143,15 @@ requirejs([
       } else if (fs.existsSync(filepath + '.html.ejs')) {
         var extension = extensions['html'];
         var data = {
-          is_game: (url == '/demo'),
+          is_game: (uri == '/demo'),
           player: player
         };
+
+        uriParams = url.parse(request.url, true).query;
+        for (var key in uriParams) {
+          data[key] = uriParams[key];
+        }
+
         var header = ejs.render(
           fs.readFileSync(headerFile, 'utf8'),
           data
