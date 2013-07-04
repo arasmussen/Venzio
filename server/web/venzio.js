@@ -6,7 +6,7 @@ requirejs.config({
   nodeRequire: require,
   baseUrl: __dirname + '/../..',
   paths: {
-    server: 'server/web',
+    web: 'server/web',
     common: 'root/common',
     model: 'server/model',
     db: 'server/db/db',

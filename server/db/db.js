@@ -1,6 +1,6 @@
 define([
     'mongoose',
-    'server/web/SensitiveConstants'
+    'web/SensitiveConstants'
   ], function(mongoose, Constants) {
   return {
     db: null,
