@@ -1,14 +1,17 @@
-define(['mongoose'], function(mongoose) {
+define([
+    'mongoose',
+    'server/web/SensitiveConstants'
+  ], function(mongoose, Constants) {
   return {
     db: null,
     mongoose: mongoose,
 
     connect: function() {
-      var username = process.env.VENZIO_DB_USER;
-      var password = process.env.VENZIO_DB_PASS;
-      var host = process.env.VENZIO_DB_HOST;
-      var port = process.env.VENZIO_DB_PORT;
-      var name = process.env.VENZIO_DB_NAME;
+      var username = Constants.DBUSERNAME;
+      var password = Constants.DBPASSWORD;
+      var host = Constants.DBHOST;
+      var port = Constants.DBPORT;
+      var name = Constants.DBNAME;
       var connectionString = 'mongodb://' + username + ':' + password + '@' + host + ':' + port + '/' + name;
       mongoose.connect(connectionString);
       this.db = mongoose.connection;
