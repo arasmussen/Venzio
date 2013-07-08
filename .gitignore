@@ -6,3 +6,8 @@
 ## node_modules stuff
 
 node_modules/*/build/*
+
+
+## database shit
+
+server/web/SensitiveConstants.js
