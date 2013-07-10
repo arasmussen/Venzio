@@ -1,0 +1,150 @@
+body, html {
+  background-color: #39f;
+  margin: 0;
+}
+
+#header {
+  width: 100%;
+  height: 60px;
+  background-color: #39f;
+  box-shadow: inset 0 -7px 7px -7px #000000;
+}
+
+#header * {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #fff;
+}
+
+#header #topbar {
+  width: 950px;
+  height: 60px;
+  margin: 0 auto;
+}
+
+#header #topbar #logo {
+  width: 136px;
+  height: 60px;
+  float: left;
+}
+
+#header #topbar #logo a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#header #topbar #logo a:hover {
+  background-color: #27d;
+  box-shadow: inset 0 -7px 7px -7px #000000;
+}
+
+#header #topbar #logo a img {
+  padding: 15px;
+}
+
+#header #topbar #nav ul {
+  float: left;
+  height: 60px;
+}
+
+#header #topbar #nav li {
+  float: left;
+  display: inline-block;
+  height: 60px;
+}
+
+#header #topbar #nav li a {
+  display: block;
+  height: 60px;
+  padding: 0 15px;
+  text-decoration: none;
+  line-height: 60px;
+}
+
+#header #topbar #nav li a:hover {
+  background-color: #27d;
+  box-shadow: inset 0 -7px 7px -7px #000000;
+}
+
+#header #topbar #guest_menu,
+#header #topbar #user_menu {
+  float: right;
+}
+
+#header #topbar #guest_menu a,
+#header #topbar #user_menu a {
+  float: left;
+  width: 100px;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+#content * {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #555;
+}
+
+#content {
+  background-color: #e7f0ff;
+  width: 100%;
+  height: 100%;
+  padding: 40px 0;
+  min-height: 600px;
+}
+
+#content #center {
+  width: 960px;
+  margin: 0 auto;
+}
+
+#footer * {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #fff;
+}
+
+#footer a {
+  text-decoration: none;
+}
+
+#footer a:hover {
+  color: #22a;
+}
+
+#footer #bottombar ul li a {
+  margin: 0 15px;
+}
+
+#footer {
+  width: 100%;
+  height: 12px;
+  background: #39f;
+  padding: 20px 0;
+  box-shadow: inset 0 7px 7px -7px #000000;
+}
+
+#footer #bottombar li {
+  height: 12px;
+  float: right;
+}
+
+#footer #bottombar {
+  width: 960px;
+  margin: 0 auto;
+}
+
+#footer #bottombar #copyright {
+  display: inline-block;
+  float: left;
+}
+
+#footer #bottombar #copyright span {
+  font-size: 12px;
+}
+
+#footer #bottombar #social {
+  width: 300px;
+  float: right;
+  font-size: 12px;
+}

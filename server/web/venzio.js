@@ -20,21 +20,26 @@ requirejs([
     'fs',
     'http',
     'url',
-    'endpoint/Heightmap',
-    'endpoint/Payment',
-    'endpoint/PlayerLogin',
-    'endpoint/CreatePlayer',
-    'endpoint/Logout',
-    'endpoint/DeveloperSubscribe',
-    'model/player'
+    'model/player',
+    'web/config'
   ],
-  function(db, ejs, fs, http, url, HeightmapEndpoint, PaymentEndpoint, LoginPlayerEndpoint, CreatePlayerEndpoint, LogoutEndpoint, DeveloperSubscribeEndpoint, playerModel) {
+  function(
+    db,
+    ejs,
+    fs,
+    http,
+    url,
+    playerModel,
+    config
+  ) {
     db.connect();
 
     var webroot = __dirname + '/../../root';
 
     var headerFile = __dirname + '/../template/header.html.ejs';
     var footerFile = __dirname + '/../template/footer.html';
+
+    var fourOhFourFile = __dirname + '/../template/404.html';
 
     var extensions = {
       'html': {contentType: 'text/html', binary: false},
@@ -46,24 +51,6 @@ requirejs([
       'png': {contentType: 'image/png', binary: true},
       'ico': {contentType: 'image/x-icon', binary: true},
       'other': {contentType: 'text/plain', binary: false}
-    };
-
-    var keywords = {
-      '/heightmap': HeightmapEndpoint,
-      '/charge': PaymentEndpoint,
-      '/playerLogin': LoginPlayerEndpoint,
-      '/createPlayer': CreatePlayerEndpoint,
-      '/logout': LogoutEndpoint,
-      '/developerSubscribe': DeveloperSubscribeEndpoint
-    };
-
-    var aliases = {
-    //  '/': '/index',
-      '/favicon.ico': '/img/favicon.ico'
-    };
-
-    var redirects = {
-      '/': '/developers'
     };
 
     function getExtension(uri) {
@@ -103,37 +90,37 @@ requirejs([
       var uri = getFilepath(request.url);
 
       // if it's a special keyword then call that function
-      if (keywords.hasOwnProperty(uri)) {
-        var handler = new keywords[uri](request, response, player);
+      if (config.endpoints.hasOwnProperty(uri)) {
+        var handler = new config.endpoints[uri](request, response, player);
         handler.handle();
         return;
       }
 
       // if it's an alias then fix the uri
-      if (aliases.hasOwnProperty(uri)) {
-        uri = aliases[uri];
+      if (config.aliases.hasOwnProperty(uri)) {
+        uri = config.aliases[uri];
       }
 
-      if (redirects.hasOwnProperty(uri)) {
+      if (config.redirects.hasOwnProperty(uri)) {
         response.writeHead(302, {
           'Content-Type': 'text/plain',
-          'Location': redirects[uri]
+          'Location': config.redirects[uri]
         });
         response.end();
         return;
       }
 
       var filepath = webroot + uri;
-      var extension;
-      if (fs.existsSync(filepath)) {
-        var extension = getExtension(uri);
+      var extension = getExtension(uri);
+      var data = {
+        cssFiles: config.cssFiles[uri] || [],
+        is_game: (uri == '/demo'),
+        player: player
+      };
+      if (fs.existsSync(filepath) && extension != extensions['html']) {
         var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
       } else if (fs.existsSync(filepath + '.html')) {
-        var extension = extensions['html'];
-        var data = {
-          is_game: (uri == '/demo'),
-          player: player
-        };
+        extension = extensions['html'];
         var header = ejs.render(
           fs.readFileSync(headerFile, 'utf8'),
           data
@@ -142,8 +129,9 @@ requirejs([
         var contents = fs.readFileSync(filepath + '.html', 'utf8')
         contents = header + contents + footer;
       } else if (fs.existsSync(filepath + '.html.ejs')) {
-        var extension = extensions['html'];
+        extension = extensions['html'];
         var data = {
+          cssFiles: [],
           is_game: (uri == '/demo'),
           player: player
         };
@@ -164,8 +152,16 @@ requirejs([
         );
         contents = header + contents + footer;
       } else {
-        response.writeHead(404);
-        response.end();
+        extension = extensions['html'];
+        var header = ejs.render(
+          fs.readFileSync(headerFile, 'utf8'),
+          data
+        );
+        var footer = fs.readFileSync(footerFile);
+        var contents = fs.readFileSync(fourOhFourFile, 'utf8');
+        contents = header + contents + footer;
+        response.writeHead(404, {'Content-Type': extension.contentType});
+        response.end(contents, 'utf8');
         return;
       }
       response.writeHead(200, {'Content-Type': extension.contentType});

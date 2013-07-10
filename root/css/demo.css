@@ -1,0 +1,88 @@
+#canvas-wrapper {
+  width: 960px;
+  height: 720px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  -webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC); /* this fixes the overflow:hidden in Chrome/Opera */
+}
+
+#canvas-wrapper #canvas {
+  background-color: #fff;
+  height: 720px;
+  width: 960px;
+}
+
+#canvas-wrapper #framerate {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #fff;
+}
+
+#canvas-wrapper #ping {
+  position: absolute;
+  top: 26px;
+  left: 10px;
+  color: #fff;
+}
+
+#canvas-wrapper #cursor {
+  display: none;
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  top: 352px;
+  left: 472px;
+}
+
+#loading {
+  width: 960px;
+  height: 520px;
+  background: #000;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  text-align: center;
+  padding-top: 280px;
+}
+
+#loading h3 {
+  display: inline-block;
+  color: #fff;
+}
+
+#loading-wrapper {
+  position: relative;
+  height: 75px;
+  width: 265px;
+  margin: 0 auto;
+}
+
+#loading-done, #loading-todo, #loading img {
+  margin-top: 10px;
+  height: 75px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+#loading-done {
+  background: #39f;
+  width: 0px;
+}
+
+#loading-todo {
+  background: #aaa;
+  width: 265px;
+}
+
+#instructions {
+  margin-top: 20px;
+  width: 960px;
+  text-align: center;
+}
+
+#instructions ul {
+  list-style: none;
+}

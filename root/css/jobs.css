@@ -1,0 +1,51 @@
+#jobs h1 {
+  font-size: 24px;
+  color: #39f;
+  margin-bottom: 12px;
+}
+
+#jobs > p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+#jobs li.position {
+  border-top: 1px solid #ccc;
+  padding: 20px 0;
+}
+
+#jobs li.position h2 {
+  display: inline-block;
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+#jobs li.position h3 {
+  font-size: 14px;
+  color: #666;
+  margin: 8px 0;
+}
+
+#jobs li.position li {
+  font-size: 14px;
+  color: #666;
+}
+
+#jobs li.position li:before {
+  content: "-";
+  color: #666;
+  padding-right: 0.4em;
+}
+
+#jobs li.position a {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+#jobs li.position p {
+  font-size: 14px;
+  color: #666;
+}

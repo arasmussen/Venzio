@@ -1,0 +1,152 @@
+#developers {
+  text-align: center;
+}
+
+#developers a {
+  color: #3af;
+}
+
+#developers #headings {
+  margin-bottom: 40px;
+}
+
+#developers #headings h1 {
+  font-size: 40px;
+  text-align: center;
+  width: 700px;
+  margin: 0 auto;
+}
+
+#developers #headings h2 {
+  font-size: 16px;
+  text-align: center;
+  width: 600px;
+  margin: 60px auto 0 auto;
+}
+
+#developers #bubble {
+  width: 958px;
+  margin: 20px 0;
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  border: 1px solid #aac;
+  text-align: left;
+}
+
+#developers #bubble .section {
+  border-top: 1px solid rgba(0, 0, 0, 0.25);
+  width: 856px;
+  height: 300px;
+  padding: 51px;
+}
+
+#developers #bubble .section:first-child {
+  border-top: none;
+}
+
+#developers #bubble .section .left {
+  height: 300px;
+  width: 377px;
+  float: left;
+  padding-right: 51px;
+}
+
+#developers #bubble .section .right {
+  height: 300px;
+  width: 377px;
+  float: left;
+  padding-left: 51px;
+}
+
+#developers #bubble .section .icon {
+  height: 100px;
+  width: 200px;
+  margin: 0 94px;
+  float: left;
+}
+
+#developers #bubble .section .icon img {
+  width: 60px;
+  height: 60px;
+  padding: 10px;
+  margin: 10px;
+  float: left;
+  background-color: #ededf6;
+  border-radius: 8px;
+  box-shadow: inset 1px 1px 1px #bbb;
+}
+
+#developers #bubble .section .icon h3 {
+  width: 100px;
+  height: 20px;
+  margin: 40px 0;
+  text-align: center;
+  color: #3af;
+  float: left;
+}
+
+#developers #bubble .section .text h3 {
+  font-size: 28px;
+  font-weight: normal;
+  margin: 10px 0 20px 0;
+}
+
+#developers #bubble .section .text p {
+  color: #999;
+  font-size: 18px;
+  font-weight: lighter;
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+
+#developers #bubble .section .text a {
+  font-size: 18px;
+  font-weight: lighter;
+  text-decoration: none;
+}
+
+#developers #bubble h2 {
+  display: inline-block;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+#developers #bubble p.padBottom {
+  margin-bottom: 20px;
+}
+
+#developers #bubble ul {
+  margin-left: 20px;
+  list-style: disc;
+}
+
+#developers #bubble li {
+  margin-top: 10px;
+}
+
+#developers #bubble #minibubbles {
+  display: inline-block;
+  width: 760px;
+}
+
+#developers #bubble .minibubble {
+  border: 1px solid #aac;
+  border-radius: 8px;
+  float: left;
+  padding: 12px;
+  width: 214px;
+  height: 150px;
+  margin-left: 20px;
+}
+
+#developers #bubble .minibubble h3 {
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+#developers #bubble .minibubble:first-child {
+  margin-left: 0;
+}
