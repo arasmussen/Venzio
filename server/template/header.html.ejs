@@ -22,13 +22,13 @@
     <div id="header">
       <div id="topbar">
         <div id="logo">
-          <a href="/"><img src="/img/headerLogo.png" alt="logo" /></a>
+          <a <% if (uri == '/index') { %>class="current" <% } %>href="/"><img src="/img/headerLogo.png" alt="logo" /></a>
         </div>
         <div id="nav">
           <ul>
-            <li><a href="/demo">demo</a></li>
-            <li><a href="/nextgen">why webgl</a></li>
-            <li><a href="/subscribe">subscribe</a></li>
+            <li><a <% if (uri == '/demo') { %>class="current" <% } %>href="/demo">demo</a></li>
+            <li><a <% if (uri == '/nextgen') { %>class="current" <% } %>href="/nextgen">why webgl</a></li>
+            <li><a <% if (uri == '/subscribe') { %>class="current" <% } %>href="/subscribe">subscribe</a></li>
             <li><a href="mailto:contact@venz.io">contact</a></li>
           </ul>
         </div>

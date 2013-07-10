@@ -115,37 +115,29 @@ requirejs([
       var data = {
         cssFiles: config.cssFiles[uri] || [],
         is_game: (uri == '/demo'),
-        player: player
+        player: player,
+        uri: uri
       };
+      var header = ejs.render(
+        fs.readFileSync(headerFile, 'utf8'),
+        data
+      );
+      var footer = fs.readFileSync(footerFile);
+
       if (fs.existsSync(filepath) && extension != extensions['html']) {
         var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
       } else if (fs.existsSync(filepath + '.html')) {
         extension = extensions['html'];
-        var header = ejs.render(
-          fs.readFileSync(headerFile, 'utf8'),
-          data
-        );
-        var footer = fs.readFileSync(footerFile);
         var contents = fs.readFileSync(filepath + '.html', 'utf8')
         contents = header + contents + footer;
       } else if (fs.existsSync(filepath + '.html.ejs')) {
         extension = extensions['html'];
-        var data = {
-          cssFiles: [],
-          is_game: (uri == '/demo'),
-          player: player
-        };
 
         uriParams = url.parse(request.url, true).query;
         for (var key in uriParams) {
           data[key] = uriParams[key];
         }
 
-        var header = ejs.render(
-          fs.readFileSync(headerFile, 'utf8'),
-          data
-        );
-        var footer = fs.readFileSync(footerFile);
         var contents = ejs.render(
           fs.readFileSync(filepath + '.html.ejs', 'utf8'),
           data
@@ -153,11 +145,6 @@ requirejs([
         contents = header + contents + footer;
       } else {
         extension = extensions['html'];
-        var header = ejs.render(
-          fs.readFileSync(headerFile, 'utf8'),
-          data
-        );
-        var footer = fs.readFileSync(footerFile);
         var contents = fs.readFileSync(fourOhFourFile, 'utf8');
         contents = header + contents + footer;
         response.writeHead(404, {'Content-Type': extension.contentType});
