@@ -59,6 +59,7 @@ requirejs([
 
     var aliases = {
     //  '/': '/index',
+      '/favicon.ico': '/img/favicon.ico'
     };
 
     var redirects = {
