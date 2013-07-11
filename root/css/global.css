@@ -6,6 +6,9 @@ body, html {
 }
 
 #header {
+  position: fixed;
+  top: 0;
+  z-index: 100;
   width: 100%;
   height: 60px;
   background-color: #39f;
@@ -88,17 +91,18 @@ body, html {
   margin-bottom: 6px;
 }
 
-#content * {
-  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #555;
-}
-
 #content {
   background-color: #e7f0ff;
   width: 100%;
   height: 100%;
   padding: 40px 0;
   min-height: 600px;
+  margin-top: 60px;
+}
+
+#content * {
+  font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
+  color: #555;
 }
 
 #content #center {
