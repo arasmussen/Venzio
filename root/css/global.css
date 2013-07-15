@@ -1,23 +1,22 @@
 /* Copyright (c) Venzio 2013 All Rights Reserved */
 
 body, html {
-  background-color: #39f;
   margin: 0;
 }
 
 #header {
+  background-color: #333;
   position: fixed;
   top: 0;
   z-index: 100;
   width: 100%;
   height: 60px;
-  background-color: #39f;
   box-shadow: inset 0 -7px 7px -7px #000000;
 }
 
 #header * {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #fff;
+  color: #ddd;
 }
 
 #header #topbar {
@@ -39,7 +38,7 @@ body, html {
 }
 
 #header #topbar #logo a:hover {
-  background-color: #27d;
+  background-color: #555;
   box-shadow: inset 0 -7px 7px -7px #000000;
 }
 
@@ -67,12 +66,12 @@ body, html {
 }
 
 #header #topbar #nav li a.current {
-  background-color: #27d;
+  background-color: #555;
   box-shadow: inset 0 -7px 7px -7px #000000;
 }
 
 #header #topbar #nav li a:hover {
-  background-color: #27d;
+  background-color: #555;
   box-shadow: inset 0 -7px 7px -7px #000000;
 }
 
@@ -92,27 +91,28 @@ body, html {
 }
 
 #content {
-  background-color: #e7f0ff;
+  background-color: #fff;
   width: 100%;
   height: 100%;
-  padding: 40px 0;
   min-height: 600px;
   margin-top: 60px;
 }
 
 #content * {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #555;
 }
 
-#content #center {
-  width: 960px;
-  margin: 0 auto;
+#footer {
+  width: 100%;
+  height: 12px;
+  padding: 30px 0;
+  box-shadow: inset 0 7px 7px -7px #000000;
+  background-color: #fff;
 }
 
 #footer * {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #fff;
+  color: #666;
 }
 
 #footer a {
@@ -120,19 +120,11 @@ body, html {
 }
 
 #footer a:hover {
-  color: #22a;
+  color: #000;
 }
 
 #footer #bottombar ul li a {
   margin: 0 15px;
-}
-
-#footer {
-  width: 100%;
-  height: 12px;
-  background: #39f;
-  padding: 20px 0;
-  box-shadow: inset 0 7px 7px -7px #000000;
 }
 
 #footer #bottombar li {

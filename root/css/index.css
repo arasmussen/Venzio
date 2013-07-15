@@ -2,71 +2,131 @@
 
 #index {
   text-align: center;
+  position: relative;
 }
 
 #index a {
   color: #3af;
 }
 
+#index #headings-container {
+  width: 100%;
+  padding-top: 40px;
+  background-image: url('/img/whiteBackground.jpg');
+  background-repeat: repeat;
+}
+
 #index #headings {
-  margin-bottom: 40px;
+  width: 960px;
+  margin: 0 auto;
+}
+
+#index #headings * {
+  color: #222;
+}
+
+#index #headings #graphic-container {
+  width: 960px;
+  height: 435px;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 #index #headings h1 {
   font-size: 40px;
   text-align: center;
   width: 700px;
-  margin: 0 auto;
+  margin: 0 auto 40px auto;
 }
 
 #index #headings h2 {
   font-size: 16px;
   text-align: center;
   width: 600px;
-  margin: 60px auto 0 auto;
+  padding: 60px 0;
+  margin: 0 auto;
+}
+
+#index #bubble-container {
+  padding: 1px 0;
+  background-color: #333;
+  width: 100%;
 }
 
 #index #bubble {
-  width: 958px;
-  margin: 20px 0;
-  display: inline-block;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-  border: 1px solid #aac;
+  width: 960px;
+  margin: 0 auto;
   text-align: left;
 }
 
 #index #bubble .section {
-  border-top: 1px solid rgba(0, 0, 0, 0.25);
-  width: 856px;
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 20px 0;
+  width: 960px;
   height: 300px;
-  padding: 51px;
 }
 
 #index #bubble .section:first-child {
   border-top: none;
 }
 
-#index #bubble .section .left {
-  height: 300px;
-  width: 377px;
+#index #bubble .section .text {
+  width: 700px;
   float: left;
-  padding-right: 51px;
 }
 
-#index #bubble .section .right {
-  height: 300px;
-  width: 377px;
+#index #bubble .section .text h3 {
+  color: #eee;
+  font-size: 28px;
+  font-weight: normal;
+  margin: 10px 0 20px 0;
+}
+
+#index #bubble .section .text p {
+  color: #bbb;
+  font-size: 18px;
+  font-weight: lighter;
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+
+#index #bubble .section .learnmore {
   float: left;
-  padding-left: 51px;
+  width: 260px;
+  margin-top: 50px;
+}
+
+#index #bubble .section .learnmore a {
+  background-color: #5c4;
+  background-repeat: repeat-x;
+  background-image: linear-gradient(180deg, #5c4 0%, #182 100%);
+  border-radius: 10px;
+  display: block;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#index #bubble .section .learnmore a:hover {
+  background-position: 0 8px;
+  transition: background-position 0.1s linear;
+}
+
+#index #bubble .section .icons {
+  float: left;
+  width: 960px;
 }
 
 #index #bubble .section .icon {
   height: 100px;
   width: 200px;
-  margin: 0 94px;
   float: left;
+  margin: 20px 60px;
 }
 
 #index #bubble .section .icon img {
@@ -75,9 +135,8 @@
   padding: 10px;
   margin: 10px;
   float: left;
-  background-color: #ededf6;
+  background-color: #000;
   border-radius: 8px;
-  box-shadow: inset 1px 1px 1px #bbb;
 }
 
 #index #bubble .section .icon h3 {
@@ -85,70 +144,6 @@
   height: 20px;
   margin: 40px 0;
   text-align: center;
-  color: #3af;
+  color: #eee;
   float: left;
-}
-
-#index #bubble .section .text h3 {
-  font-size: 28px;
-  font-weight: normal;
-  margin: 10px 0 20px 0;
-}
-
-#index #bubble .section .text p {
-  color: #999;
-  font-size: 18px;
-  font-weight: lighter;
-  margin-bottom: 20px;
-  line-height: 20px;
-}
-
-#index #bubble .section .text a {
-  font-size: 18px;
-  font-weight: lighter;
-  text-decoration: none;
-}
-
-#index #bubble h2 {
-  display: inline-block;
-  margin-top: 30px;
-  margin-bottom: 10px;
-  width: 100%;
-}
-
-#index #bubble p.padBottom {
-  margin-bottom: 20px;
-}
-
-#index #bubble ul {
-  margin-left: 20px;
-  list-style: disc;
-}
-
-#index #bubble li {
-  margin-top: 10px;
-}
-
-#index #bubble #minibubbles {
-  display: inline-block;
-  width: 760px;
-}
-
-#index #bubble .minibubble {
-  border: 1px solid #aac;
-  border-radius: 8px;
-  float: left;
-  padding: 12px;
-  width: 214px;
-  height: 150px;
-  margin-left: 20px;
-}
-
-#index #bubble .minibubble h3 {
-  display: inline-block;
-  margin-bottom: 10px;
-}
-
-#index #bubble .minibubble:first-child {
-  margin-left: 0;
 }
