@@ -36,7 +36,7 @@ define([
     var loadingHeader = $('#loading h3');
     var loadingDone = $('#loading-done');
     var loadingToDo = $('#loading-todo');
-    var imageWidth = 265;
+    var imageWidth = 264;
 
     var updateMessage = function(message) {
       loadingHeader.html(message);
@@ -44,7 +44,7 @@ define([
     }
 
     var updateLoadingBar = function(amount) { // amount is between 0 and 1
-      var width = amount * imageWidth;
+      var width = Math.floor(amount * imageWidth);
       loadingDone.animate({width: width + 'px'}, 120);
       loadingToDo.animate({width: (imageWidth - width) + 'px', left: width + 'px'}, 120);
     }
