@@ -1,6 +1,13 @@
 /* Copyright (c) Venzio 2013 All Rights Reserved */
 
+#demo {
+  background-image: url('/img/whiteBackground.jpg');
+  background-repeat: repeat;
+  padding: 40px 0;
+}
+
 #canvas-wrapper {
+  margin: 0 auto;
   width: 960px;
   height: 720px;
   position: relative;
@@ -87,4 +94,19 @@
 
 #instructions ul {
   list-style: none;
+}
+
+#controls {
+  padding: 40px 0 100px 0;
+  background-color: #333;
+  text-align: center;
+}
+
+#controls h2 {
+  color: #eee;
+  margin-bottom: 10px;
+}
+
+#controls li {
+  color: #bbb;
 }

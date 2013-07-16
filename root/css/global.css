@@ -111,7 +111,7 @@ body, html {
 
 #footer * {
   font-family: 'Segoe UI', 'Segoe WP', 'Segoe UI Regular', 'Helvetica Neue', 'Helvetica', 'Tahoma', 'Arial Unicode MS', sans-serif;
-  color: #666;
+  color: #bbb;
   line-height: 72px;
 }
 
@@ -120,7 +120,7 @@ body, html {
 }
 
 #footer a:hover {
-  color: #000;
+  color: #eee;
 }
 
 #footer #bottombar ul li a {
