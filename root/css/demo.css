@@ -1,9 +1,7 @@
 /* Copyright (c) Venzio 2013 All Rights Reserved */
 
 #demo {
-  background-image: url('/img/whiteBackground.jpg');
-  background-repeat: repeat;
-  padding: 40px 0;
+  margin: 60px 0;
 }
 
 #canvas-wrapper {
@@ -17,7 +15,7 @@
 }
 
 #canvas-wrapper #canvas {
-  background-color: #fff;
+  background-color: #000;
   height: 720px;
   width: 960px;
 }
@@ -64,7 +62,7 @@
 #loading-wrapper {
   position: relative;
   height: 75px;
-  width: 265px;
+  width: 264px;
   margin: 0 auto;
 }
 
@@ -83,7 +81,7 @@
 
 #loading-todo {
   background: #aaa;
-  width: 265px;
+  width: 264px;
 }
 
 #instructions {
@@ -97,7 +95,7 @@
 }
 
 #controls {
-  padding: 40px 0 100px 0;
+  padding: 50px 0;
   background-color: #333;
   text-align: center;
 }

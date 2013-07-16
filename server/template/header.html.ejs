@@ -27,10 +27,12 @@
         <div id="nav">
           <ul>
             <li><a <% if (uri == '/demo') { %>class="current" <% } %>href="/demo">demo</a></li>
-            <li><a <% if (uri == '/nextgen') { %>class="current" <% } %>href="/nextgen">why webgl</a></li>
-            <li><a <% if (uri == '/subscribe') { %>class="current" <% } %>href="/subscribe">subscribe</a></li>
-            <li><a href="mailto:contact@venz.io">contact</a></li>
+            <li><a <% if (uri == '/webgl') { %>class="current" <% } %>href="/webgl">webgl</a></li>
+            <li><a <% if (uri == '/features') { %>class="current" <% } %>href="/features">features</a></li>
           </ul>
+        </div>
+        <div id="subscribe-nav">
+          <a href="/subscribe">Subscribe</a>
         </div>
         <!--
 <% if (player) { %>

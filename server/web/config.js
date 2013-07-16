@@ -22,7 +22,8 @@ define([
         '/demo': ['demo'],
         '/jobs': ['jobs'],
         '/thanks': ['acknowledge'],
-        '/sorry': ['acknowledge']
+        '/sorry': ['acknowledge'],
+        '/subscribe': ['form']
       },
 
       endpoints: {

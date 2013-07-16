@@ -12,8 +12,6 @@
 #index #headings-container {
   width: 100%;
   padding-top: 40px;
-  background-image: url('/img/whiteBackground.jpg');
-  background-repeat: repeat;
 }
 
 #index #headings {
@@ -30,6 +28,29 @@
   height: 435px;
   overflow: hidden;
   border-radius: 8px;
+  position: relative;
+}
+
+#index #headings #graphic-container a {
+  position: absolute;
+  display: block;
+  top: 340px;
+  left: 710px;
+  width: 140px;
+  height: 50px;
+  background-color: #3af;
+  background-repeat: repeat-x;
+  background-image: linear-gradient(180deg, #3af 0%, #07e 100%);
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  line-height: 50px;
+  font-weight: bold;
+}
+
+#index #headings #graphic-container a:hover {
+  background-position: 0 8px;
+  transition: background-position 0.1s linear;
 }
 
 #index #headings h1 {
