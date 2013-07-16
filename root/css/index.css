@@ -47,6 +47,11 @@
   margin: 0 auto;
 }
 
+#index #social {
+  width: 960px;
+  margin: 0 auto;
+}
+
 #index #bubble-container {
   padding: 1px 0;
   background-color: #333;
@@ -124,10 +129,9 @@
 
 #index #bubble .section .icon {
   height: 100px;
-  width: 220px;
+  width: 200px;
   float: left;
-  margin: 20px 50px;
-  background-color: #666;
+  margin: 20px 60px;
 }
 
 #index #bubble .section .icon img {
@@ -136,6 +140,8 @@
   padding: 10px;
   margin: 10px;
   float: left;
+  background-color: #000;
+  border-radius: 8px;
 }
 
 #index #bubble .section .icon h3 {
