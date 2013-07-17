@@ -16,7 +16,7 @@ define([
         this.response.writeHead(302, {
           'Content-Type': 'text/plain',
           'Location': '/',
-          'Set-Cookie': 'sessid=',
+          'Set-Cookie': 'sessid=; HttpOnly'
         });
         this.response.end();
       },
@@ -26,7 +26,7 @@ define([
           this.response.writeHead(302, {
             'Content-Type': 'text/plain',
             'Location': '/',
-            'Set-Cookie': 'sessid=' + player.getSessionID()
+            'Set-Cookie': 'sessid=' + player.getSessionID() + '; HttpOnly'
           });
         } else {
           this.response.writeHead(302, {
