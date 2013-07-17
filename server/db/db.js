@@ -1,17 +1,17 @@
 define([
     'mongoose',
-    'web/SensitiveConstants'
-  ], function(mongoose, Constants) {
+    'server/LocalConfig'
+  ], function(mongoose, config) {
   return {
     db: null,
     mongoose: mongoose,
 
     connect: function() {
-      var username = Constants.DBUSERNAME;
-      var password = Constants.DBPASSWORD;
-      var host = Constants.DBHOST;
-      var port = Constants.DBPORT;
-      var name = Constants.DBNAME;
+      var username = config.DBUSERNAME;
+      var password = config.DBPASSWORD;
+      var host = config.DBHOST;
+      var port = config.DBPORT;
+      var name = config.DBNAME;
       var connectionString = 'mongodb://' + username + ':' + password + '@' + host + ':' + port + '/' + name;
       mongoose.connect(connectionString);
       this.db = mongoose.connection;

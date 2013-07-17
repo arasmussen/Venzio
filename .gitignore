@@ -8,6 +8,6 @@
 node_modules/*/build/*
 
 
-## database shit
+## local configuration
 
-server/web/SensitiveConstants.js
+server/LocalConfig.js
