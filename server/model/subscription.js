@@ -21,15 +21,23 @@ define(['db'], function(db) {
           .where('email').equals(email)
           .exec(function(err, subscription) {
             if (subscription) {
-              callback('DEVELOPER_SUBSCRIBE_EMAIL_ALREADY_EXISTS');
-              return;
+              if (subscription.active) {
+                // subscription already active
+                callback('DEVELOPER_SUBSCRIBE_EMAIL_ALREADY_EXISTS');
+                return;
+              }
+
+              // reset the subscription to active
+              subscription.active = true;
+            } else {
+              // create a new subscription
+              subscription = new subscriptionModel();
+              subscription.email = email;
+              subscription.created = new Date();
+              subscription.active = true;
             }
 
-            subscription = new subscriptionModel();
-            subscription.email = email;
-            subscription.created = new Date();
-            subscription.active = true;
-
+            // save subscription
             subscription.save(function(err) {
               if (err) {
                 console.error(err);
