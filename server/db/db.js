@@ -7,11 +7,11 @@ define([
     mongoose: mongoose,
 
     connect: function() {
-      var username = config.DBUSERNAME;
-      var password = config.DBPASSWORD;
-      var host = config.DBHOST;
-      var port = config.DBPORT;
-      var name = config.DBNAME;
+      var username = config.db.username;
+      var password = config.db.password;
+      var host = config.db.host;
+      var port = config.db.port;
+      var name = config.db.name;
       var connectionString = 'mongodb://' + username + ':' + password + '@' + host + ':' + port + '/' + name;
       mongoose.connect(connectionString);
       this.db = mongoose.connection;
