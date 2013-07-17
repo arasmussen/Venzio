@@ -124,13 +124,21 @@ requirejs([
       );
       var footer = fs.readFileSync(footerFile);
 
-      if (fs.existsSync(filepath) && extension != extensions['html']) {
+      var rootCheck = true;
+      if (fs.existsSync(filepath) || fs.existsSync(filepath + '.html') || fs.existsSync(filepath + '.html.ejs')) {
+        var checkFilename = fs.existsSync(filepath) ? filepath : (fs.existsSync(filepath + '.html') ? filepath + '.html' : filepath + '.html.ejs');
+        var checkFile = fs.realpathSync(checkFilename);
+        var rootDir = fs.realpathSync(__dirname + '/../../root');
+        rootCheck = (checkFile.indexOf(rootDir) == 0);
+      }
+
+      if (rootCheck && fs.existsSync(filepath) && extension != extensions['html']) {
         var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
-      } else if (fs.existsSync(filepath + '.html')) {
+      } else if (rootCheck && fs.existsSync(filepath + '.html')) {
         extension = extensions['html'];
         var contents = fs.readFileSync(filepath + '.html', 'utf8')
         contents = header + contents + footer;
-      } else if (fs.existsSync(filepath + '.html.ejs')) {
+      } else if (rootCheck && fs.existsSync(filepath + '.html.ejs')) {
         extension = extensions['html'];
 
         uriParams = url.parse(request.url, true).query;
