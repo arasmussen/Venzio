@@ -24,7 +24,9 @@ define([
         '/thanks': ['acknowledge'],
         '/sorry': ['acknowledge'],
         '/subscribe': ['form'],
-        '/unsubscribe': ['form']
+        '/unsubscribe': ['form'],
+        '/signup': ['form'],
+        '/login': ['form']
       },
 
       endpoints: {

@@ -25,7 +25,7 @@ define([
           this.response.writeHead(302, {
             'Content-Type': 'text/plain',
             'Location': '/',
-            'Set-Cookie': 'sessid=' + player.getSessionID() + '; HttpOnly'
+            'Set-Cookie': 'sessid=' + player.newSessionID() + '; HttpOnly'
           });
         } else {
           this.response.writeHead(302, {

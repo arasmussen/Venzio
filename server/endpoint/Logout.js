@@ -8,32 +8,18 @@ define([
   ],
   function(Base, db, url, playerModel) {
     return Base.extend({
-      constructor: function(request, response) {
+      constructor: function(request, response, player) {
         this.response = response;
+        this.player = player;
       },
 
       handle: function() {
+        this.player.logout();
         this.response.writeHead(302, {
           'Content-Type': 'text/plain',
           'Location': '/',
           'Set-Cookie': 'sessid=; HttpOnly'
         });
-        this.response.end();
-      },
-
-      respond: function(msg, player) {
-        if (player) {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/',
-            'Set-Cookie': 'sessid=' + player.getSessionID() + '; HttpOnly'
-          });
-        } else {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/login?failed=true&username=' + encodeURIComponent(this.emailOrUsername)
-          });
-        }
         this.response.end();
       }
     });

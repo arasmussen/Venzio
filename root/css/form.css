@@ -6,12 +6,21 @@
 #unsubscribe {
   width: 480px;
   height: auto;
-  margin: 150px auto 0;
   border: 1px solid #aac;
   border-radius: 8px;
   background-color: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
   text-align: center;
+}
+
+#login,
+#subscribe,
+#unsubscribe {
+  margin: 150px auto 0;
+}
+
+#signup {
+  margin: 100px auto 0;
 }
 
 #signup form,

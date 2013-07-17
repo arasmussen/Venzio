@@ -1,6 +1,6 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
-define(['db', 'password-hash'], function(db, passwordhash) {
+define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
   var schema = db.mongoose.Schema({
     email: String,
     password: String,
@@ -9,14 +9,10 @@ define(['db', 'password-hash'], function(db, passwordhash) {
     cardToken: String,
     authorizedGames: [String],
     created: Date,
-    sessid: String,
+    sessions: [String],
     activated: Boolean
   });
-  schema.methods.getSessionID = function() {
-    if (this.sessid) {
-      return this.sessid;
-    }
-
+  schema.methods.newSessionID = function() {
     function guid() {
       function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
@@ -26,19 +22,37 @@ define(['db', 'password-hash'], function(db, passwordhash) {
       return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
     }
 
-    this.sessid = guid();
+    var sessid = guid();
+    var hashedSSID = crypto.createHash('sha512').update(sessid, 'utf8').digest();
+
+    this.sessions.push(hashedSSID);
     this.save();
-    return this.sessid;
+
+    return sessid;
+  };
+  schema.methods.logout = function() {
+    var index = this.sessions.indexOf(this.hashedSSID);
+    if (index != -1) {
+      this.sessions.splice(index, 1);
+      this.save();
+    }
   };
   var playerModel = db.mongoose.model('player', schema);
   return {
     model: playerModel,
 
     playerFromSessID: function(sessid, callback) {
+      var hashedSSID = crypto.createHash('sha512').update(sessid, 'utf8').digest();
       playerModel
         .findOne()
-        .where('sessid').equals(sessid)
+        .where('sessions').in([hashedSSID])
         .exec(function(err, player) {
+          if (err) {
+            console.error(err);
+          }
+          if (player) {
+            player.hashedSSID = hashedSSID;
+          }
           callback(player);
         });
     },
@@ -61,7 +75,7 @@ define(['db', 'password-hash'], function(db, passwordhash) {
         player.cardToken = null;
         player.authorizedGames = [];
         player.created = new Date();
-        player.sessid = null;
+        player.sessions = [];
         player.activated = false;
 
         player.save(function(err) {
