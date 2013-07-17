@@ -38,8 +38,11 @@ requirejs([
 
     var headerFile = __dirname + '/../template/header.html.ejs';
     var footerFile = __dirname + '/../template/footer.html';
-
     var fourOhFourFile = __dirname + '/../template/404.html';
+
+    var header = fs.readFileSync(headerFile, 'utf8');
+    var footer = fs.readFileSync(footerFile, 'utf8');
+    var fourOhFourPage = fs.readFileSync(fourOhFourFile, 'utf8');
 
     var extensions = {
       'html': {contentType: 'text/html', binary: false},
@@ -118,27 +121,38 @@ requirejs([
         player: player,
         uri: uri
       };
-      var header = ejs.render(
-        fs.readFileSync(headerFile, 'utf8'),
-        data
-      );
-      var footer = fs.readFileSync(footerFile);
+      var generatedHeader = ejs.render(header, data);
 
-      var rootCheck = true;
       if (fs.existsSync(filepath) || fs.existsSync(filepath + '.html') || fs.existsSync(filepath + '.html.ejs')) {
         var checkFilename = fs.existsSync(filepath) ? filepath : (fs.existsSync(filepath + '.html') ? filepath + '.html' : filepath + '.html.ejs');
         var checkFile = fs.realpathSync(checkFilename);
         var rootDir = fs.realpathSync(__dirname + '/../../root');
-        rootCheck = (checkFile.indexOf(rootDir) == 0);
+        if (!(checkFile.indexOf(rootDir) == 0)) {
+          fourOhFour(response, generatedHeader);
+          return;
+        }
       }
 
-      if (rootCheck && fs.existsSync(filepath) && extension != extensions['html']) {
-        var contents = fs.readFileSync(filepath, extension.binary ? 'binary' : 'utf8');
-      } else if (rootCheck && fs.existsSync(filepath + '.html')) {
+      if (fs.existsSync(filepath) && extension != extensions['html']) {
+        fs.readFile(filepath, extension.binary ? 'binary' : 'utf8', function(err, contents) {
+          if (err) {
+            console.log(err);
+            fourOhFour(response, generatedHeader);
+            return;
+          }
+          twoHundred(response, contents, extension);
+        });
+      } else if (fs.existsSync(filepath + '.html')) {
         extension = extensions['html'];
-        var contents = fs.readFileSync(filepath + '.html', 'utf8')
-        contents = header + contents + footer;
-      } else if (rootCheck && fs.existsSync(filepath + '.html.ejs')) {
+        fs.readFile(filepath + '.html', 'utf8', function(err, contents) {
+          if (err) {
+            console.error(err);
+            fourOhFour(response, generatedHeader);
+            return;
+          }
+          twoHundred(response, generatedHeader + contents + footer, extension);
+        });
+      } else if (fs.existsSync(filepath + '.html.ejs')) {
         extension = extensions['html'];
 
         uriParams = url.parse(request.url, true).query;
@@ -146,19 +160,27 @@ requirejs([
           data[key] = uriParams[key];
         }
 
-        var contents = ejs.render(
-          fs.readFileSync(filepath + '.html.ejs', 'utf8'),
-          data
-        );
-        contents = header + contents + footer;
+        fs.readFile(filepath + '.html.ejs', 'utf8', function(err, contents) {
+          if (err) {
+            console.error(err);
+            fourOhFour(response, generatedHeader);
+            return;
+          }
+          twoHundred(response, generatedHeader + ejs.render(contents, data) + footer, extension);
+        });
       } else {
-        extension = extensions['html'];
-        var contents = fs.readFileSync(fourOhFourFile, 'utf8');
-        contents = header + contents + footer;
-        response.writeHead(404, {'Content-Type': extension.contentType});
-        response.end(contents, 'utf8');
-        return;
+        fourOhFour(response, generatedHeader);
       }
+    }
+
+    function fourOhFour(response, generatedHeader) {
+      var extension = extensions['html'];
+      var contents = generatedHeader + fourOhFourPage + footer;
+      response.writeHead(404, {'Content-Type': extension.contentType});
+      response.end(contents, 'utf8');
+    }
+
+    function twoHundred(response, contents, extension) {
       response.writeHead(200, {'Content-Type': extension.contentType});
       response.end(contents, extension.binary ? 'binary' : 'utf8');
     }
