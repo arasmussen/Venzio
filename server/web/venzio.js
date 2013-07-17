@@ -21,7 +21,8 @@ requirejs([
     'http',
     'url',
     'model/player',
-    'web/config'
+    'web/config',
+    'web/cache'
   ],
   function(
     db,
@@ -30,7 +31,8 @@ requirejs([
     http,
     url,
     playerModel,
-    config
+    config,
+    cache
   ) {
     db.connect();
 
@@ -45,15 +47,15 @@ requirejs([
     var fourOhFourPage = fs.readFileSync(fourOhFourFile, 'utf8');
 
     var extensions = {
-      'html': {contentType: 'text/html', binary: false},
-      'css': {contentType: 'text/css', binary: false},
-      'js': {contentType: 'application/javascript', binary: false},
-      'gif': {contentType: 'image/gif', binary: true},
-      'jpeg': {contentType: 'image/jpeg', binary: true},
-      'jpg': {contentType: 'image/jpeg', binary: true},
-      'png': {contentType: 'image/png', binary: true},
-      'ico': {contentType: 'image/x-icon', binary: true},
-      'other': {contentType: 'text/plain', binary: false}
+      'html': {contentType: 'text/html', encoding: 'utf8'},
+      'css': {contentType: 'text/css', encoding: 'utf8'},
+      'js': {contentType: 'application/javascript', encoding: 'utf8'},
+      'gif': {contentType: 'image/gif', encoding: 'binary'},
+      'jpeg': {contentType: 'image/jpeg', encoding: 'binary'},
+      'jpg': {contentType: 'image/jpeg', encoding: 'binary'},
+      'png': {contentType: 'image/png', encoding: 'binary'},
+      'ico': {contentType: 'image/x-icon', encoding: 'binary'},
+      'other': {contentType: 'text/plain', encoding: 'utf8'}
     };
 
     function getExtension(uri) {
@@ -134,7 +136,7 @@ requirejs([
       }
 
       if (fs.existsSync(filepath) && extension != extensions['html']) {
-        fs.readFile(filepath, extension.binary ? 'binary' : 'utf8', function(err, contents) {
+        cache.getFile(filepath, extension.encoding, function(err, contents) {
           if (err) {
             console.log(err);
             fourOhFour(response, generatedHeader);
@@ -144,7 +146,7 @@ requirejs([
         });
       } else if (fs.existsSync(filepath + '.html')) {
         extension = extensions['html'];
-        fs.readFile(filepath + '.html', 'utf8', function(err, contents) {
+        cache.getFile(filepath + '.html', 'utf8', function(err, contents) {
           if (err) {
             console.error(err);
             fourOhFour(response, generatedHeader);
@@ -160,7 +162,7 @@ requirejs([
           data[key] = uriParams[key];
         }
 
-        fs.readFile(filepath + '.html.ejs', 'utf8', function(err, contents) {
+        cache.getFile(filepath + '.html.ejs', 'utf8', function(err, contents) {
           if (err) {
             console.error(err);
             fourOhFour(response, generatedHeader);
@@ -182,7 +184,7 @@ requirejs([
 
     function twoHundred(response, contents, extension) {
       response.writeHead(200, {'Content-Type': extension.contentType});
-      response.end(contents, extension.binary ? 'binary' : 'utf8');
+      response.end(contents, extension.encoding);
     }
   }
 );
