@@ -16,175 +16,44 @@ requirejs.config({
 
 requirejs([
     'db',
-    'ejs',
-    'fs',
     'http',
-    'url',
-    'model/player',
     'web/config',
-    'web/cache'
   ],
-  function(
-    db,
-    ejs,
-    fs,
-    http,
-    url,
-    playerModel,
-    config,
-    cache
-  ) {
+  function(db, http, config) {
     db.connect();
 
-    var webroot = __dirname + '/../../root';
-
-    var headerFile = __dirname + '/../template/header.html.ejs';
-    var footerFile = __dirname + '/../template/footer.html';
-    var fourOhFourFile = __dirname + '/../template/404.html';
-
-    var header = fs.readFileSync(headerFile, 'utf8');
-    var footer = fs.readFileSync(footerFile, 'utf8');
-    var fourOhFourPage = fs.readFileSync(fourOhFourFile, 'utf8');
-
-    var extensions = {
-      'html': {contentType: 'text/html', encoding: 'utf8'},
-      'css': {contentType: 'text/css', encoding: 'utf8'},
-      'js': {contentType: 'application/javascript', encoding: 'utf8'},
-      'gif': {contentType: 'image/gif', encoding: 'binary'},
-      'jpeg': {contentType: 'image/jpeg', encoding: 'binary'},
-      'jpg': {contentType: 'image/jpeg', encoding: 'binary'},
-      'png': {contentType: 'image/png', encoding: 'binary'},
-      'ico': {contentType: 'image/x-icon', encoding: 'binary'},
-      'other': {contentType: 'text/plain', encoding: 'utf8'}
-    };
-
-    function getExtension(uri) {
-      var lastDot = uri.lastIndexOf('.') + 1;
-      var questionMark = uri.indexOf('?');
-      if (questionMark != -1) {
-        var extension = uri.substr(lastDot, questionMark - lastDot);
-      } else {
-        var extension = uri.substr(lastDot);
-      }
-      return extensions[extension] || extensions['other'];
-    }
-
-    function getFilepath(uri) {
-      if (uri.indexOf('?') == -1) {
-        return uri;
-      }
-      // strip get params if there are any
-      return uri.substr(0, uri.indexOf('?'));
-    }
-
-    http.createServer(function(request, response) {
-      var cookies = {};
-      request.headers.cookie && request.headers.cookie.split(';').forEach(function(cookie) {
-        var parts = cookie.split('=');
-        cookies[parts[0].trim()] = (parts[1] || '').trim();
-      });
-      if (cookies.hasOwnProperty('sessid')) {
-        var callback = processRequest.bind(null, request, response);
-        playerModel.playerFromSessID(cookies['sessid'], callback);
-      } else {
-        processRequest(request, response, null);
-      }
+    http.createServer(function(req, res) {
+      var request = new request(req, res, processRequest);
     }).listen(8001);
 
-    function processRequest(request, response, player) {
-      var uri = getFilepath(request.url);
+    function processRequest(request) {
+      var uri = request.getURI();
 
       // if it's a special keyword then call that function
       if (config.endpoints.hasOwnProperty(uri)) {
-        var handler = new config.endpoints[uri](request, response, player);
+        var handler = new config.endpoints[uri](request);
         handler.handle();
         return;
       }
 
-      // if it's an alias then fix the uri
+      // if it's an alias then change the uri
       if (config.aliases.hasOwnProperty(uri)) {
         uri = config.aliases[uri];
       }
 
+      // if it's a redirect then send the 302
       if (config.redirects.hasOwnProperty(uri)) {
-        response.writeHead(302, {
-          'Content-Type': 'text/plain',
-          'Location': config.redirects[uri]
-        });
-        response.end();
+        request.respond302(config.redirects[uri]);
         return;
       }
 
-      var filepath = webroot + uri;
-      var extension = getExtension(uri);
-      var data = {
-        cssFiles: config.cssFiles[uri] || [],
-        is_game: (uri == '/demo'),
-        player: player,
-        uri: uri
-      };
-      var generatedHeader = ejs.render(header, data);
-
-      if (fs.existsSync(filepath) || fs.existsSync(filepath + '.html') || fs.existsSync(filepath + '.html.ejs')) {
-        var checkFilename = fs.existsSync(filepath) ? filepath : (fs.existsSync(filepath + '.html') ? filepath + '.html' : filepath + '.html.ejs');
-        var checkFile = fs.realpathSync(checkFilename);
-        var rootDir = fs.realpathSync(__dirname + '/../../root');
-        if (!(checkFile.indexOf(rootDir) == 0)) {
-          fourOhFour(response, generatedHeader);
-          return;
-        }
+      // make sure the uri is valid and inside the webroot
+      if (!request.isValidURI()) {
+        request.respond404();
+        return;
       }
 
-      if (fs.existsSync(filepath) && extension != extensions['html']) {
-        cache.getFile(filepath, extension.encoding, function(err, contents) {
-          if (err) {
-            console.log(err);
-            fourOhFour(response, generatedHeader);
-            return;
-          }
-          twoHundred(response, contents, extension);
-        });
-      } else if (fs.existsSync(filepath + '.html')) {
-        extension = extensions['html'];
-        cache.getFile(filepath + '.html', 'utf8', function(err, contents) {
-          if (err) {
-            console.error(err);
-            fourOhFour(response, generatedHeader);
-            return;
-          }
-          twoHundred(response, generatedHeader + contents + footer, extension);
-        });
-      } else if (fs.existsSync(filepath + '.html.ejs')) {
-        extension = extensions['html'];
-
-        uriParams = url.parse(request.url, true).query;
-        for (var key in uriParams) {
-          data[key] = uriParams[key];
-        }
-
-        cache.getFile(filepath + '.html.ejs', 'utf8', function(err, contents) {
-          if (err) {
-            console.error(err);
-            fourOhFour(response, generatedHeader);
-            return;
-          }
-          twoHundred(response, generatedHeader + ejs.render(contents, data) + footer, extension);
-        });
-      } else {
-        fourOhFour(response, generatedHeader);
-      }
-    }
-
-    function fourOhFour(response, generatedHeader) {
-      var extension = extensions['html'];
-      var contents = generatedHeader + fourOhFourPage + footer;
-      response.writeHead(404, {'Content-Type': extension.contentType});
-      response.end(contents, 'utf8');
-    }
-
-    function twoHundred(response, contents, extension) {
-      response.writeHead(200, {'Content-Type': extension.contentType});
-      response.end(contents, extension.encoding);
+      request.respond20();
     }
   }
 );
