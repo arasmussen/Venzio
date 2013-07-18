@@ -1,7 +1,6 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'endpoint/Heightmap',
     'endpoint/Payment',
     'endpoint/PlayerLogin',
     'endpoint/CreatePlayer',
@@ -9,7 +8,6 @@ define([
     'endpoint/DeveloperSubscribe',
   ],
   function(
-    HeightmapEndpoint,
     PaymentEndpoint,
     LoginPlayerEndpoint,
     CreatePlayerEndpoint,
@@ -30,7 +28,6 @@ define([
       },
 
       endpoints: {
-        '/heightmap': HeightmapEndpoint,
         '/charge': PaymentEndpoint,
         '/playerLogin': LoginPlayerEndpoint,
         '/createPlayer': CreatePlayerEndpoint,

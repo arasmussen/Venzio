@@ -1,26 +1,21 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'basejs',
-    'db',
-    'url',
-    'model/player'
+    'basejs'
   ],
-  function(Base, db, url, playerModel) {
+  function(Base) {
     return Base.extend({
-      constructor: function(request, response, player) {
-        this.response = response;
-        this.player = player;
+      constructor: function(request) {
+        this.request = request;
       },
 
       handle: function() {
-        this.player.logout();
-        this.response.writeHead(302, {
-          'Content-Type': 'text/plain',
-          'Location': '/',
-          'Set-Cookie': 'sessid=; HttpOnly'
-        });
-        this.response.end();
+        if (this.request.user) {
+          this.request.user.logout();
+        }
+        this.request
+          .setCookie('ssid', '')
+          .respond302('/');
       }
     });
   }

@@ -9,6 +9,9 @@ define(['fs', 'server/LocalConfig'],
         // bypass cache for dev environment
         var dev = (config.environment == 'dev');
 
+        // resolve to realpath
+        filepath = fs.realpathSync(filepath);
+
         if (dev || !this.data.hasOwnProperty(filepath)) {
           fs.readFile(filepath, encoding, function(err, data) {
             if (err) {
@@ -24,6 +27,19 @@ define(['fs', 'server/LocalConfig'],
         } else {
           callback(null, this.data[filepath]);
         }
+      },
+
+      getFileSync: function(filepath, encoding) {
+        // bypass cache for dev environment
+        var dev = (config.environment == 'dev');
+
+        // resolve to realpath
+        filepath = fs.realpathSync(filepath);
+
+        if (dev || !this.data.hasOwnProperty(filepath)) {
+          this.data[filepath] = fs.readFileSync(filepath, encoding);
+        }
+        return this.data[filepath];
       }
     }
   }

@@ -2,27 +2,21 @@
 
 define([
     'basejs',
-    'url',
     'model/player'
   ],
-  function(Base, url, playerModel) {
+  function(Base, playerModel) {
     return Base.extend({
-      constructor: function(request, response, player) {
-        urlParams = url.parse(request.url, true).query;
+      constructor: function(request) {
+        var urlParams = request.getURLParams();
         this.emailOrUsername = urlParams.email_or_username;
         this.password = urlParams.password;
-        this.response = response;
-        this.player = player;
+        this.request = request;
       },
 
       handle: function() {
         // if they're already logged in, redirect them to the homepage
-        if (this.player) {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/'
-          });
-          this.response.end();
+        if (this.request.user) {
+          this.request.respond302('/');
           return;
         }
 
@@ -30,19 +24,14 @@ define([
       },
 
       respond: function(msg, player) {
-        if (player) {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/',
-            'Set-Cookie': 'sessid=' + player.newSessionID() + '; HttpOnly'
-          });
-        } else {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/login?failed=true&username=' + encodeURIComponent(this.emailOrUsername)
-          });
+        if (!player) {
+          this.request.respond302('/login?failed=true&username=' + encodeURIComponent(this.emailOrUsername));
+          return;
         }
-        this.response.end();
+
+        this.request
+          .setCookie('ssid', player.newSessionID())
+          .respond302('/');
       }
     });
   }

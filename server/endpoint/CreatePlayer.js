@@ -2,40 +2,33 @@
 
 define([
     'basejs',
-    'url',
     'model/player'
   ],
-  function(Base, url, player) {
+  function(Base, playerModel) {
     return Base.extend({
-      constructor: function(request, response) {
-        urlParams = url.parse(request.url, true).query;
+      constructor: function(request) {
+        var urlParams = request.getURLParams();
         this.username = urlParams.username;
         this.name = urlParams.name;
         this.email = urlParams.email;
         this.password = urlParams.password;
-        this.response = response;
+        this.request = request;
       },
 
       handle: function() {
-        player.create(this.username, this.name, this.email, this.password, this.respond.bind(this));
+        playerModel.create(this.username, this.name, this.email, this.password, this.respond.bind(this));
       },
 
       respond: function(msg, player) {
-        if (player) {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/',
-            'Set-Cookie': 'sessid=' + player.newSessionID() + '; HttpOnly'
-          });
-        } else {
-          this.response.writeHead(302, {
-            'Content-Type': 'text/plain',
-            'Location': '/signup?failed=true'
-          });
+        if (!player) {
+          this.request.respond302('/signup?failed=true');
+          return;
         }
-        this.response.end();
+
+        this.request
+          .setCookie('ssid', player.newSessionID())
+          .respond302('/');
       }
     });
   }
 );
-

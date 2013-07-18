@@ -1,5 +1,8 @@
       <div id="signup">
         <h2>sign up</h2>
+<% if (locals.failed) { %>
+        <p>Invalid input</p>
+<% } %>
         <form method="get" action="/createPlayer">
           <label for="signup_username">username</label>
           <div class="rounded_input">

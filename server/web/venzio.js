@@ -17,13 +17,14 @@ requirejs.config({
 requirejs([
     'db',
     'http',
-    'web/config',
+    'web/request',
+    'web/config'
   ],
-  function(db, http, config) {
+  function(db, http, request, config) {
     db.connect();
 
     http.createServer(function(req, res) {
-      var request = new request(req, res, processRequest);
+      var r = new request(req, res, processRequest);
     }).listen(8001);
 
     function processRequest(request) {
@@ -38,7 +39,7 @@ requirejs([
 
       // if it's an alias then change the uri
       if (config.aliases.hasOwnProperty(uri)) {
-        uri = config.aliases[uri];
+        request.setURI(config.aliases[uri]);
       }
 
       // if it's a redirect then send the 302
@@ -53,7 +54,7 @@ requirejs([
         return;
       }
 
-      request.respond20();
+      request.serveFile();
     }
   }
 );

@@ -42,6 +42,8 @@
   color: #555;
 }
 
+#signup p,
+#login p,
 #subscribe p,
 #unsubscribe p {
   display: inline-block;

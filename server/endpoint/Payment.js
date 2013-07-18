@@ -3,16 +3,16 @@
 define([
     'basejs',
     'stripe',
-    'url'
+    'server/LocalConfig'
   ],
-  function(Base, stripe, url) {
+  function(Base, stripe, config) {
     return Base.extend({
-      constructor: function(request, response) {
-        urlParams = url.parse(request.url, true).query;
+      constructor: function(request) {
+        var urlParams = request.getURLParams();
         this.amount = urlParams.amount;
         this.token = urlParams.token;
-        this.response = response;
-        this.stripe = stripe('sk_test_bhh6uKmqdHSUauBObP1RYyFi');
+        this.stripe = stripe(config.stripe.secret_key);
+        this.request = request;
       },
 
       handle: function() {
@@ -21,9 +21,7 @@ define([
         }
 
         this.stripe.charges.create({card: this.token, amount: this.amount, currency: 'usd'});
-
-        this.response.writeHead(200, {'Content-Type': 'text/plain'});
-        this.response.end();
+        this.request.respond200('', 'text/plain', 'utf8');
       },
 
       errorCheck: function() {
