@@ -25,32 +25,29 @@
 
 #index #headings #graphic-container {
   width: 960px;
-  height: 585px;
+  height: 575px;
   overflow: hidden;
   border-radius: 8px;
   position: relative;
 }
 
-#index #headings #graphic-container #graphic-top {
-  background-color: rgba(255, 255, 255, 0.5);
-  position: absolute;
-  top: 0;
-  width: 960px;
-  height: 120px;
-}
-
 #index #headings #graphic-container h1 {
+  background-color: #acf;
+  display: block;
   width: 700px;
-  margin: 20px auto 0;
+  height: 80px;
+  padding: 30px 130px;
   color: #000;
+  font-size: 40px;
+  text-align: center;
 }
 
 #index #headings #graphic-container a {
   position: absolute;
   display: block;
-  top: 490px;
-  left: 710px;
-  width: 140px;
+  bottom: 50px;
+  right: 50px;
+  width: 200px;
   height: 50px;
   background-color: #555;
   background-repeat: repeat-x;
@@ -65,13 +62,6 @@
 #index #headings #graphic-container a:hover {
   background-position: 0 8px;
   transition: background-position 0.1s linear;
-}
-
-#index #headings h1 {
-  font-size: 40px;
-  text-align: center;
-  width: 700px;
-  margin: 0 auto 40px auto;
 }
 
 #index #headings h2 {
