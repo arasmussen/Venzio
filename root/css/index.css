@@ -11,7 +11,6 @@
 
 #index #headings-container {
   width: 100%;
-  padding-top: 40px;
 }
 
 #index #headings {
@@ -25,18 +24,17 @@
 
 #index #headings #graphic-container {
   width: 960px;
-  height: 575px;
+  height: 435px;
   overflow: hidden;
   border-radius: 8px;
   position: relative;
 }
 
-#index #headings #graphic-container h1 {
-  background-color: #acf;
+#index #headings h1 {
   display: block;
   width: 700px;
   height: 80px;
-  padding: 30px 130px;
+  padding: 60px 130px;
   color: #000;
   font-size: 40px;
   text-align: center;
@@ -68,7 +66,7 @@
   font-size: 20px;
   text-align: center;
   width: 800px;
-  padding: 80px 0;
+  padding: 70px 0;
   margin: 0 auto;
 }
 
