@@ -10,6 +10,7 @@
 }
 
 #index #headings-container {
+  min-width: 960px;
   width: 100%;
 }
 
@@ -79,6 +80,7 @@
   padding: 1px 0;
   background-color: #333;
   width: 100%;
+  min-width: 960px;
 }
 
 #index #bubble {
