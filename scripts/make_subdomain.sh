@@ -12,6 +12,8 @@ if [ ! -d $SUBDOMAIN ]; then
   mkdir $SUBDOMAIN/img
   mkdir $SUBDOMAIN/css
   cp $WWW/img/headerLogo.png $SUBDOMAIN/img
+  cp $WWW/img/favicon.ico $SUBDOMAIN/img
+  cp $WWW/img/whiteBackground.jpg $SUBDOMAIN/img
   cp $WWW/css/reset.css $SUBDOMAIN/css
   cp $WWW/css/global.css $SUBDOMAIN/css/global.css
   cp $WWW/analytics.js $SUBDOMAIN/analytics.js
