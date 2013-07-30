@@ -8,10 +8,11 @@ define([
     'path',
     'url',
     'model/player',
+    'model/session',
     'web/cache',
     'web/config'
   ],
-  function(Base, ejs, fs, module, path, url, playerModel, cache, config) {
+  function(Base, ejs, fs, module, path, url, playerModel, sessionModel, cache, config) {
 
     var __dirname = path.dirname(module.uri);
 
@@ -40,6 +41,11 @@ define([
         this.readyCallback = readyCallback;
         this.setCookies = {};
 
+        this.waitingOn = {
+          'player': true,
+          'session': true,
+        };
+
         // make sure subdomain is whitelisted (else 404)
         if (config.subdomains.indexOf(this.getSubdomain()) == -1) {
           this.respond(404, {'Content-Type': 'text/html'});
@@ -55,18 +61,35 @@ define([
           }.bind(this));
         }
 
+        // initiate the general session
+        sessionModel.getSession(this.cookies['gsid'], this.fetchSession.bind(this), this.getSubdomain());
+
         // see if there's some kind of user logged in
-        if (this.cookies.hasOwnProperty('sessid')) {
-          playerModel.playerFromSessID(this.cookies['sessid'], this.ready.bind(this));
+        if (this.cookies.hasOwnProperty('psid')) {
+          playerModel.playerFromSessID(this.cookies['psid'], this.ready.bind(this, 'player'));
         } else {
-          this.ready(null);
+          this.ready('player', null);
         }
       },
 
-      ready: function(user) {
-        if (user) {
-          this.user = user;
+      fetchSession: function(session, sessid) {
+        if (session && sessid) {
+          this.setCookie('gsid', sessid);
         }
+        this.ready('session', session);
+      },
+
+      ready: function(key, value) {
+        this[key] = value;
+        this.waitingOn[key] = false;
+        for (var key in this.waitingOn) {
+          if (this.waitingOn[key]) {
+            // not ready yet
+            return;
+          }
+        }
+
+        // everything is ready
         this.readyCallback(this);
       },
 

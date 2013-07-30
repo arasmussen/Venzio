@@ -17,6 +17,7 @@ define([
 
       handle: function() {
         if (!this.errorCheck()) {
+          this.request.respond404();
           return;
         }
 

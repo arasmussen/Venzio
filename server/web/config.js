@@ -6,13 +6,15 @@ define([
     'endpoint/CreatePlayer',
     'endpoint/Logout',
     'endpoint/DeveloperSubscribe',
+    'endpoint/FakeSignup',
   ],
   function(
     PaymentEndpoint,
     LoginPlayerEndpoint,
     CreatePlayerEndpoint,
     LogoutEndpoint,
-    DeveloperSubscribeEndpoint
+    DeveloperSubscribeEndpoint,
+    FakeSignupEndpoint
   ) {
     return {
       cssFiles: {
@@ -24,7 +26,7 @@ define([
         '/subscribe': ['form'],
         '/unsubscribe': ['form'],
         '/signup': ['form'],
-        '/login': ['form']
+        '/login': ['form'],
       },
 
       endpoints: {
@@ -32,19 +34,20 @@ define([
         '/playerLogin': LoginPlayerEndpoint,
         '/createPlayer': CreatePlayerEndpoint,
         '/logout': LogoutEndpoint,
-        '/developerSubscribe': DeveloperSubscribeEndpoint
+        '/developerSubscribe': DeveloperSubscribeEndpoint,
+        '/fakeSignup': FakeSignupEndpoint,
       },
 
       subdomains: [
         // 'www',
         'medieval',
-        'space'
+        'space',
       ],
 
       // loads B when A is requested
       aliases: {
         '/': '/index',
-        '/favicon.ico': '/img/favicon.ico'
+        '/favicon.ico': '/img/favicon.ico',
       },
 
       // sends a 302 redirect from A to B

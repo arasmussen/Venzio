@@ -36,18 +36,22 @@
         <div id="subscribe-nav">
           <a href="/subscribe">Subscribe</a>
         </div>
-  <% if (true) { %>
-  <% } else if (player) { %>
+<% } else if (subdomain == 'medieval') { %>
+        <div id="subscribe-nav">
+          <a href="/signup">Sign up</a>
+        </div>
+<% } %>
+<% if (true) { %>
+<% } else if (player) { %>
         <div id="user_menu">
           <a id="profile_link" href="/profile"><%= player.username %></a>
           <a id="signout_link" href="/logout">log out</a>
         </div>
-  <% } else { %>
+<% } else { %>
         <div id="guest_menu">
           <a id="login_link" href="/login">login</a>
           <a id="signup_link" href="/signup">signup</a>
         </div>
-  <% } %>
 <% } %>
       </div>
     </div>
