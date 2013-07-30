@@ -3,13 +3,12 @@
 #
 # this is my super unrobust script to count the lines in the project
 
-
 pushd `dirname $0` > /dev/null
 
 GFX='..'
 
 JS=$(wc -l `find ${GFX} -name \*.js -print` | grep total | awk '{print $1}')
-LIB=$(wc -l `find ${GFX}/root/client/lib -name \*.js -print` | grep total | awk '{print $1}')
+LIB=$(wc -l `find ${GFX}/root/www/client/lib -name \*.js -print` | grep total | awk '{print $1}')
 MODULES_JS=$(wc -l `find ${GFX}/node_modules -name \*.js -print` | grep total | awk '{print $1}')
 GLSL=$(wc -l `find ${GFX} -name \*.glsl -print` | grep total | awk '{print $1}')
 CSS=$(wc -l `find ${GFX} -name \*.css -print` | grep total | awk '{print $1}')
