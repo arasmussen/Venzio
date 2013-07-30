@@ -39,6 +39,11 @@ define([
         this.response = response;
         this.readyCallback = readyCallback;
         this.setCookies = {};
+
+        // make sure subdomain is whitelisted (else 404)
+        if (config.subdomains.indexOf(this.getSubdomain()) == -1) {
+          this.respond(404, {'Content-Type': 'text/html'});
+        }
         this.webroot = webroot + '/' + this.getSubdomain() + '/';
 
         // parse cookies

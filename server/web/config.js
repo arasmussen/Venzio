@@ -35,6 +35,12 @@ define([
         '/developerSubscribe': DeveloperSubscribeEndpoint
       },
 
+      subdomains: [
+        // 'www',
+        'medieval',
+        'space'
+      ],
+
       // loads B when A is requested
       aliases: {
         '/': '/index',
