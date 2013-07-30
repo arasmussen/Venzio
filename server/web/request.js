@@ -39,6 +39,7 @@ define([
         this.response = response;
         this.readyCallback = readyCallback;
         this.setCookies = {};
+        this.webroot = webroot + '/' + this.getSubdomain() + '/';
 
         // parse cookies
         this.cookies = {};
@@ -93,7 +94,7 @@ define([
 
       serveFile: function() {
         var uri = this.getURI();
-        var filepath = webroot + uri;
+        var filepath = this.webroot + uri;
         var extension = this.getExtension(uri);
         var isHTML = false;
         var isEJS = false;
@@ -146,7 +147,7 @@ define([
       },
 
       isValidURI: function() {
-        var filepath = webroot + this.getURI();
+        var filepath = this.webroot + this.getURI();
         var realpath;
 
         if (fs.existsSync(filepath)) {
@@ -159,7 +160,7 @@ define([
           return false;
         }
 
-        if (!(realpath.indexOf(fs.realpathSync(webroot)) == 0)) {
+        if (!(realpath.indexOf(fs.realpathSync(this.webroot)) == 0)) {
           return false;
         }
 
@@ -184,7 +185,8 @@ define([
           cssFiles: config.cssFiles[uri] || [],
           is_game: (uri == '/demo'),
           user: this.user,
-          uri: uri
+          uri: uri,
+          subdomain: this.getSubdomain()
         };
       },
 
@@ -201,6 +203,15 @@ define([
           extension = 'html';
         }
         return extensions[extension] || extensions['other'];
+      },
+
+      getSubdomain: function() {
+        var host = this.request.headers.host;
+        var subdomain = host.substr(0, host.indexOf('.'));
+        if (subdomain == '') {
+          subdomain = 'www';
+        }
+        return subdomain;
       },
 
       getURLParams: function() {
