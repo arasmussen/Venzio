@@ -7,6 +7,7 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
       email: String,
       password: String,
     }],
+    ip: String,
     latest: Date,
     requests: Number,
     sessid: String,
@@ -16,10 +17,10 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
   return {
     model: sessionModel,
 
-    getSession: function(sessid, callback, subdomain) {
+    getSession: function(sessid, callback, subdomain, ip) {
       // if there isn't a valid sessid, make a new session
       if (!sessid) {
-        this.create(callback, subdomain);
+        this.create(callback, subdomain, ip);
         return;
       }
 
@@ -34,7 +35,7 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
           }
           if (!session) {
             // and if that fetch fails, create a new one
-            this.create(callback, subdomain);
+            this.create(callback, subdomain, ip);
             return;
           }
 
@@ -49,7 +50,7 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
         }.bind(this));
     },
 
-    create: function(callback, subdomain) {
+    create: function(callback, subdomain, ip) {
       function guid() {
         function s4() {
           return Math.floor((1 + Math.random()) * 0x10000)
@@ -65,6 +66,7 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
       var session = new sessionModel();
       session.created = new Date();
       session.creds = [];
+      session.ip = ip;
       session.latest = new Date();
       session.requests = 1;
       session.sessid = hashedSSID;

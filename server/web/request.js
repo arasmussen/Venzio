@@ -62,7 +62,7 @@ define([
         }
 
         // initiate the general session
-        sessionModel.getSession(this.cookies['gsid'], this.fetchSession.bind(this), this.getSubdomain());
+        sessionModel.getSession(this.cookies['gsid'], this.fetchSession.bind(this), this.getSubdomain(), this.getClientIP());
 
         // see if there's some kind of user logged in
         if (this.cookies.hasOwnProperty('psid')) {
@@ -231,6 +231,10 @@ define([
           extension = 'html';
         }
         return extensions[extension] || extensions['other'];
+      },
+
+      getClientIP: function() {
+        return this.request.connection.remoteAddress;
       },
 
       getSubdomain: function() {
