@@ -39,9 +39,10 @@ define([
       },
 
       subdomains: [
-        // 'www',
+        'mars',
         'medieval',
         'space',
+        // 'www',
       ],
 
       // loads B when A is requested

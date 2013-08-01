@@ -16,6 +16,7 @@ if [ ! -d $SUBDOMAIN ]; then
   cp $WWW/img/whiteBackground.jpg $SUBDOMAIN/img
   cp $WWW/css/reset.css $SUBDOMAIN/css
   cp $WWW/css/global.css $SUBDOMAIN/css/global.css
+  cp $WWW/css/index.css $SUBDOMAIN/css/index.css
   cp $WWW/analytics.js $SUBDOMAIN/analytics.js
   cp $WWW/script.js $SUBDOMAIN/script.js
   touch $SUBDOMAIN/index.html
