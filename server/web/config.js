@@ -39,9 +39,7 @@ define([
       },
 
       subdomains: [
-        'mars',
         'medieval',
-        'space',
         // 'www',
       ],
 
