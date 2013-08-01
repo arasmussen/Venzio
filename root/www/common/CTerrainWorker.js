@@ -28,11 +28,13 @@ require({
         var normalDistance = sectionFetcher.normalDistance;
 
         var heights = sectionFetcher.fetch(e.data.coords);
+        /*
         for (var x = -normalDistance; x <= length + normalDistance; x++) {
           for (var z = -normalDistance; z <= length + normalDistance; z++) {
             heights[x][z] = (255 - heights[x][z]) / 9 - 6;
           }
         }
+        */
 
         for (var x = 0; x <= length + 2 * normalDistance; x++) {
           var row = x - normalDistance;

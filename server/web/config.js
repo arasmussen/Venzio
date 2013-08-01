@@ -40,7 +40,7 @@ define([
 
       subdomains: [
         'medieval',
-        // 'www',
+        'www',
       ],
 
       // loads B when A is requested

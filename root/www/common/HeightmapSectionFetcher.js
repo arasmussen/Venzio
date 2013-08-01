@@ -26,13 +26,35 @@ define([
           return this.cachedSectionData[sectionKey];
         }
 
+        /*
         var noise = this.getNoiseMatrix(coords);
         var blurred = this.applyBlur(noise);
-        var contrasted = this.applyContrast(blurred);
-        var terrain = this.applyTerrain(contrasted);
+        var contrasted = this.applyContrast(noise);
+        var terrain = this.applyTerrain(noise);
+        */
+
+        var terrain = this.getWaveTerrain(coords);
 
         this.cachedSectionData[sectionKey] = terrain;
         return terrain;
+      },
+
+      getWaveTerrain: function(coords) {
+        var offset = {
+          x: coords.x * this.terrainLength,
+          z: coords.z * this.terrainLength
+        };
+
+        var matrix = [];
+        for (var x = -this.normalDistance; x <= this.terrainLength + this.normalDistance; x++) {
+          matrix[x] = [];
+          for (var z = -this.normalDistance; z <= this.terrainLength + this.normalDistance; z++) {
+            matrix[x][z] =
+              1.8 * Math.sin(2 * Math.PI * (x + offset.x) / (4 * this.terrainLength)) +
+              1.8 * Math.cos(2 * Math.PI * (z + offset.z) / (4 * this.terrainLength));
+          }
+        }
+        return matrix;
       },
 
       getNoiseMatrix: function(coords) {
@@ -50,7 +72,7 @@ define([
           noiseMatrix[i] = [];
           for (var j = -extra; j <= this.terrainLength + extra; j++) {
             var vertexKey = (offset.x + i) + ' ' + (offset.z + j);
-            noiseMatrix[i][j] = this.hasher.hash(vertexKey) / 255;
+            noiseMatrix[i][j] = this.hasher.hash(vertexKey) / 255 / 255;
           }
         }
 
