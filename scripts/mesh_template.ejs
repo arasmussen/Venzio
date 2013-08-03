@@ -1,0 +1,35 @@
+// Copyright (c) Venzio 2013 All Rights Reserved
+
+define([
+    'client/Mesh'
+  ],
+  function(Mesh) {
+    return Mesh.extend({
+      getAttribData: function(attrib) {
+        if (attrib == 'Position') {
+          return new Float32Array([<%= v %>]);
+        } else if (attrib == 'Normal') {
+          return new Float32Array([<%= n %>]);
+        } else if (attrib == 'TextureCoord') {
+          return new Float32Array([<%= t %>]);
+        }
+      },
+
+      getNumItems: function() {
+        return <%= count %>;
+      },
+
+      getPosition: function() {
+        return {x: 0.0, y: 2.0, z: 0.0};
+      },
+
+      getRotation: function() {
+        return {pitch: 0.0, yaw: 0.0};
+      },
+
+      getShaderName: function() {
+        return 'man';
+      }
+    });
+  }
+);

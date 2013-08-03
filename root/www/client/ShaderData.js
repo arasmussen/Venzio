@@ -30,6 +30,27 @@ define(function() {
       ],
       textures: []
     },
+    man: {
+      attributes: [
+        'Position',
+        'Normal'
+      ],
+      uniforms: [
+        {
+          name: 'MVMatrix',
+          type: uniformMatrix4fvNoTranspose
+        },
+        {
+          name: 'PMatrix',
+          type: uniformMatrix4fvNoTranspose
+        },
+        {
+          name: 'NormalMatrix',
+          type: uniformMatrix4fvNoTranspose
+        },
+      ],
+      textures: []
+    },
     cube: {
       attributes: [
         'Position',

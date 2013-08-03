@@ -11,9 +11,10 @@ define([
     'client/ui/Framerate',
     'client/ui/Ping',
     'client/ui/Cursor',
-    'common/Globals'
+    'common/Globals',
+    'client/meshes/ManMesh'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals, ManMesh) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -23,6 +24,9 @@ define([
         this.camera = new Camera(this.player);
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
+
+        this.man = new ManMesh();
+        this.man.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -71,6 +75,8 @@ define([
 
         this.player.draw();
         this.terrainManager.draw(this.player.position);
+
+        this.man.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();
