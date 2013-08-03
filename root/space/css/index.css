@@ -1,0 +1,181 @@
+/* Copyright (c) Venzio 2013 All Rights Reserved */
+
+#index {
+  text-align: center;
+  position: relative;
+}
+
+#index a {
+  color: #3af;
+}
+
+#index #headings-container {
+  min-width: 960px;
+  width: 100%;
+}
+
+#index #headings {
+  width: 960px;
+  margin: 0 auto;
+}
+
+#index #headings * {
+  color: #222;
+}
+
+#index #headings #graphic-container {
+  width: 960px;
+  height: 435px;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+}
+
+#index #headings h1 {
+  display: block;
+  width: 700px;
+  height: 80px;
+  padding: 60px 130px;
+  color: #000;
+  font-size: 40px;
+  text-align: center;
+}
+
+#index #headings #graphic-container a {
+  position: absolute;
+  display: block;
+  bottom: 50px;
+  right: 50px;
+  width: 200px;
+  height: 50px;
+  background-color: #555;
+  background-repeat: repeat-x;
+  background-image: linear-gradient(180deg, #555 0%, #222 100%);
+  border-radius: 10px;
+  color: #fff;
+  text-decoration: none;
+  line-height: 50px;
+  font-weight: bold;
+}
+
+#index #headings #graphic-container a:hover {
+  background-position: 0 8px;
+  transition: background-position 0.1s linear;
+}
+
+#index #headings h2 {
+  font-size: 20px;
+  text-align: center;
+  width: 800px;
+  padding: 70px 0;
+  margin: 0 auto;
+}
+
+#index #social {
+  width: 960px;
+  margin: 0 auto;
+}
+
+#index #bubble-container {
+  padding: 1px 0;
+  background-color: #333;
+  width: 100%;
+  min-width: 960px;
+}
+
+#index #bubble {
+  width: 960px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#index #bubble .section {
+  border-top: 1px solid rgba(255, 255, 255, 0.45);
+  padding: 20px 0;
+  width: 960px;
+  height: 300px;
+}
+
+#index #bubble .section:first-child {
+  border-top: none;
+}
+
+#index #bubble .section .text {
+  width: 700px;
+  float: left;
+}
+
+#index #bubble .section .text h3 {
+  color: #eee;
+  font-size: 28px;
+  font-weight: normal;
+  margin: 10px 0 20px 0;
+}
+
+#index #bubble .section .text p {
+  color: #bbb;
+  font-size: 18px;
+  font-weight: lighter;
+  margin-bottom: 20px;
+  line-height: 20px;
+}
+
+#index #bubble .section .learnmore {
+  float: left;
+  width: 260px;
+  margin-top: 50px;
+}
+
+#index #bubble .section .learnmore a {
+  background-color: #3af;
+  background-repeat: repeat-x;
+  background-image: linear-gradient(180deg, #3af 0%, #07e 100%);
+  border-radius: 10px;
+  display: block;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  margin: 0 auto;
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+#index #bubble .section .learnmore a:hover {
+  background-position: 0 8px;
+  transition: background-position 0.1s linear;
+}
+
+#index #bubble .section .icons {
+  float: left;
+  width: 960px;
+}
+
+#index #bubble .section .icon {
+  height: 110px;
+  width: 210px;
+  float: left;
+  margin: 20px 55px;
+}
+
+#index #bubble .section .icon img {
+  width: 70px;
+  height: 70px;
+  padding: 10px;
+  margin: 10px;
+  float: left;
+  background-image: linear-gradient(180deg, #262626 0%, #000 100%);
+  border-radius: 8px;
+  box-shadow: inset -1px -1px 1px #666;
+}
+
+#index #bubble .section .icon h3 {
+  width: 100px;
+  height: 20px;
+  margin: 45px 0;
+  text-align: center;
+  color: #eee;
+  float: left;
+  font-size: 16px;
+}

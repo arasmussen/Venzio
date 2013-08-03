@@ -40,6 +40,7 @@ define([
 
       subdomains: [
         'medieval',
+	'space',
         'www',
       ],
 
