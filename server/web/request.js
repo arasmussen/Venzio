@@ -240,7 +240,7 @@ define([
       getSubdomain: function() {
         var host = this.request.headers.host;
         var subdomain = host.substr(0, host.indexOf('.'));
-        if (subdomain == '') {
+        if (subdomain == 'venz') {
           subdomain = 'www';
         }
         return subdomain;
