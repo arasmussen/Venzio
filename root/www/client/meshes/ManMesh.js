@@ -12,13 +12,12 @@ define([
       initialize: function() {
         Mesh.prototype.initialize.bind(this)();
         this.uNormalMatrix = mat4.create();
+        mat4.identity(this.uNormalMatrix);
         this.updateNormalMatrix();
         this.setUniform('NormalMatrix', this.uNormalMatrix);
       },
 
       updateNormalMatrix: function() {
-        mat4.inverse(mvMatrix, this.uNormalMatrix);
-        mat4.transpose(this.uNormalMatrix, this.uNormalMatrix);
       },
 
       preDraw: function() {
@@ -41,7 +40,7 @@ define([
       },
 
       getPosition: function() {
-        return {x: 0.0, y: 2.0, z: 0.0};
+        return {x: 0.0, y: 1.77, z: -3.0};
       },
 
       getRotation: function() {
@@ -54,4 +53,3 @@ define([
     });
   }
 );
-
