@@ -48,9 +48,9 @@
   left: 380px;
   width: 200px;
   height: 50px;
-  background-color: #3af;
+  background-color: #555;
   background-repeat: repeat-x;
-  background-image: linear-gradient(180deg, #3af 0%, #07e 100%);
+  background-image: linear-gradient(180deg, #555 0%, #222 100%);
   border-radius: 10px;
   color: #fff;
   text-decoration: none;
