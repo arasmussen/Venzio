@@ -114,7 +114,7 @@ var end = contents.indexOf(source_end, start);
 var joints_label = contents.substr(start, end - start);
 var start = contents.indexOf('>', contents.indexOf(joints_label + '-array')) + 1;
 var end = contents.indexOf('<', start);
-var joints = contents.substr(start, end - start).trim().split(/[\s\n]+/);
+vleBaseMesh_LeftArmar joints = contents.substr(start, end - start).trim().split(/[\s\n]+/);
 
 var weight_source = '<input semantic="WEIGHT"';
 var weights = [];
@@ -148,6 +148,10 @@ for (var i = 0; i < counts.length; i++) {
     });
   }
   console.log(vertices[i]);
+}
+
+var transforms = {};
+for (var i = 0; i < joints.length; i++) {
 }
 
 var data = {
