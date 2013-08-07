@@ -114,7 +114,7 @@ var end = contents.indexOf(source_end, start);
 var joints_label = contents.substr(start, end - start);
 var start = contents.indexOf('>', contents.indexOf(joints_label + '-array')) + 1;
 var end = contents.indexOf('<', start);
-vleBaseMesh_LeftArmar joints = contents.substr(start, end - start).trim().split(/[\s\n]+/);
+var joints = contents.substr(start, end - start).trim().split(/[\s\n]+/);
 
 var weight_source = '<input semantic="WEIGHT"';
 var weights = [];
@@ -147,11 +147,53 @@ for (var i = 0; i < counts.length; i++) {
       weight: weights[indices[indices_index++]]
     });
   }
-  console.log(vertices[i]);
+  console.log(vertices[i].influences);
 }
 
 var transforms = {};
 for (var i = 0; i < joints.length; i++) {
+  var animation_start = '<source id="' + joints[i] + '-Matrix-animation-output-transform">';
+  if (contents.indexOf(animation_start) == -1) {
+    continue;
+  }
+  var start = contents.indexOf('>', contents.indexOf(animation_start) + animation_start.length) + 1;
+  var end = contents.indexOf('<', start)
+  transforms[joints[i]] = contents.substr(start, end - start).trim().split('\n');
+}
+
+var name_start = 'id="';
+var name_end = '"';
+var node_start = '<node';
+var node_end = '</node>';
+
+var start = contents.indexOf(name_start, contents.indexOf(node_start, contents.indexOf(node_start) + node_start.length)) + name_start.length;
+var end = contents.indexOf(name_end, start);
+var root_name = contents.substr(start, end - start);
+
+var hierarchy = {
+  children: [],
+  name: root_name,
+  parent: null
+};
+
+var current_node = hierarchy;
+
+while (contents.indexOf(node_start, start) != -1) {
+  if (contents.indexOf(node_start, start) < contents.indexOf(node_end, start)) {
+    start = contents.indexOf(name_start, contents.indexOf(node_start, start)) + name_start.length;
+    end = contents.indexOf(name_end, start);
+    var name = contents.substr(start, end - start);
+    var node = {
+      children: [],
+      name: name,
+      parent: current_node
+    };
+    current_node.children.push(node);
+    current_node = node;
+  } else {
+    start = contents.indexOf(node_end, start) + node_end.length;
+    current_node = current_node.parent;
+  }
 }
 
 var data = {
