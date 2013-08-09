@@ -198,6 +198,8 @@ define([
           return 1;
         } else if (attrib == 'Normal') {
           return 3;
+        } else {
+          return 1;
         }
       },
 

@@ -5,13 +5,51 @@ define([
   ],
   function(Mesh) {
     return Mesh.extend({
+      constructor: function() {
+        this.base();
+
+        this.normalMatrix = mat4.create();
+        mat4.identity(this.normalMatrix);
+      },
+
+      initialize: function() {
+        Mesh.prototype.initialize.bind(this)();
+
+        this.setUniform('NormalMatrix', this.normalMatrix);
+        this.setUniform('BoneMatrices', this.getBoneMatrices());
+      },
+
+      getBoneMatrices: function() {
+        return new Float32Array(<%- boneMatrices %>);
+      },
+
       getAttribData: function(attrib) {
         if (attrib == 'Position') {
-          return new Float32Array([<%= v %>]);
+          return new Float32Array(<%- vertices %>);
         } else if (attrib == 'Normal') {
-          return new Float32Array([<%= n %>]);
+          return new Float32Array(<%- normals %>);
         } else if (attrib == 'TextureCoord') {
-          return new Float32Array([<%= t %>]);
+          return new Float32Array(<%- texcoords %>);
+        } else if (attrib == 'BoneIndex1') {
+          return new Float32Array(<%- boneIndices[0] %>);
+        } else if (attrib == 'BoneIndex2') {
+          return new Float32Array(<%- boneIndices[1] %>);
+        } else if (attrib == 'BoneIndex3') {
+          return new Float32Array(<%- boneIndices[2] %>);
+        } else if (attrib == 'BoneIndex4') {
+          return new Float32Array(<%- boneIndices[3] %>);
+        } else if (attrib == 'BoneIndex5') {
+          return new Float32Array(<%- boneIndices[4] %>);
+        } else if (attrib == 'BoneWeight1') {
+          return new Float32Array(<%- boneWeights[0] %>);
+        } else if (attrib == 'BoneWeight2') {
+          return new Float32Array(<%- boneWeights[1] %>);
+        } else if (attrib == 'BoneWeight3') {
+          return new Float32Array(<%- boneWeights[2] %>);
+        } else if (attrib == 'BoneWeight4') {
+          return new Float32Array(<%- boneWeights[3] %>);
+        } else if (attrib == 'BoneWeight5') {
+          return new Float32Array(<%- boneWeights[4] %>);
         }
       },
 

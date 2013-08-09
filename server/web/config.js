@@ -43,7 +43,7 @@ define([
 	'space',
 	'desert',
 	'greek',
-        // 'www',
+        'www',
       ],
 
       // loads B when A is requested

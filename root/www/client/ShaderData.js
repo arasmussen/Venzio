@@ -4,7 +4,8 @@ var uniformMatrix4fvNoTranspose = function(location, values) {
   gl.uniformMatrix4fv(location, false, values);
 };
 
-// above might be necessary but there must be a better way than this.
+// there must be a better way than this.
+
 var uniform1i = function(location, values) {
   gl.uniform1i(location, values);
 };
@@ -21,10 +22,12 @@ define(function() {
         'Color'
       ],
       uniforms: [
-        {name: 'MVMatrix',
+        {
+          name: 'MVMatrix',
           type: uniformMatrix4fvNoTranspose
         },
-        {name: 'PMatrix',
+        {
+          name: 'PMatrix',
           type: uniformMatrix4fvNoTranspose
         }
       ],
@@ -33,7 +36,17 @@ define(function() {
     man: {
       attributes: [
         'Position',
-        'Normal'
+        'Normal',
+        'BoneIndex1',
+        'BoneIndex2',
+        'BoneIndex3',
+        'BoneIndex4',
+        'BoneIndex5',
+        'BoneWeight1',
+        'BoneWeight2',
+        'BoneWeight3',
+        'BoneWeight4',
+        'BoneWeight5'
       ],
       uniforms: [
         {
@@ -46,6 +59,10 @@ define(function() {
         },
         {
           name: 'NormalMatrix',
+          type: uniformMatrix4fvNoTranspose
+        },
+        {
+          name: 'BoneMatrices',
           type: uniformMatrix4fvNoTranspose
         },
       ],
