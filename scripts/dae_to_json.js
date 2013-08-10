@@ -257,7 +257,7 @@ for (var i = 0; i < joints.length; i++) {
   if (animation[joints[i]]) {
     boneIndexMapper[i] = boneMatrices.length / 16;
     for (var j = 0; j < 16; j++) {
-      boneMatrices.push(absMatrices[i]);
+      boneMatrices.push(absMatrices[i][j]);
       // boneMatrices.push(absMatrices[i][j]);
     }
     // for (var j = 0; j < 16; j++) {
