@@ -10,9 +10,9 @@ define([
     'model/player',
     'model/session',
     'web/cache',
-    'web/config'
+    'web/configs',
   ],
-  function(Base, ejs, fs, module, path, url, playerModel, sessionModel, cache, config) {
+  function(Base, ejs, fs, module, path, url, playerModel, sessionModel, cache, configs) {
 
     var __dirname = path.dirname(module.uri);
 
@@ -28,11 +28,11 @@ define([
       'other': {contentType: 'text/plain', encoding: 'utf8'}
     };
 
-    var headerFile = __dirname + '/../template/header.html.ejs';
-    var footerFile = __dirname + '/../template/footer.html';
-    var fourOhFourFile = __dirname + '/../template/404.html';
+    var headerFile = '/../template/header.html.ejs';
+    var footerFile = '/../template/footer.html.ejs';
+    var fourOhFourFile = '/../template/404.html';
 
-    var webroot = __dirname + '/../../root';
+    var webroot = __dirname + '/../../roots';
 
     return Base.extend({
       constructor: function(request, response, readyCallback) {
@@ -46,11 +46,14 @@ define([
           'session': true,
         };
 
-        // make sure subdomain is whitelisted (else 404)
-        if (config.subdomains.indexOf(this.getSubdomain()) == -1) {
+        this.webroot = webroot + '/' + this.getSubdomain() + '/root/';
+
+        // make sure subdomain exists
+        if (!configs.hasOwnProperty(this.getSubdomain())) {
           this.respond(404, {'Content-Type': 'text/html'});
+          return;
         }
-        this.webroot = webroot + '/' + this.getSubdomain() + '/';
+        this.config = configs[this.getSubdomain()];
 
         // parse cookies
         this.cookies = {};
@@ -196,22 +199,22 @@ define([
       },
 
       getHeader: function() {
-        return ejs.render(cache.getFileSync(headerFile, 'utf8'), this.getEJSData());
+        return ejs.render(cache.getFileSync(this.webroot + headerFile, 'utf8'), this.getEJSData());
       },
 
       getFooter: function() {
-        return cache.getFileSync(footerFile, 'utf8');
+        return ejs.render(cache.getFileSync(this.webroot + footerFile, 'utf8'), this.getEJSData());
       },
 
       get404Page: function() {
-        return cache.getFileSync(fourOhFourFile, 'utf8');
+        return cache.getFileSync(this.webroot + fourOhFourFile, 'utf8');
       },
 
       getEJSData: function() {
         var uri = this.getURI();
         return {
-          cssFiles: config.cssFiles[uri] || [],
-          is_game: (uri == '/demo'),
+          cssFiles: this.config.cssFiles[uri] || [],
+          is_game: (uri == '/demo' || uri == '/demo2'),
           user: this.user,
           uri: uri,
           subdomain: this.getSubdomain()

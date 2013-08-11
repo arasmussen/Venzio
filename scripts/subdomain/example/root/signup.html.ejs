@@ -1,0 +1,19 @@
+      <div id="signup">
+        <h2>sign up</h2>
+<% if (locals.failed) { %>
+        <p>Invalid input</p>
+<% } %>
+        <form method="get" action="/fakeSignup">
+          <label for="signup_email">email</label>
+          <div class="rounded_input">
+            <input id="signup_email" name="email" type="text" />
+          </div>
+          <label for="signup_password">password</label>
+          <div class="rounded_input">
+            <input id="signup_password" name="password" type="password" />
+          </div>
+          <div id="signup_button_container">
+            <input id="signup_button" value="sign up" type="submit" />
+          </div>
+        </form>
+      </div>
