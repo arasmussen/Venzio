@@ -3,8 +3,8 @@ $(function() {
     $('#header').css('left', -$(this).scrollLeft() + 'px');
   });
 
-  var width = 400;
-  var height = 300;
+  var width = 800;
+  var height = 600;
 
   var view_angle = 45;
   var aspect = width / height;
@@ -17,24 +17,27 @@ $(function() {
   var camera = new THREE.PerspectiveCamera(view_angle, aspect, near, far);
   var scene = new THREE.Scene();
 
-  camera.position.z = 300;
-
   renderer.setSize(width, height);
   container.append(renderer.domElement);
 
-  var radius = 50;
-  var segments = 16;
-  var rings = 16;
-
-  var sphereMaterial = new THREE.MeshLambertMaterial({color: 0xCC0000});
-
-  var sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(radius, segments, rings),
-    sphereMaterial
-  );
-
-  scene.add(sphere);
   scene.add(camera);
+
+  var t = 0;
+
+  var loader = new THREE.JSONLoader();
+  loader.load('/man.js', function(geometry, materials) {
+    var material = new THREE.MeshFaceMaterial(materials);
+    var originalMaterial = materials[0];
+    originalMaterial.skinning = true;
+    originalMaterial.transparent = true;
+    originalMaterial.alphaTest = 0.75;
+
+    THREE.AnimationHandler.add(geometry.animation);
+    var man = new THREE.SkinnedMesh(geometry, material, false);
+    scene.add(man);
+    var animation = new THREE.Animation(man, 'ArmatureAction');
+    render();
+  });
 
   var pointLight = new THREE.PointLight(0xFFFFFF);
   pointLight.position.x = 10;
@@ -42,9 +45,23 @@ $(function() {
   pointLight.position.z = 130;
   scene.add(pointLight);
 
+  var clock = new THREE.Clock();
   function render() {
+    var delta = clock.getDelta();
     requestAnimationFrame(render);
+
+    var timer = Date.now() * 0.0005;
+
+    camera.position.x = Math.cos( timer ) * 10;
+    camera.position.y = 2;
+    camera.position.z = Math.sin( timer ) * 10;
+
+    camera.lookAt( scene.position );
+
+    pointLight.position.x = Math.sin( timer * 4 ) * 3009;
+    pointLight.position.y = Math.cos( timer * 5 ) * 4000;
+    pointLight.position.z = Math.cos( timer * 4 ) * 3009;
+
     renderer.render(scene, camera);
   }
-  render();
 });
