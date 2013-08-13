@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Venzio</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+<% cssFiles.forEach(function(file) { %>
+    <link rel="stylesheet" href="/css/<%= file %>.css" />
+<% }); %>
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript" src="https://checkout.stripe.com/v2/checkout.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="/analytics.js"></script>
+    <script type="text/javascript" src="/script.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="topbar">
+        <div id="logo">
+          <a href="/"><img src="/img/headerLogo.png" alt="logo" /></a>
+        </div>
+      </div>
+    </div>
+    <div id="content">

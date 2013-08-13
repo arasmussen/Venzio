@@ -1,0 +1,58 @@
+    </div>
+    <div id="footer">
+      <div id="bottombar">
+        <div id="copyright">
+          <span>Copyright &copy; Venzio <%= (new Date()).getFullYear() %>. All Rights Reserved.</span>
+        </div>
+        <div id="social-actions">
+          <div id="footer-like">
+            <div class="fb-like" data-href="http://venz.io" data-send="false" data-layout="button_count" data-width="450" data-show-faces="true" data-font="segoe ui"></div>
+          </div>
+          <div id="footer-plus">
+            <div class="g-plusone"></div>
+          </div>
+          <div id="footer-tweet">
+            <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://venz.io" data-via="venziogame" data-lang="en">Tweet</a>
+          </div>
+        </div>
+        <div id="social-links">
+          <ul>
+            <li><a href="https://twitter.com/venziogame">twitter</a></li>
+            <li><a href="https://www.facebook.com/pages/Venzio/137462203109524">facebook</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="fb-root"></div>
+    <script>
+      (function() {
+        var js, fjs = document.getElementsByTagName('script')[0];
+        if (document.getElementById('facebook-jssdk')) return;
+        js = document.createElement('script');
+        js.id = 'facebook-jssdk';
+        js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+        fjs.parentNode.insertBefore(js, fjs);
+      }());
+    </script>
+    <script type="text/javascript">
+      (function() {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/plusone.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+      })();
+    </script>
+    <script>
+      (function(d,s,id) {
+        var js,fjs = document.getElementsByTagName('script')[0];
+        if (document.getElementById('twitter-wjs')) return;
+        js = document.createElement('script');
+        js.id = 'twitter-wjs';
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,134 @@
+/* Copyright (c) Venzio 2013 All Rights Reserved */
+
+#signup,
+#login,
+#subscribe,
+#unsubscribe {
+  width: 480px;
+  height: auto;
+  border: 1px solid #aac;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+#login,
+#subscribe,
+#unsubscribe {
+  margin: 150px auto 0;
+}
+
+#signup {
+  margin: 100px auto 0;
+}
+
+#signup form,
+#login form,
+#subscribe form,
+#unsubscribe form {
+  display: inline-block;
+  font-size: 12px;
+}
+
+#signup h2,
+#login h2,
+#subscribe h2,
+#unsubscribe h2 {
+  display: block;
+  margin: 30px 0;
+  font-size: 32px;
+  text-align: center;
+  color: #555;
+}
+
+#signup p,
+#login p,
+#subscribe p,
+#unsubscribe p {
+  display: inline-block;
+  color: #f55;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+#signup form label {
+  width: 120px;
+}
+
+#login form label {
+  width: 155px;
+}
+
+#subscribe form label,
+#unsubscribe form label {
+  width: 120px;
+}
+
+#signup form label,
+#login form label,
+#subscribe form label,
+#unsubscribe form label {
+  display: block;
+  margin-top: 17px;
+  margin-right: 20px;
+  height: 20px;
+  float: left;
+  text-align: right;
+  color: #666;
+  font-size: 16px;
+}
+
+#signup .rounded_input,
+#login .rounded_input,
+#subscribe .rounded_input,
+#unsubscribe .rounded_input {
+  float: left;
+  width: 240px;
+  height: 40px;
+  background-color: #fff;
+  overflow: hidden;
+  border: 1px solid #aac;
+  border-radius: 8px;
+  margin: 6px auto 0 auto;
+}
+
+#signup input[type="text"],
+#signup input[type="password"],
+#login input[type="text"],
+#login input[type="password"],
+#subscribe input[type="text"],
+#unsubscribe input[type="text"] {
+  border: 0;
+  margin: 0 10px 0 10px;
+  padding: 0;
+  width: 230px;
+  height: 40px;
+  font-size: 20px;
+}
+
+#signup #signup_button_container,
+#login #login_button_container,
+#subscribe #subscribe_button_container,
+#unsubscribe #unsubscribe_button_container {
+  margin: 30px 0;
+  float: left;
+  display: block;
+  width: 480px;
+  height: 40px;
+  text-align: center;
+}
+
+#signup input[type="submit"],
+#login input[type="submit"],
+#subscribe input[type="submit"],
+#unsubscribe input[type="submit"] {
+  color: #666;
+  border: 1px solid #aac;
+  border-radius: 5px;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  width: 100px;
+  height: 40px;
+}

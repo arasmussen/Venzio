@@ -14,7 +14,11 @@ define([
       'space': space,
       'medieval': medieval,
       'greek': greek,
+      'greeke': greeke,
+      'greeki': greeki,	
       'desert': desert,
+      'deserte': deserte,
+      'deserti': deserti,
       'three': three
     };
   }
