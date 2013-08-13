@@ -4,11 +4,15 @@ define([
     'roots/www/config',
     'roots/space/config',
     'roots/medieval/config',
-    'roots/greek/config',
+    'roots/greek/config', 
+    'roots/greeke/config',
+    'roots/greeki/config',
     'roots/desert/config',
+    'roots/deserte/config',
+    'roots/deserti/config',
     'roots/three/config',
   ],
-  function(www, space, medieval, greek, desert, three) {
+  function(www, space, medieval, greek, greeke, greeki, desert, deserte, deserti, three) {
     return {
       'www': www,
       'space': space,
