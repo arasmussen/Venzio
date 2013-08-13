@@ -24,7 +24,7 @@ uniform mat4 uNormalMatrix;
 varying vec3 vLighting;
 
 void main(void) {
-  vec4 vertex = vec4(0.0, 0.0, 0.0, 1.0);
+  vec4 vertex = vec4(0.0, 0.0, 0.0, 0.0);
   vertex += aBoneWeight1 * vec4(uBoneMatrices[int(aBoneIndex1)] * aPosition);
   vertex += aBoneWeight2 * vec4(uBoneMatrices[int(aBoneIndex2)] * aPosition);
   vertex += aBoneWeight3 * vec4(uBoneMatrices[int(aBoneIndex3)] * aPosition);

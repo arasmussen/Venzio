@@ -20,7 +20,7 @@ define([
       },
 
       getBoneMatrices: function() {
-        return new Float32Array(<%- boneMatrices %>);
+        return new Float32Array(<%- bone_matrices %>);
       },
 
       getAttribData: function(attrib) {
@@ -31,25 +31,25 @@ define([
         } else if (attrib == 'TextureCoord') {
           return new Float32Array(<%- texcoords %>);
         } else if (attrib == 'BoneIndex1') {
-          return new Float32Array(<%- boneIndices[0] %>);
+          return new Float32Array(<%- bone_indices[0] %>);
         } else if (attrib == 'BoneIndex2') {
-          return new Float32Array(<%- boneIndices[1] %>);
+          return new Float32Array(<%- bone_indices[1] %>);
         } else if (attrib == 'BoneIndex3') {
-          return new Float32Array(<%- boneIndices[2] %>);
+          return new Float32Array(<%- bone_indices[2] %>);
         } else if (attrib == 'BoneIndex4') {
-          return new Float32Array(<%- boneIndices[3] %>);
+          return new Float32Array(<%- bone_indices[3] %>);
         } else if (attrib == 'BoneIndex5') {
-          return new Float32Array(<%- boneIndices[4] %>);
+          return new Float32Array(<%- bone_indices[4] %>);
         } else if (attrib == 'BoneWeight1') {
-          return new Float32Array(<%- boneWeights[0] %>);
+          return new Float32Array(<%- bone_weights[0] %>);
         } else if (attrib == 'BoneWeight2') {
-          return new Float32Array(<%- boneWeights[1] %>);
+          return new Float32Array(<%- bone_weights[1] %>);
         } else if (attrib == 'BoneWeight3') {
-          return new Float32Array(<%- boneWeights[2] %>);
+          return new Float32Array(<%- bone_weights[2] %>);
         } else if (attrib == 'BoneWeight4') {
-          return new Float32Array(<%- boneWeights[3] %>);
+          return new Float32Array(<%- bone_weights[3] %>);
         } else if (attrib == 'BoneWeight5') {
-          return new Float32Array(<%- boneWeights[4] %>);
+          return new Float32Array(<%- bone_weights[4] %>);
         }
       },
 
