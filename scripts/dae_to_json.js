@@ -22,17 +22,18 @@ var raw = {
   normals: ArrayToFloat(GetRawData('NORMAL')), // a list of normals
   texcoords: ArrayToFloat(GetRawData('TEXCOORD')), // a list of texcoords
   weights: ArrayToFloat(GetRawData('WEIGHT')), // a list of weights
-  joints: GetRawData('JOINT'), // a list of joints
-  inv_bind_matrix: ArrayToFloat(GetRawData('INV_BIND_MATRIX')) // a list of inv bind matrices
+  joints: GetRawData('JOINT') // a list of joints
 };
 var polylist = GetPolylist(); // matches vertices with normals and texcoords
 var bone_data = GetBoneWeightsAndIndices(raw.weights); // matches vertices with bone weights/influences
 var animation_data = GetAnimationData(raw.joints); // animation matrices for each frame for each bone
 var bone_index_map = GetBoneIndexMap(raw.joints, animation_data); // maps bone id to used bone id
 var bone_data = FixBoneData(bone_data, bone_index_map); // removes unused bone indices
-var hierarchy = GetHierarchy(raw.joints, bone_index_map); // gets hierarchy, bind pose matrices, and world matrices
+var inverse_bind_matrices = GetInverseBindMatrices(bone_index_map);
+var hierarchy = GetHierarchy(raw.joints, bone_index_map, animation_data); // gets hierarchy, bind pose matrices, and world matrices
 var joints = FlattenHierarchy(hierarchy); // flattens into [index] = node
-var joints = CalculateSkinningMatrices(joints); // calculates skinning matrices
+var joints = CalculateSkinningMatrices(joints, inverse_bind_matrices); // calculates skinning matrices
+
 var gl_data = GetGLData(raw, polylist, bone_data, joints); // puts everything together
 var ejs_data = GetEJSData(gl_data); // good format for ejs
 var output = GetOutputFilename(input);
@@ -89,6 +90,16 @@ function MatrixInverse(array) {
     matrix.e(3, 1), matrix.e(3, 2), matrix.e(3, 3), matrix.e(3, 4),
     matrix.e(4, 1), matrix.e(4, 2), matrix.e(4, 3), matrix.e(4, 4)
   ];
+}
+
+function MatrixTranspose(matrix) {
+  var transpose = [];
+  for (var x = 0; x < 4; x++) {
+    for (var y = 0; y < 4; y++) {
+      transpose[x * 4 + y] = matrix[y * 4 + x];
+    }
+  }
+  return transpose;
 }
 
 // pass in type = "POSITION", "NORMAL", "TEXCOORD", "WEIGHT", "JOINT", or "INV_BIND_MATRIX"
@@ -163,7 +174,7 @@ function GetAnimationData(joints) {
     if (contents.indexOf(section_start) == -1) {
       continue;
     }
-    animation[joints[i]] = ArrayToFloat(Parse(section_start, start, end));
+    animation[joints[i]] = ArrayToFloat(Parse(section_start, start, end).trim().split(/[\s\n]+/));
   }
   return animation;
 }
@@ -188,7 +199,20 @@ function FixBoneData(bone_data, bone_index_map) {
   return bone_data;
 }
 
-function GetHierarchy(joints, bone_index_map) {
+function GetInverseBindMatrices(bone_index_map) {
+  var original_matrices = ArrayToFloat(GetRawData('INV_BIND_MATRIX'));
+  var matrices = [];
+  for (var i = 0; i < original_matrices.length / 16; i++) {
+    var index = bone_index_map.indexOf(i);
+    if (index == -1) {
+      break;
+    }
+    matrices[i] = original_matrices.slice(index * 16, index * 16 + 16);
+  }
+  return matrices;
+}
+
+function GetHierarchy(joints, bone_index_map, animation) {
   var read_from = contents.indexOf('</skeleton>');
 
   var node_start = '<node';
@@ -221,7 +245,9 @@ function GetHierarchy(joints, bone_index_map) {
     parent: null,
     index: bone_index_map[joints.indexOf(root_name)],
     world_matrix: matrix,
-    bind_pose_matrix: matrix
+    bind_pose_matrix: matrix,
+    inverse_bind_pose_matrix: MatrixInverse(matrix),
+    anim_matrix: animation[root_name].slice(160, 176)
   };
   var current_node = hierarchy;
 
@@ -235,7 +261,9 @@ function GetHierarchy(joints, bone_index_map) {
         parent: current_node,
         index: bone_index_map[joints.indexOf(node_name)],
         world_matrix: MatrixMultiply(current_node.world_matrix, matrix),
-        bind_pose_matrix: matrix
+        bind_pose_matrix: matrix,
+        inverse_bind_pose_matrix: MatrixInverse(MatrixMultiply(current_node.world_matrix, matrix)),
+        anim_matrix: animation[node_name] ? MatrixMultiply(current_node.anim_matrix, animation[node_name].slice(160, 176)) : null
       };
       current_node.children.push(node);
       current_node = node;
@@ -265,10 +293,13 @@ function FlattenHierarchy(hierarchy) {
   return flatten;
 }
 
-function CalculateSkinningMatrices(joints) {
+function CalculateSkinningMatrices(joints, inverse_bind_matrices) {
   for (var i = 0; i < joints.length; i++) {
-    joints[i].inverse_bind_matrix = MatrixInverse(joints[i].world_matrix);
-    joints[i].skinning_matrix = MatrixMultiply(joints[i].inverse_bind_matrix, joints[i].world_matrix);
+    if (i == 5 || 1) {
+      joints[i].skinning_matrix = MatrixMultiply(joints[i].inverse_bind_pose_matrix, joints[i].anim_matrix);
+    } else {
+      joints[i].skinning_matrix = MatrixMultiply(joints[i].inverse_bind_pose_matrix, joints[i].world_matrix);
+    }
   }
   return joints;
 }

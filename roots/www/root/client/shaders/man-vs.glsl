@@ -31,12 +31,15 @@ void main(void) {
   vertex += aBoneWeight4 * vec4(uBoneMatrices[int(aBoneIndex4)] * aPosition);
   vertex += aBoneWeight5 * vec4(uBoneMatrices[int(aBoneIndex5)] * aPosition);
 
+/*
   vec3 normal = vec3(0.0, 0.0, 0.0);
   normal += aBoneWeight1 * vec3(uBoneMatrices[int(aBoneIndex1)] * vec4(aNormal, 1.0));
   normal += aBoneWeight2 * vec3(uBoneMatrices[int(aBoneIndex2)] * vec4(aNormal, 1.0));
   normal += aBoneWeight3 * vec3(uBoneMatrices[int(aBoneIndex3)] * vec4(aNormal, 1.0));
   normal += aBoneWeight4 * vec3(uBoneMatrices[int(aBoneIndex4)] * vec4(aNormal, 1.0));
   normal += aBoneWeight5 * vec3(uBoneMatrices[int(aBoneIndex5)] * vec4(aNormal, 1.0));
+  */
+  vec3 normal = aNormal;
 
   vec3 ambientLight = vec3(0.2, 0.2, 0.2);
   vec3 directionalLight = vec3(1.0, 0.7, 0.7);
