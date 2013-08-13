@@ -23,7 +23,7 @@ define([
       'desert': desert,
       'deserte': deserte,
       'deserti': deserti,
-      'three': three
+      'three': three,
     };
   }
 );
