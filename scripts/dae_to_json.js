@@ -295,13 +295,7 @@ function FlattenHierarchy(hierarchy) {
 
 function CalculateSkinningMatrices(joints, inverse_bind_matrices) {
   for (var i = 0; i < joints.length; i++) {
-    if (i == 5 || 1) {
-      joints[i].skinning_matrix = MatrixMultiply(joints[i].inverse_bind_pose_matrix, joints[i].anim_matrix);
-      joints[i].skinning_matrix = joints[i].world_matrix;
-      joints[i].skinning_matrix = joints[i].anim_matrix;
-    } else {
-      joints[i].skinning_matrix = MatrixMultiply(joints[i].inverse_bind_pose_matrix, joints[i].world_matrix);
-    }
+    joints[i].skinning_matrix = MatrixMultiply(inverse_bind_matrices[i], joints[i].anim_matrix);
   }
   return joints;
 }

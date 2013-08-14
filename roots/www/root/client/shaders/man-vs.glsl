@@ -49,5 +49,5 @@ void main(void) {
   float directional = max(dot(normal, directionalLightDirection), 0.0);
   vLighting = ambientLight + (directionalLight * directional);
 
-  gl_Position = uPMatrix * uMVMatrix * vec4(aPosition.xyz / 90.0, 1.0);
+  gl_Position = uPMatrix * uMVMatrix * vec4(vertex.xyz / 90.0, 1.0);
 }
