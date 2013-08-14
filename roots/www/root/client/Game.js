@@ -12,9 +12,10 @@ define([
     'client/ui/Ping',
     'client/ui/Cursor',
     'common/Globals',
-    'client/meshes/ManMesh'
+    'client/meshes/ManMesh',
+    'client/meshes/SkeletonMesh'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals, ManMesh) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals, ManMesh, SkeletonMesh) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -25,8 +26,10 @@ define([
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
 
-        this.man = new ManMesh();
-        this.man.initialize();
+        // this.man = new ManMesh();
+        // this.man.initialize();
+        this.skeleton = new SkeletonMesh();
+        this.skeleton.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -76,7 +79,8 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        this.man.draw();
+        // this.man.draw();
+        this.skeleton.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();

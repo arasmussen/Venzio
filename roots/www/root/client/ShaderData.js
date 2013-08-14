@@ -68,6 +68,22 @@ define(function() {
       ],
       textures: []
     },
+    skeleton: {
+      attributes: [
+        'JointPosition'
+      ],
+      uniforms: [
+        {
+          name: 'MVMatrix',
+          type: uniformMatrix4fvNoTranspose
+        },
+        {
+          name: 'PMatrix',
+          type: uniformMatrix4fvNoTranspose
+        }
+      ],
+      textures: []
+    },
     cube: {
       attributes: [
         'Position',
