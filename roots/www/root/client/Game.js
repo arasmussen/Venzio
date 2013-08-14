@@ -26,10 +26,10 @@ define([
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
 
-        // this.man = new ManMesh();
-        // this.man.initialize();
-        this.skeleton = new SkeletonMesh();
-        this.skeleton.initialize();
+        this.man = new ManMesh();
+        this.man.initialize();
+        // this.skeleton = new SkeletonMesh();
+        // this.skeleton.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -79,8 +79,8 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        // this.man.draw();
-        this.skeleton.draw();
+        this.man.draw();
+        // this.skeleton.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();
