@@ -155,7 +155,7 @@ function GetBoneWeightsAndIndices(weights) {
       }
     }
     for (var j = 0; j < 5; j++) {
-      // boneWeights[j][boneWeights[j].length - 1] /= weightSum;
+      boneWeights[j][boneWeights[j].length - 1] /= weightSum;
     }
   }
 
