@@ -247,7 +247,7 @@ function GetHierarchy(joints, bone_index_map, animation) {
     world_matrix: matrix,
     bind_pose_matrix: matrix,
     inverse_bind_pose_matrix: MatrixInverse(matrix),
-    anim_matrix: animation[root_name].slice(32, 48)
+    anim_matrix: animation[root_name].slice(1040, 1056)
   };
   var current_node = hierarchy;
 
@@ -263,7 +263,7 @@ function GetHierarchy(joints, bone_index_map, animation) {
         world_matrix: MatrixMultiply(current_node.world_matrix, matrix),
         bind_pose_matrix: matrix,
         inverse_bind_pose_matrix: MatrixInverse(MatrixMultiply(current_node.world_matrix, matrix)),
-        anim_matrix: animation[node_name] ? MatrixMultiply(current_node.anim_matrix, animation[node_name].slice(32, 48)) : null
+        anim_matrix: animation[node_name] ? MatrixMultiply(current_node.anim_matrix, animation[node_name].slice(1040, 1056)) : null
       };
       current_node.children.push(node);
       current_node = node;
