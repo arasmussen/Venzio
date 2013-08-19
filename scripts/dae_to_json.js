@@ -101,6 +101,21 @@ function MatrixInverse(array) {
   ];
 }
 
+function MatrixTranspose(array) {
+  var matrix = $M([
+    [array[0], array[1], array[2], array[3]],
+    [array[4], array[5], array[6], array[7]],
+    [array[8], array[9], array[10], array[11]],
+    [array[12], array[13], array[14], array[15]]
+  ]).transpose();
+  return [
+    matrix.e(1, 1), matrix.e(1, 2), matrix.e(1, 3), matrix.e(1, 4),
+    matrix.e(2, 1), matrix.e(2, 2), matrix.e(2, 3), matrix.e(2, 4),
+    matrix.e(3, 1), matrix.e(3, 2), matrix.e(3, 3), matrix.e(3, 4),
+    matrix.e(4, 1), matrix.e(4, 2), matrix.e(4, 3), matrix.e(4, 4)
+  ];
+}
+
 // pass in type = "POSITION", "NORMAL", "TEXCOORD", "WEIGHT", "JOINT", or "INV_BIND_MATRIX"
 function GetRawData(type) {
   var label_section = '<input semantic="' + type + '" ';
@@ -175,6 +190,12 @@ function AddAnimationData(joints) {
     for (var j = 0; j < section_starts.length; j++) {
       if (contents.indexOf(section_starts[j]) !== -1) {
         joints[i].animation_data = ArrayToFloat(Parse(section_starts[j], start, end).trim().split(/[\s\n]+/));
+        for (var k = 0; k < joints[i].animation_data.length / 16; k++) {
+          var transposed = MatrixTranspose(joints[i].animation_data.slice(k * 16, (k + 1) * 16));
+          for (var m = 0; m < 16; m++) {
+            joints[i].animation_data[k * 16 + m] = transposed[m];
+          }
+        }
       }
     }
   }
@@ -254,6 +275,7 @@ function GetInverseBindMatrices() {
   var matrices = [];
   for (var i = 0; i < original_matrices.length / 16; i++) {
     matrices[i] = original_matrices.slice(i * 16, i * 16 + 16);
+    matrices[i] = MatrixTranspose(matrices[i]);
   }
   return matrices;
 }
@@ -287,7 +309,7 @@ function GetHierarchy(joints) {
     var start = contents.indexOf('>', contents.indexOf(matrix_start, read_from)) + 1;
     var end = contents.indexOf(matrix_end, start);
     read_from = end;
-    return ArrayToFloat(contents.substr(start, end - start).trim().split(' '));
+    return MatrixTranspose(ArrayToFloat(contents.substr(start, end - start).trim().split(' ')));
   }
 
   var id_name = GetNodeID();
