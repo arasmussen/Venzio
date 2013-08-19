@@ -102,6 +102,11 @@ function MatrixTranspose(matrix) {
   return transpose;
 }
 
+function FixMatrixAxes(matrix) {
+  var fix_matrix = [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1];
+  return MatrixMultiply(matrix, fix_matrix);
+}
+
 // pass in type = "POSITION", "NORMAL", "TEXCOORD", "WEIGHT", "JOINT", or "INV_BIND_MATRIX"
 function GetRawData(type) {
   var label_section = '<input semantic="' + type + '" ';
@@ -176,6 +181,12 @@ function AddAnimationData(joints) {
     for (var j = 0; j < section_starts.length; j++) {
       if (contents.indexOf(section_starts[j]) !== -1) {
         joints[i].animation_data = ArrayToFloat(Parse(section_starts[j], start, end).trim().split(/[\s\n]+/));
+        for (var k = 0; k < joints[i].animation_data.length / 16; k++) {
+          var fixed = FixMatrixAxes(joints[i].animation_data.slice(k * 16, (k + 1) * 16));
+          for (var m = 0; m < 12; m++) {
+            joints[i].animation_data[k * 16 + m] = fixed[m];
+          }
+        }
       }
     }
   }
@@ -288,7 +299,7 @@ function GetHierarchy(joints) {
     var start = contents.indexOf('>', contents.indexOf(matrix_start, read_from)) + 1;
     var end = contents.indexOf(matrix_end, start);
     read_from = end;
-    return ArrayToFloat(contents.substr(start, end - start).trim().split(' '));
+    return FixMatrixAxes(ArrayToFloat(contents.substr(start, end - start).trim().split(' ')));
   }
 
   var id_name = GetNodeID();
