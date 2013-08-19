@@ -237,7 +237,6 @@ function RemoveBadBones(joints, bone_data) {
   }
 
   // update data with new indices
-
   for (var i = 0; i < joints.length; i++) {
     if (joints[i].affectsVertices) {
       joints[i].realIndex = bone_index_map[joints[i].index];
