@@ -176,6 +176,13 @@ function AddAnimationData(joints) {
     for (var j = 0; j < section_starts.length; j++) {
       if (contents.indexOf(section_starts[j]) !== -1) {
         joints[i].animation_data = ArrayToFloat(Parse(section_starts[j], start, end).trim().split(/[\s\n]+/));
+        for (var k = 0; k < joints[i].animation_data.length / 16; k++) {
+          var matrix = joints[i].animation_data.slice(k * 16, (k + 1) * 16);
+          var transpose = MatrixTranspose(matrix);
+          for (var m = 0; m < 16; m++) {
+            joints[i].animation_data[k * 16 + m] = transpose[m];
+          }
+        }
       }
     }
   }
@@ -288,7 +295,7 @@ function GetHierarchy(joints) {
     var start = contents.indexOf('>', contents.indexOf(matrix_start, read_from)) + 1;
     var end = contents.indexOf(matrix_end, start);
     read_from = end;
-    return ArrayToFloat(contents.substr(start, end - start).trim().split(' '));
+    return MatrixTranspose(ArrayToFloat(contents.substr(start, end - start).trim().split(' ')));
   }
 
   var id_name = GetNodeID();
