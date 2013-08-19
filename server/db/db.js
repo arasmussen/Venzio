@@ -7,6 +7,10 @@ define([
     mongoose: mongoose,
 
     connect: function() {
+      if (!config) {
+        return;
+      }
+
       var username = config.db.username;
       var password = config.db.password;
       var host = config.db.host;
