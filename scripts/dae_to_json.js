@@ -24,6 +24,7 @@ var raw = {
   weights: ArrayToFloat(GetRawData('WEIGHT')), // a list of weights
   joints: GetRawData('JOINT') // a list of joints
 };
+
 var polylist = GetPolylist(); // matches vertices with normals and texcoords
 var bone_data = GetBoneWeightsAndIndices(raw.weights); // matches vertices with bone weights/influences
 var inverse_bind_matrices = GetInverseBindMatrices(); // gets inverse bind matrices
@@ -64,17 +65,25 @@ function ArrayToFloat(array) {
 
 // matrices are arrays of size 16
 function MatrixMultiply(m1, m2) {
-  var result = [];
-  for (var y = 0; y < 4; y++) {
-    for (var x = 0; x < 4; x++) {
-      var sum = 0;
-      for (var n = 0; n < 4; n++) {
-        sum += m1[4 * y + n] * m2[4 * n + x];
-      }
-      result.push(sum);
-    }
-  }
-  return result;
+  var matrix1 = $M([
+    [m1[0], m1[1], m1[2], m1[3]],
+    [m1[4], m1[5], m1[6], m1[7]],
+    [m1[8], m1[9], m1[10], m1[11]],
+    [m1[12], m1[13], m1[14], m1[15]]
+  ]);
+  var matrix2 = $M([
+    [m2[0], m2[1], m2[2], m2[3]],
+    [m2[4], m2[5], m2[6], m2[7]],
+    [m2[8], m2[9], m2[10], m2[11]],
+    [m2[12], m2[13], m2[14], m2[15]]
+  ]);
+  var result = matrix1.multiply(matrix2);
+  return [
+    result.e(1, 1), result.e(1, 2), result.e(1, 3), result.e(1, 4),
+    result.e(2, 1), result.e(2, 2), result.e(2, 3), result.e(2, 4),
+    result.e(3, 1), result.e(3, 2), result.e(3, 3), result.e(3, 4),
+    result.e(4, 1), result.e(4, 2), result.e(4, 3), result.e(4, 4)
+  ];
 }
 
 function MatrixInverse(array) {
@@ -90,21 +99,6 @@ function MatrixInverse(array) {
     matrix.e(3, 1), matrix.e(3, 2), matrix.e(3, 3), matrix.e(3, 4),
     matrix.e(4, 1), matrix.e(4, 2), matrix.e(4, 3), matrix.e(4, 4)
   ];
-}
-
-function MatrixTranspose(matrix) {
-  var transpose = [];
-  for (var x = 0; x < 4; x++) {
-    for (var y = 0; y < 4; y++) {
-      transpose[x * 4 + y] = matrix[y * 4 + x];
-    }
-  }
-  return transpose;
-}
-
-function FixMatrixAxes(matrix) {
-  var fix_matrix = [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1];
-  return MatrixMultiply(matrix, fix_matrix);
 }
 
 // pass in type = "POSITION", "NORMAL", "TEXCOORD", "WEIGHT", "JOINT", or "INV_BIND_MATRIX"
@@ -181,12 +175,6 @@ function AddAnimationData(joints) {
     for (var j = 0; j < section_starts.length; j++) {
       if (contents.indexOf(section_starts[j]) !== -1) {
         joints[i].animation_data = ArrayToFloat(Parse(section_starts[j], start, end).trim().split(/[\s\n]+/));
-        for (var k = 0; k < joints[i].animation_data.length / 16; k++) {
-          var fixed = FixMatrixAxes(joints[i].animation_data.slice(k * 16, (k + 1) * 16));
-          for (var m = 0; m < 12; m++) {
-            joints[i].animation_data[k * 16 + m] = fixed[m];
-          }
-        }
       }
     }
   }
@@ -203,7 +191,7 @@ function AddSkinningMatrices(joints_tree, inverse_bind_matrices) {
     if (node.parent) {
       node.anim_pose_matrix = MatrixMultiply(node.parent.anim_pose_matrix, node.anim_pose_matrix);
     }
-    node.skinning_matrix = MatrixMultiply(node.inverse_bind_pose_matrix, node.anim_pose_matrix);
+    node.skinning_matrix = MatrixMultiply(inverse_bind_matrices[node.index], node.anim_pose_matrix);
   }
 }
 
@@ -299,7 +287,7 @@ function GetHierarchy(joints) {
     var start = contents.indexOf('>', contents.indexOf(matrix_start, read_from)) + 1;
     var end = contents.indexOf(matrix_end, start);
     read_from = end;
-    return FixMatrixAxes(ArrayToFloat(contents.substr(start, end - start).trim().split(' ')));
+    return ArrayToFloat(contents.substr(start, end - start).trim().split(' '));
   }
 
   var id_name = GetNodeID();
