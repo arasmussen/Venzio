@@ -2,13 +2,18 @@
 
 define(['fs', 'server/LocalConfig'],
   function(fs, config) {
+    // bypass cache for dev environment
+    var dev;
+    if (!config) {
+      dev = true;
+    } else {
+      dev = (config.environment == 'dev');
+    }
+
     return {
       data: {},
 
       getFile: function(filepath, encoding, callback) {
-        // bypass cache for dev environment
-        var dev = (config.environment == 'dev');
-
         // resolve to realpath
         filepath = fs.realpathSync(filepath);
 
@@ -30,9 +35,6 @@ define(['fs', 'server/LocalConfig'],
       },
 
       getFileSync: function(filepath, encoding) {
-        // bypass cache for dev environment
-        var dev = (config.environment == 'dev');
-
         // resolve to realpath
         filepath = fs.realpathSync(filepath);
 

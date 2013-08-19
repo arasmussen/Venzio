@@ -18,6 +18,12 @@ define(['db', 'crypto', 'password-hash'], function(db, crypto, passwordhash) {
     model: sessionModel,
 
     getSession: function(sessid, callback, subdomain, ip) {
+      // if the db is offline, return
+      if (!db.connected) {
+        setTimeout(callback.bind(null, null, null), 0);
+        return;
+      }
+
       // if there isn't a valid sessid, make a new session
       if (!sessid) {
         this.create(callback, subdomain, ip);

@@ -3,11 +3,12 @@ define([
     'server/LocalConfig'
   ], function(mongoose, config) {
   return {
+    connected: false,
     db: null,
     mongoose: mongoose,
 
     connect: function() {
-      if (!config) {
+      if (!config || !config.db) {
         return;
       }
 
@@ -24,6 +25,7 @@ define([
     },
 
     success: function() {
+      this.connected = true;
       console.log('db successfully connected');
     }
   };
