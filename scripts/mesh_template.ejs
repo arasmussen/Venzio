@@ -17,10 +17,20 @@ define([
 
         this.setUniform('NormalMatrix', this.normalMatrix);
         this.setUniform('BoneMatrices', this.getBoneMatrices());
+        this.setUniform('InvBindMatrices', this.getInvBindMatrices());
+        this.setUniform('WorldMatrices', this.getWorldMatrices());
       },
 
       getBoneMatrices: function() {
         return new Float32Array(<%- bone_matrices %>);
+      },
+
+      getInvBindMatrices: function() {
+        return new Float32Array(<%- inv_bind_matrices %>);
+      },
+
+      getWorldMatrices: function() {
+        return new Float32Array(<%- world_matrices %>);
       },
 
       getAttribData: function(attrib) {
