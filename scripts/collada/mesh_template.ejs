@@ -21,7 +21,7 @@ define([
       },
 
       update: function(tslf) {
-        this.time += tslf * 30;
+        this.time += tslf * 24;
         this.setUniform('BoneMatrices', this.getBoneMatrices());
       },
 
