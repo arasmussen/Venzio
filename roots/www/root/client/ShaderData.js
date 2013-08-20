@@ -64,14 +64,6 @@ define(function() {
         {
           name: 'BoneMatrices',
           type: uniformMatrix4fvNoTranspose
-        },
-        {
-          name: 'WorldMatrices',
-          type: uniformMatrix4fvNoTranspose
-        },
-        {
-          name: 'InvBindMatrices',
-          type: uniformMatrix4fvNoTranspose
         }
       ],
       textures: []

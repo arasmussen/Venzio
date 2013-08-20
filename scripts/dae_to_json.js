@@ -35,7 +35,7 @@ AddAnimationData(joints); // animation matrices for each frame for each bone
 RemoveBadBones(joints, bone_data);
 AddSkinningMatrices(joints_tree, inverse_bind_matrices); // calculates skinning matrices
 
-var gl_data = GetGLData(raw, polylist, bone_data, joints, inverse_bind_matrices); // puts everything together
+var gl_data = GetGLData(raw, polylist, bone_data, joints); // puts everything together
 var ejs_data = GetEJSData(gl_data); // good format for ejs
 var output = GetOutputFilename(input);
 PrintOutput(output, ejs_data);
@@ -64,7 +64,7 @@ function ArrayToFloat(array) {
 }
 
 // matrices are arrays of size 16
-function MatrixMultiply(m1, m2) {
+function MatrixMultiply(m2, m1) {
   var matrix1 = $M([
     [m1[0], m1[1], m1[2], m1[3]],
     [m1[4], m1[5], m1[6], m1[7]],
@@ -207,12 +207,12 @@ function AddSkinningMatrices(joints_tree, inverse_bind_matrices) {
     var node = queue.pop();
     queue = queue.concat(node.children);
 
-    var frame = 15;
+    var frame = 65;
     node.anim_pose_matrix = node.animation_data ? node.animation_data.slice(frame * 16, frame * 16 + 16) : node.bind_pose_matrix;
     if (node.parent) {
       node.anim_pose_matrix = MatrixMultiply(node.parent.anim_pose_matrix, node.anim_pose_matrix);
     }
-    node.skinning_matrix = MatrixMultiply(inverse_bind_matrices[node.index], node.anim_pose_matrix);
+    node.skinning_matrix = MatrixMultiply(node.anim_pose_matrix, inverse_bind_matrices[node.index]);
   }
 }
 
@@ -371,7 +371,7 @@ function FlattenHierarchy(hierarchy) {
   return flatten;
 }
 
-function GetGLData(raw, polylist, bone_data, joints, /* TEMP */ inv_bind_matrices) {
+function GetGLData(raw, polylist, bone_data, joints) {
   var index_data = {
     vertices: [],
     normals: [],
@@ -394,10 +394,6 @@ function GetGLData(raw, polylist, bone_data, joints, /* TEMP */ inv_bind_matrice
     bone_indices: [[],[],[],[],[]],
     bone_weights: [[],[],[],[],[]],
     bone_matrices: [],
-
-    // TEMP
-    inv_bind_matrices: [],
-    world_matrices: [],
   };
 
   for (var i = 0; i < polylist.length / 3; i++) {
@@ -421,10 +417,6 @@ function GetGLData(raw, polylist, bone_data, joints, /* TEMP */ inv_bind_matrice
   for (var i = 0; i < joints.length; i++) {
     if (joints[i].affectsVertices) {
       data.bone_matrices = data.bone_matrices.concat(joints[i].skinning_matrix);
-
-      // TEMP
-      data.inv_bind_matrices = data.inv_bind_matrices.concat(inverse_bind_matrices[i]);
-      data.world_matrices = data.world_matrices.concat(joints[i].anim_pose_matrix);
     }
   }
 
@@ -447,10 +439,6 @@ function GetEJSData(gl_data) {
     bone_weights: bone_weights,
     bone_matrices: JSON.stringify(gl_data.bone_matrices),
     count: gl_data.vertices.length / 3,
-
-    // TEMP
-    inv_bind_matrices: JSON.stringify(gl_data.inv_bind_matrices),
-    world_matrices: JSON.stringify(gl_data.world_matrices)
   };
 }
 
