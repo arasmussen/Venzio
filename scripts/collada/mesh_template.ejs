@@ -5,9 +5,10 @@ define([
   ],
   function(Mesh) {
     return Mesh.extend({
-      constructor: function() {
+      constructor: function(position) {
         this.base();
 
+        this.position = position;
         this.time = 0;
         this.normalMatrix = mat4.create();
         mat4.identity(this.normalMatrix);
@@ -80,7 +81,7 @@ define([
       },
 
       getPosition: function() {
-        return {x: 0.0, y: 2.0, z: -4.0};
+        return this.position;
       },
 
       getRotation: function() {

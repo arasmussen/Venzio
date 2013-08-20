@@ -26,8 +26,16 @@ define([
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
 
-        this.man = new ManMesh();
-        this.man.initialize();
+        this.men = [];
+        for (var i = 0; i < 3; i++) {
+          var position = {
+            x: -2 + 2 * (i % 5),
+            z: -6
+          }
+          position.y = this.terrainManager.getTerrainHeight(position) + 0.1;
+          this.men[i] = new ManMesh(position);
+          this.men[i].initialize();
+        }
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -59,7 +67,9 @@ define([
         this.camera.update();
         this.terrainManager.update(this.player.position);
 
-        this.man.update(tslf);
+        for (var i = 0; i < this.men.length; i++) {
+          this.men[i].update(tslf);
+        }
 
         this.physicsManager.movePlayer(this.player, tslf);
         if (Globals.multiplayer) {
@@ -79,7 +89,9 @@ define([
         this.player.draw();
         this.terrainManager.draw(this.player.position);
 
-        this.man.draw();
+        for (var i = 0; i < this.men.length; i++) {
+          this.men[i].draw();
+        }
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();
