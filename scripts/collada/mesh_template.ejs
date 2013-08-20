@@ -8,6 +8,7 @@ define([
       constructor: function(position) {
         this.base();
 
+        this.anim_matrices = <%- bone_matrices %>;
         this.position = position;
         this.time = 0;
         this.normalMatrix = mat4.create();
@@ -27,17 +28,16 @@ define([
       },
 
       getBoneMatrices: function() {
-        var anim_matrices = <%- bone_matrices %>;
-        var frames = anim_matrices[0].length;
+        var frames = this.anim_matrices[0].length;
 
         var frame1 = parseInt(this.time % frames);
         var frame2 = parseInt((this.time + 1) % frames);
         var weight = this.time - parseInt(this.time);
 
         var result = [];
-        for (var i = 0; i < anim_matrices.length; i++) {
-          var matrix1 = anim_matrices[i][frame1];
-          var matrix2 = anim_matrices[i][frame2];
+        for (var i = 0; i < this.anim_matrices.length; i++) {
+          var matrix1 = this.anim_matrices[i][frame1];
+          var matrix2 = this.anim_matrices[i][frame2];
           for (var j = 0; j < 16; j++) {
             result[i * 16 + j] = matrix2[j] * weight + matrix1[j] * (1.0 - weight);
           }
