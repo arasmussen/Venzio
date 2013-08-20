@@ -27,10 +27,10 @@ define([
         InputManager.networkManager = this.networkManager;
 
         this.men = [];
-        for (var i = 0; i < 3; i++) {
+        for (var i = 0; i < 30; i++) {
           var position = {
-            x: -2 + 2 * (i % 5),
-            z: -6
+            x: -4 + 2 * (i % 5),
+            z: -6 - 2 * parseInt(i / 5)
           }
           position.y = this.terrainManager.getTerrainHeight(position) + 0.1;
           this.men[i] = new ManMesh(position);
