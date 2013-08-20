@@ -28,8 +28,6 @@ define([
 
         this.man = new ManMesh();
         this.man.initialize();
-        // this.skeleton = new SkeletonMesh();
-        // this.skeleton.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -61,6 +59,8 @@ define([
         this.camera.update();
         this.terrainManager.update(this.player.position);
 
+        this.man.update(tslf);
+
         this.physicsManager.movePlayer(this.player, tslf);
         if (Globals.multiplayer) {
           this.networkManager.snapshot(tslf);
@@ -80,7 +80,6 @@ define([
         this.terrainManager.draw(this.player.position);
 
         this.man.draw();
-        // this.skeleton.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();

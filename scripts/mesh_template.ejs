@@ -8,6 +8,7 @@ define([
       constructor: function() {
         this.base();
 
+        this.time = 0;
         this.normalMatrix = mat4.create();
         mat4.identity(this.normalMatrix);
       },
@@ -19,8 +20,29 @@ define([
         this.setUniform('BoneMatrices', this.getBoneMatrices());
       },
 
+      update: function(tslf) {
+        this.time += tslf * 30;
+        this.setUniform('BoneMatrices', this.getBoneMatrices());
+      },
+
       getBoneMatrices: function() {
-        return new Float32Array(<%- bone_matrices %>);
+        var anim_matrices = <%- bone_matrices %>;
+        var frames = anim_matrices[0].length;
+
+        var frame1 = parseInt(this.time % frames);
+        var frame2 = parseInt((this.time + 1) % frames);
+        var weight = this.time - parseInt(this.time);
+
+        var result = [];
+        for (var i = 0; i < anim_matrices.length; i++) {
+          var matrix1 = anim_matrices[i][frame1];
+          var matrix2 = anim_matrices[i][frame2];
+          for (var j = 0; j < 16; j++) {
+            result[i * 16 + j] = matrix2[j] * weight + matrix1[j] * (1.0 - weight);
+          }
+        }
+
+        return new Float32Array(result);
       },
 
       getAttribData: function(attrib) {
