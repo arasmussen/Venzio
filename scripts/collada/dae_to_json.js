@@ -3,12 +3,13 @@
 var ejs = require('ejs');
 var fs = require('fs');
 require('sylvester');
+var zlib = require('zlib');
 
 
 // get input file
 
-var input = process.argv[2];
-if (!input || !fs.existsSync(input) || input.substr(-4) != '.dae') {
+var input = __dirname + '/../../art/models/' + process.argv[2] + '.dae';
+if (!input || !fs.existsSync(input)) {
   console.log('bad input file');
   return;
 }
@@ -35,18 +36,18 @@ var frames = AddAnimationData(joints); // animation matrices for each frame for 
 RemoveBadBones(joints, bone_data);
 AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames); // calculates skinning matrices
 
-var gl_data = GetGLData(raw, polylist, bone_data, joints); // puts everything together
-var ejs_data = GetEJSData(gl_data); // good format for ejs
-var output = GetOutputFilename(input);
-PrintOutput(output, ejs_data);
+var ejs_data = GetEJSData(raw, polylist, bone_data, joints); // puts everything together
+var filename = GetOutputFilename(input);
+PrintOutput(filename, ejs_data);
 
 
 // functions
 
+// "../../art/models/gangnam.dae" => "gangnam"
 function GetOutputFilename(input) {
   var start = input.lastIndexOf('/') == -1 ? 0 : input.lastIndexOf('/') + 1;
   var end = input.lastIndexOf('.');
-  return input.substr(start, end - start) + '.js';
+  return input.substr(start, end - start);
 }
 
 function Parse(section_indicator, start_indicator, end_indicator) {
@@ -379,7 +380,7 @@ function FlattenHierarchy(hierarchy) {
   return flatten;
 }
 
-function GetGLData(raw, polylist, bone_data, joints) {
+function GetEJSData(raw, polylist, bone_data, joints) {
   var index_data = {
     vertices: [],
     normals: [],
@@ -428,29 +429,28 @@ function GetGLData(raw, polylist, bone_data, joints) {
     }
   }
 
+  data.num_vertices = data.vertices.length / 3;
+  data.num_bones = data.bone_matrices.length;
+  data.num_frames = data.bone_matrices[0].length;
+
   return data;
 }
 
-function GetEJSData(gl_data) {
-  var bone_indices = [];
-  var bone_weights = [];
-  for (var i = 0; i < 5; i++) {
-    bone_indices[i] = JSON.stringify(gl_data.bone_indices[i]);
-    bone_weights[i] = JSON.stringify(gl_data.bone_weights[i]);
-  }
+function PrintOutput(filename, ejs_data) {
+  var raw_template = fs.readFileSync(__dirname + '/raw_template.ejs', 'utf8');
+  var raw_path = __dirname + '/../../art/raw/' + filename + '.json';
+  var raw_data = ejs.render(raw_template, ejs_data);
+  fs.writeFileSync(raw_path, raw_data);
 
-  return {
-    vertices: JSON.stringify(gl_data.vertices),
-    normals: JSON.stringify(gl_data.normals),
-    texcoords: JSON.stringify(gl_data.texcoords),
-    bone_indices: bone_indices,
-    bone_weights: bone_weights,
-    bone_matrices: JSON.stringify(gl_data.bone_matrices),
-    count: gl_data.vertices.length / 3,
-  };
+  var binary_template = fs.readFileSync(__dirname + '/binary_template.ejs', 'utf8');
+  var binary_path = __dirname + '/../../art/binary/' + filename + '.data';
+  var binary_data = ejs.render(binary_template, ejs_data);
+  fs.writeFileSync(binary_path, binary_data);
+
+  var compressed_path = __dirname + '/../../art/compressed/' + filename + '.data.tar.gz';
+  var gzip = zlib.createGzip();
+  var in_stream = fs.createReadStream(binary_path);
+  var out_stream = fs.createWriteStream(compressed_path);
+  in_stream.pipe(gzip).pipe(out_stream);
 }
 
-function PrintOutput(output, ejs_data) {
-  var template = fs.readFileSync(__dirname + '/mesh_template.ejs', 'utf8');
-  fs.writeFileSync(output, ejs.render(template, ejs_data));
-}

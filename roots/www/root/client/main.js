@@ -7,9 +7,10 @@ define([
     'client/CTerrainManager',
     'client/Game',
     'client/TextureManager',
+    'client/MeshManager',
     'common/Globals'
   ],
-  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, TextureManager, Globals) {
+  function(NetworkManager, GraphicsManager, InputManager, CTerrainManager, Game, TextureManager, MeshManager, Globals) {
     window.requestAnimFrame = (function() {
       return window.requestAnimationFrame ||
              window.webkitRequestAnimationFrame ||
@@ -87,6 +88,14 @@ define([
         initMessage: 'Loading textures...',
         successMessage: 'Textures loaded',
         failureMessage: 'Couldn\'t load textures'
+      },
+      {
+        func: function() {
+          MeshManager.initialize(main.bind(null, true));
+        },
+        initMessage: 'Loading meshes...',
+        successMessage: 'Meshes loaded',
+        failureMeshes: 'Couldn\'t load meshes'
       },
       {
         func: function() {

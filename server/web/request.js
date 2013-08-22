@@ -25,6 +25,7 @@ define([
       'jpg': {contentType: 'image/jpeg', encoding: 'binary'},
       'png': {contentType: 'image/png', encoding: 'binary'},
       'ico': {contentType: 'image/x-icon', encoding: 'binary'},
+      'mesh': {contentType: 'text/plain', encoding: 'binary', gzip: true},
       'other': {contentType: 'text/plain', encoding: 'utf8'}
     };
 
@@ -119,8 +120,13 @@ define([
         }
       },
 
-      respond200: function(contents, contentType, encoding) {
-        this.respond(200, {'Content-Type': contentType}, contents, encoding);
+      respond200: function(contents, contentType, encoding, gzip) {
+        var headers = {'Content-Type': contentType};
+        if (gzip) {
+          headers['Content-Encoding'] = 'gzip';
+        }
+
+        this.respond(200, headers, contents, encoding);
       },
 
       serveFile: function() {
@@ -163,12 +169,12 @@ define([
             contents = header + contents + footer;
           }
 
-          this.respond200(contents, extension.contentType, extension.encoding);
+          this.respond200(contents, extension.contentType, extension.encoding, extension.gzip);
         }.bind(this));
       },
 
       respond302: function(location) {
-        this.respond(302, {'Content-Type': 'text/plain', 'Location': location});
+        this.respond(302, {'Location': location});
       },
 
       respond404: function() {

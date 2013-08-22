@@ -1,14 +1,15 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define([
-    'client/Mesh'
+    'client/Mesh',
+    'client/MeshManager'
   ],
-  function(Mesh) {
+  function(Mesh, MeshManager) {
     return Mesh.extend({
       constructor: function(position) {
         this.base();
 
-        this.anim_matrices = <%- bone_matrices %>;
+        this.data_source = MeshManager.getData('man');
         this.position = position;
         this.time = 0;
         this.normalMatrix = mat4.create();
@@ -28,16 +29,16 @@ define([
       },
 
       getBoneMatrices: function() {
-        var frames = this.anim_matrices[0].length;
+        var frames = this.data_source.anim_matrices[0].length;
 
         var frame1 = parseInt(this.time % frames);
         var frame2 = parseInt((this.time + 1) % frames);
         var weight = this.time - parseInt(this.time);
 
         var result = [];
-        for (var i = 0; i < this.anim_matrices.length; i++) {
-          var matrix1 = this.anim_matrices[i][frame1];
-          var matrix2 = this.anim_matrices[i][frame2];
+        for (var i = 0; i < this.data_source.anim_matrices.length; i++) {
+          var matrix1 = this.data_source.anim_matrices[i][frame1];
+          var matrix2 = this.data_source.anim_matrices[i][frame2];
           for (var j = 0; j < 16; j++) {
             result[i * 16 + j] = matrix2[j] * weight + matrix1[j] * (1.0 - weight);
           }
@@ -48,36 +49,36 @@ define([
 
       getAttribData: function(attrib) {
         if (attrib == 'Position') {
-          return new Float32Array(<%- vertices %>);
+          return new Float32Array(this.data_source.vertices);
         } else if (attrib == 'Normal') {
-          return new Float32Array(<%- normals %>);
+          return new Float32Array(this.data_source.normals);
         } else if (attrib == 'TextureCoord') {
-          return new Float32Array(<%- texcoords %>);
+          return new Float32Array(this.data_source.texcoords);
         } else if (attrib == 'BoneIndex1') {
-          return new Float32Array(<%- bone_indices[0] %>);
+          return new Float32Array(this.data_source.bone_indices[0]);
         } else if (attrib == 'BoneIndex2') {
-          return new Float32Array(<%- bone_indices[1] %>);
+          return new Float32Array(this.data_source.bone_indices[1]);
         } else if (attrib == 'BoneIndex3') {
-          return new Float32Array(<%- bone_indices[2] %>);
+          return new Float32Array(this.data_source.bone_indices[2]);
         } else if (attrib == 'BoneIndex4') {
-          return new Float32Array(<%- bone_indices[3] %>);
+          return new Float32Array(this.data_source.bone_indices[3]);
         } else if (attrib == 'BoneIndex5') {
-          return new Float32Array(<%- bone_indices[4] %>);
+          return new Float32Array(this.data_source.bone_indices[4]);
         } else if (attrib == 'BoneWeight1') {
-          return new Float32Array(<%- bone_weights[0] %>);
+          return new Float32Array(this.data_source.bone_weights[0]);
         } else if (attrib == 'BoneWeight2') {
-          return new Float32Array(<%- bone_weights[1] %>);
+          return new Float32Array(this.data_source.bone_weights[1]);
         } else if (attrib == 'BoneWeight3') {
-          return new Float32Array(<%- bone_weights[2] %>);
+          return new Float32Array(this.data_source.bone_weights[2]);
         } else if (attrib == 'BoneWeight4') {
-          return new Float32Array(<%- bone_weights[3] %>);
+          return new Float32Array(this.data_source.bone_weights[3]);
         } else if (attrib == 'BoneWeight5') {
-          return new Float32Array(<%- bone_weights[4] %>);
+          return new Float32Array(this.data_source.bone_weights[4]);
         }
       },
 
       getNumItems: function() {
-        return <%= count %>;
+        return this.data_source.num_vertices;
       },
 
       getPosition: function() {
