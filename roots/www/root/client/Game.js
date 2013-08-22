@@ -35,6 +35,7 @@ define([
           position.y = this.terrainManager.getTerrainHeight(position) + 0.1;
           this.men[i] = new ManMesh(position);
           this.men[i].initialize();
+          this.men[i].update(i % 5);
         }
 
         this.framerate = new Framerate('framerate');
