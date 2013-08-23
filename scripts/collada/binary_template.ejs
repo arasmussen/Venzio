@@ -6,8 +6,8 @@
   buffer_length += num_vertices * 3 * 4; // 12 bytes for each vertex
   buffer_length += num_vertices * 3 * 4; // 12 bytes for each normal
   buffer_length += num_vertices * 2 * 4; // 8 bytes for each texcoord
-  buffer_length += num_vertices * 5 * 1; // 1 byte for each bone index (5 bones per vert)
-  buffer_length += num_vertices * 5 * 4; // 4 bytes for each bone weight (5 bones per vert)
+  buffer_length += num_vertices * 7 * 1; // 1 byte for each bone index (7 bones per vert)
+  buffer_length += num_vertices * 7 * 4; // 4 bytes for each bone weight (7 bones per vert)
   buffer_length += num_bones * num_frames * 12 * 4; // 4 bytes per float per 3x4 matrix per frame per bone
 
   var buffer = new Buffer(buffer_length);
@@ -57,13 +57,13 @@
     WriteFloat(texcoords[2 * i + 1]);
   }
 
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     for (var j = 0; j < num_vertices; j++) {
       WriteByte(bone_indices[i][j]);
     }
   }
 
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     for (var j = 0; j < num_vertices; j++) {
       WriteFloat(bone_weights[i][j]);
     }

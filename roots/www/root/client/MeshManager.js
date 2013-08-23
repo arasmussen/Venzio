@@ -10,7 +10,7 @@ define([
       meshes: {},
 
       initialMeshes: [
-        {name: 'man'}
+        {name: 'goblin'}
       ],
 
       initialize: function(callback) {
@@ -90,7 +90,7 @@ define([
         }
 
         data.bone_indices = [];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 7; i++) {
           data.bone_indices[i] = [];
           for (var j = 0; j < data.num_vertices; j++) {
             data.bone_indices[i][j] = ReadByte();
@@ -98,7 +98,7 @@ define([
         }
 
         data.bone_weights = [];
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 7; i++) {
           data.bone_weights[i] = [];
           for (var j = 0; j < data.num_vertices; j++) {
             data.bone_weights[i][j] = ReadFloat();

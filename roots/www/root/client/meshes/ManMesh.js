@@ -9,7 +9,7 @@ define([
       constructor: function(position) {
         this.base();
 
-        this.data_source = MeshManager.getDataSource('man');
+        this.data_source = MeshManager.getDataSource('goblin');
         this.position = position;
         this.time = 0;
         this.normalMatrix = mat4.create();
@@ -64,6 +64,10 @@ define([
           return new Float32Array(this.data_source.bone_indices[3]);
         } else if (attrib == 'BoneIndex5') {
           return new Float32Array(this.data_source.bone_indices[4]);
+        } else if (attrib == 'BoneIndex6') {
+          return new Float32Array(this.data_source.bone_indices[5]);
+        } else if (attrib == 'BoneIndex7') {
+          return new Float32Array(this.data_source.bone_indices[6]);
         } else if (attrib == 'BoneWeight1') {
           return new Float32Array(this.data_source.bone_weights[0]);
         } else if (attrib == 'BoneWeight2') {
@@ -74,6 +78,10 @@ define([
           return new Float32Array(this.data_source.bone_weights[3]);
         } else if (attrib == 'BoneWeight5') {
           return new Float32Array(this.data_source.bone_weights[4]);
+        } else if (attrib == 'BoneWeight6') {
+          return new Float32Array(this.data_source.bone_weights[5]);
+        } else if (attrib == 'BoneWeight7') {
+          return new Float32Array(this.data_source.bone_weights[6]);
         }
       },
 

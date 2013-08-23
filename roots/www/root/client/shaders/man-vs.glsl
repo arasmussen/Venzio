@@ -9,11 +9,15 @@ attribute float aBoneIndex2;
 attribute float aBoneIndex3;
 attribute float aBoneIndex4;
 attribute float aBoneIndex5;
+attribute float aBoneIndex6;
+attribute float aBoneIndex7;
 attribute float aBoneWeight1;
 attribute float aBoneWeight2;
 attribute float aBoneWeight3;
 attribute float aBoneWeight4;
 attribute float aBoneWeight5;
+attribute float aBoneWeight6;
+attribute float aBoneWeight7;
 
 uniform mat4 uBoneMatrices[52];
 
@@ -29,7 +33,9 @@ mat4 getSkinMatrix() {
     aBoneWeight2 * uBoneMatrices[int(aBoneIndex2)] +
     aBoneWeight3 * uBoneMatrices[int(aBoneIndex3)] +
     aBoneWeight4 * uBoneMatrices[int(aBoneIndex4)] +
-    aBoneWeight5 * uBoneMatrices[int(aBoneIndex5)];
+    aBoneWeight5 * uBoneMatrices[int(aBoneIndex5)] +
+    aBoneWeight6 * uBoneMatrices[int(aBoneIndex6)] +
+    aBoneWeight7 * uBoneMatrices[int(aBoneIndex7)];
 }
 
 // simply transpose
@@ -44,7 +50,7 @@ mat3 getNormalMatrix(in mat4 skin_matrix) {
 void main(void) {
   mat4 skin_matrix = getSkinMatrix();
   vec4 position = skin_matrix * aPosition;
-  vec3 normal = aNormal * getNormalMatrix(skin_matrix);
+  vec3 normal = normalize(aNormal * getNormalMatrix(skin_matrix));
 
   vec3 ambientLight = vec3(0.2, 0.2, 0.2);
   vec3 directionalLight = vec3(1.0, 0.7, 0.7);
@@ -54,5 +60,5 @@ void main(void) {
   float directional = max(dot(normal, directionalLightDirection), 0.0);
   vLighting = ambientLight + (directionalLight * directional);
 
-  gl_Position = uPMatrix * uMVMatrix * vec4(position.xyz / 90.0, 1.0);
+  gl_Position = uPMatrix * uMVMatrix * vec4(position.xyz, 1.0);
 }

@@ -42,11 +42,15 @@ define(function() {
         'BoneIndex3',
         'BoneIndex4',
         'BoneIndex5',
+        'BoneIndex6',
+        'BoneIndex7',
         'BoneWeight1',
         'BoneWeight2',
         'BoneWeight3',
         'BoneWeight4',
-        'BoneWeight5'
+        'BoneWeight5',
+        'BoneWeight6',
+        'BoneWeight7'
       ],
       uniforms: [
         {

@@ -26,6 +26,9 @@ var raw = {
   joints: GetRawData('JOINT') // a list of joints
 };
 
+var bsm = GetBindShapeMatrix();
+// PremultiplyBSM(raw.vertices, raw.normals, bsm);
+
 var polylist = GetPolylist(); // matches vertices with normals and texcoords
 var bone_data = GetBoneWeightsAndIndices(raw.weights); // matches vertices with bone weights/influences
 var inverse_bind_matrices = GetInverseBindMatrices(); // gets inverse bind matrices
@@ -34,7 +37,7 @@ var joints = FlattenHierarchy(joints_tree); // flattens into [index] = node
 
 var frames = AddAnimationData(joints); // animation matrices for each frame for each bone
 RemoveBadBones(joints, bone_data);
-AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames); // calculates skinning matrices
+AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames, bsm); // calculates skinning matrices
 
 var ejs_data = GetEJSData(raw, polylist, bone_data, joints); // puts everything together
 var filename = GetOutputFilename(input);
@@ -151,12 +154,12 @@ function GetBoneWeightsAndIndices(weights) {
   var indices_end = '</v>';
   var indices = Parse(section_start, indices_start, indices_end).trim().split(' ');
 
-  var boneIndices = [[],[],[],[],[]];
-  var boneWeights = [[],[],[],[],[]];
+  var boneIndices = [[],[],[],[],[],[],[]];
+  var boneWeights = [[],[],[],[],[],[],[]];
   var indices_index = 0;
   for (var i = 0; i < counts.length; i++) {
     var weightSum = 0;
-    for (var j = 0; j < 5; j++) {
+    for (var j = 0; j < 7; j++) {
       if (j < counts[i]) {
         var index = parseInt(indices[indices_index++]);
         var weight = parseFloat(weights[indices[indices_index++]]);
@@ -169,7 +172,7 @@ function GetBoneWeightsAndIndices(weights) {
         boneWeights[j].push(0.0);
       }
     }
-    for (var j = 0; j < 5; j++) {
+    for (var j = 0; j < 7; j++) {
       boneWeights[j][boneWeights[j].length - 1] /= weightSum;
     }
   }
@@ -205,7 +208,7 @@ function AddAnimationData(joints) {
   return frames;
 }
 
-function AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames) {
+function AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames, bsm) {
   var queue = [joints_tree]; // root node
   while (queue.length > 0) {
     var node = queue.pop();
@@ -216,7 +219,12 @@ function AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames) {
       if (node.parent) {
         node.anim_pose_matrices[i] = MatrixMultiply(node.parent.anim_pose_matrices[i], node.anim_pose_matrices[i]);
       }
+      if (!node.affectsVertices) {
+        continue;
+      }
+
       node.skinning_matrices[i] = MatrixMultiply(node.anim_pose_matrices[i], inverse_bind_matrices[node.index]);
+      node.skinning_matrices[i] = MatrixMultiply(node.skinning_matrices[i], bsm);
     }
   }
 }
@@ -224,7 +232,7 @@ function AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames) {
 function RemoveBadBones(joints, bone_data) {
   // make a list of all indices
   var all_indices = [];
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     all_indices = all_indices.concat(bone_data.indices[i]);
   }
 
@@ -268,7 +276,7 @@ function RemoveBadBones(joints, bone_data) {
     }
   }
 
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     for (var j = 0; j < bone_data.indices[i].length; j++) {
       bone_data.indices[i][j] = bone_index_map[bone_data.indices[i][j]];
     }
@@ -284,6 +292,45 @@ function GetInverseBindMatrices() {
   }
   return matrices;
 }
+
+function GetBindShapeMatrix() {
+  var section = '<bind_shape_matrix';
+  var start = '>';
+  var end = '<';
+  return MatrixTranspose(ArrayToFloat(Parse(section, start, end).trim().split(/[\s\n]+/)));
+}
+
+// function PremultiplyBSM(vertices, normals, bsm) {
+//   for (var i = 0; i < vertices.length / 3; i++) {
+//     var vertex = [vertices[3 * i], vertices[3 * i + 1], vertices[3 * i + 2], 1.0];
+//     var normal = [normals[3 * i], normals[3 * i + 1], normals[3 * i + 2], 1.0];
+// 
+//     var fixed_vertex = [0, 0, 0];
+//     var fixed_normal = [0, 0, 0];
+//     for (var j = 0; j < 3; j++) {
+//       for (var k = 0; k < 4; k++) {
+//         fixed_vertex[j] += vertex[k] * bsm[k * 4 + j];
+//         fixed_normal[j] += normal[k] * bsm[k * 4 + j];
+//       }
+//     }
+// 
+//     // normalize the normal
+//     var normal_sum = 0;
+//     for (var j = 0; j < 3; j++) {
+//       normal_sum += fixed_normal[j];
+//     }
+//     for (var j = 0; j < 3; j++) {
+//       fixed_normal[j] /= normal_sum;
+//     }
+// 
+//     vertices[3 * i + 0] = fixed_vertex[0];
+//     vertices[3 * i + 1] = fixed_vertex[1];
+//     vertices[3 * i + 2] = fixed_vertex[2];
+//     // normals[3 * i + 0] = fixed_normal[0];
+//     // normals[3 * i + 1] = fixed_normal[1];
+//     // normals[3 * i + 2] = fixed_normal[2];
+//   }
+// }
 
 function GetHierarchy(joints) {
   var read_from = contents.indexOf('</skeleton>');
@@ -400,8 +447,8 @@ function GetEJSData(raw, polylist, bone_data, joints) {
     vertices: [],
     normals: [],
     texcoords: [],
-    bone_indices: [[],[],[],[],[]],
-    bone_weights: [[],[],[],[],[]],
+    bone_indices: [[],[],[],[],[],[],[]],
+    bone_weights: [[],[],[],[],[],[],[]],
     bone_matrices: [],
   };
 
@@ -417,7 +464,7 @@ function GetEJSData(raw, polylist, bone_data, joints) {
     data.texcoords.push(raw.texcoords[2 * index_data.texcoords[i]]);
     data.texcoords.push(raw.texcoords[2 * index_data.texcoords[i] + 1]);
 
-    for (var j = 0; j < 5; j++) {
+    for (var j = 0; j < 7; j++) {
       data.bone_indices[j].push(bone_data.indices[j][index_data.vertices[i]]);
       data.bone_weights[j].push(bone_data.weights[j][index_data.vertices[i]]);
     }
@@ -447,10 +494,15 @@ function PrintOutput(filename, ejs_data) {
   var binary_data = ejs.render(binary_template, ejs_data);
   fs.writeFileSync(binary_path, binary_data);
 
-  var compressed_path = __dirname + '/../../art/compressed/' + filename + '.data.tar.gz';
-  var gzip = zlib.createGzip();
-  var in_stream = fs.createReadStream(binary_path);
-  var out_stream = fs.createWriteStream(compressed_path);
-  in_stream.pipe(gzip).pipe(out_stream);
-}
+  var compressed_path = __dirname + '/../../art/compressed/' + filename + '.tgz';
+  var c_gzip = zlib.createGzip();
+  var c_in_stream = fs.createReadStream(binary_path);
+  var c_out_stream = fs.createWriteStream(compressed_path);
+  c_in_stream.pipe(c_gzip).pipe(c_out_stream);
 
+  var live_path = __dirname + '/../../roots/www/root/meshes/' + filename + '.mesh';
+  var l_gzip = zlib.createGzip();
+  var l_in_stream = fs.createReadStream(binary_path);
+  var l_out_stream = fs.createWriteStream(live_path);
+  l_in_stream.pipe(l_gzip).pipe(l_out_stream);
+}
