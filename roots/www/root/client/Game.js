@@ -8,14 +8,13 @@ define([
     'basejs',
     'client/meshes/WallMesh',
     'common/WallManager',
+    'client/MeshManager',
     'client/ui/Framerate',
     'client/ui/Ping',
     'client/ui/Cursor',
-    'common/Globals',
-    'client/meshes/ManMesh',
-    'client/meshes/SkeletonMesh'
+    'common/Globals'
   ],
-  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, Framerate, Ping, Cursor, Globals, ManMesh, SkeletonMesh) {
+  function(CPlayer, Camera, InputManager, PhysicsManager, Base, Wall, WallManager, MeshManager, Framerate, Ping, Cursor, Globals) {
     return Base.extend({
       constructor: function(networkManager, terrainManager) {
         this.terrainManager = terrainManager;
@@ -26,19 +25,18 @@ define([
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
 
-        this.goblin = new ManMesh({x: 0, y: 1.75, z: -5.0});
+        this.goblin = MeshManager.newMesh('goblin');
+        this.goblin.setPosition({x: -1.0, y: 1.75, z: -5.0});
         this.goblin.initialize();
-        // this.men = [];
-        // for (var i = 0; i < 30; i++) {
-        //   var position = {
-        //     x: -4 + 2 * (i % 5),
-        //     z: -6 - 2 * parseInt(i / 5)
-        //   }
-        //   position.y = this.terrainManager.getTerrainHeight(position) + 0.1;
-        //   this.men[i] = new ManMesh(position);
-        //   this.men[i].initialize();
-        //   this.men[i].update(i % 5);
-        // }
+        this.zombie = MeshManager.newMesh('zombie');
+        this.zombie.setPosition({x: 1.0, y: 1.75, z: -5.0});
+        this.zombie.initialize();
+        this.man = MeshManager.newMesh('idle');
+        this.man.setPosition({x: -1.0, y: 1.75, z: -7.0});
+        this.man.initialize();
+        this.gangnam = MeshManager.newMesh('gangnam');
+        this.gangnam.setPosition({x: 1.0, y: 1.75, z: -7.0});
+        this.gangnam.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -71,9 +69,9 @@ define([
         this.terrainManager.update(this.player.position);
 
         this.goblin.update(tslf);
-        // for (var i = 0; i < this.men.length; i++) {
-        //   this.men[i].update(tslf);
-        // }
+        this.zombie.update(tslf);
+        this.man.update(tslf);
+        this.gangnam.update(tslf);
 
         this.physicsManager.movePlayer(this.player, tslf);
         if (Globals.multiplayer) {
@@ -94,9 +92,9 @@ define([
         this.terrainManager.draw(this.player.position);
 
         this.goblin.draw();
-        // for (var i = 0; i < this.men.length; i++) {
-        //   this.men[i].draw();
-        // }
+        this.zombie.draw();
+        this.man.draw();
+        this.gangnam.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();
