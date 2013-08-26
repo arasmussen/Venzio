@@ -150,36 +150,46 @@ function GetBoneWeightsAndIndices(weights) {
   var counts_end = '</vcount>';
   var counts = Parse(section_start, counts_start, counts_end).trim().split(' ');
 
+  var bones_per_vertex = 1;
+  for (var i = 0; i < counts.length; i++) {
+    bones_per_vertex = (counts[i] > bones_per_vertex ? counts[i] : bones_per_vertex);
+  }
+
   var indices_start = '<v>';
   var indices_end = '</v>';
   var indices = Parse(section_start, indices_start, indices_end).trim().split(' ');
 
-  var boneIndices = [[],[],[],[],[],[],[]];
-  var boneWeights = [[],[],[],[],[],[],[]];
+  var bone_indices = [];
+  var bone_weights = [];
+  for (var i = 0; i < bones_per_vertex; i++) {
+    bone_indices.push([]);
+    bone_weights.push([]);
+  }
   var indices_index = 0;
   for (var i = 0; i < counts.length; i++) {
-    var weightSum = 0;
-    for (var j = 0; j < 7; j++) {
+    var weight_sum = 0;
+    for (var j = 0; j < bones_per_vertex; j++) {
       if (j < counts[i]) {
         var index = parseInt(indices[indices_index++]);
         var weight = parseFloat(weights[indices[indices_index++]]);
-        weightSum += weight;
+        weight_sum += weight;
 
-        boneIndices[j].push(index);
-        boneWeights[j].push(weight);
+        bone_indices[j].push(index);
+        bone_weights[j].push(weight);
       } else {
-        boneIndices[j].push(0);
-        boneWeights[j].push(0.0);
+        bone_indices[j].push(0);
+        bone_weights[j].push(0.0);
       }
     }
-    for (var j = 0; j < 7; j++) {
-      boneWeights[j][boneWeights[j].length - 1] /= weightSum;
+    for (var j = 0; j < bones_per_vertex; j++) {
+      bone_weights[j][bone_weights[j].length - 1] /= weight_sum;
     }
   }
 
   return {
-    weights: boneWeights,
-    indices: boneIndices
+    bones_per_vertex: bones_per_vertex,
+    weights: bone_weights,
+    indices: bone_indices
   };
 }
 
@@ -232,7 +242,7 @@ function AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames, bsm) {
 function RemoveBadBones(joints, bone_data) {
   // make a list of all indices
   var all_indices = [];
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i < bone_data.bones_per_vertex; i++) {
     all_indices = all_indices.concat(bone_data.indices[i]);
   }
 
@@ -276,7 +286,7 @@ function RemoveBadBones(joints, bone_data) {
     }
   }
 
-  for (var i = 0; i < 7; i++) {
+  for (var i = 0; i < bone_data.bones_per_vertex; i++) {
     for (var j = 0; j < bone_data.indices[i].length; j++) {
       bone_data.indices[i][j] = bone_index_map[bone_data.indices[i][j]];
     }
@@ -299,38 +309,6 @@ function GetBindShapeMatrix() {
   var end = '<';
   return MatrixTranspose(ArrayToFloat(Parse(section, start, end).trim().split(/[\s\n]+/)));
 }
-
-// function PremultiplyBSM(vertices, normals, bsm) {
-//   for (var i = 0; i < vertices.length / 3; i++) {
-//     var vertex = [vertices[3 * i], vertices[3 * i + 1], vertices[3 * i + 2], 1.0];
-//     var normal = [normals[3 * i], normals[3 * i + 1], normals[3 * i + 2], 1.0];
-// 
-//     var fixed_vertex = [0, 0, 0];
-//     var fixed_normal = [0, 0, 0];
-//     for (var j = 0; j < 3; j++) {
-//       for (var k = 0; k < 4; k++) {
-//         fixed_vertex[j] += vertex[k] * bsm[k * 4 + j];
-//         fixed_normal[j] += normal[k] * bsm[k * 4 + j];
-//       }
-//     }
-// 
-//     // normalize the normal
-//     var normal_sum = 0;
-//     for (var j = 0; j < 3; j++) {
-//       normal_sum += fixed_normal[j];
-//     }
-//     for (var j = 0; j < 3; j++) {
-//       fixed_normal[j] /= normal_sum;
-//     }
-// 
-//     vertices[3 * i + 0] = fixed_vertex[0];
-//     vertices[3 * i + 1] = fixed_vertex[1];
-//     vertices[3 * i + 2] = fixed_vertex[2];
-//     // normals[3 * i + 0] = fixed_normal[0];
-//     // normals[3 * i + 1] = fixed_normal[1];
-//     // normals[3 * i + 2] = fixed_normal[2];
-//   }
-// }
 
 function GetHierarchy(joints) {
   var read_from = contents.indexOf('</skeleton>');
@@ -447,10 +425,15 @@ function GetEJSData(raw, polylist, bone_data, joints) {
     vertices: [],
     normals: [],
     texcoords: [],
-    bone_indices: [[],[],[],[],[],[],[]],
-    bone_weights: [[],[],[],[],[],[],[]],
+    bone_indices: [],
+    bone_weights: [],
     bone_matrices: [],
   };
+
+  for (var i = 0; i < bone_data.bones_per_vertex; i++) {
+    data.bone_indices.push([]);
+    data.bone_weights.push([]);
+  }
 
   for (var i = 0; i < polylist.length / 3; i++) {
     data.vertices.push(raw.vertices[3 * index_data.vertices[i]]);
@@ -464,7 +447,7 @@ function GetEJSData(raw, polylist, bone_data, joints) {
     data.texcoords.push(raw.texcoords[2 * index_data.texcoords[i]]);
     data.texcoords.push(raw.texcoords[2 * index_data.texcoords[i] + 1]);
 
-    for (var j = 0; j < 7; j++) {
+    for (var j = 0; j < bone_data.bones_per_vertex; j++) {
       data.bone_indices[j].push(bone_data.indices[j][index_data.vertices[i]]);
       data.bone_weights[j].push(bone_data.weights[j][index_data.vertices[i]]);
     }
@@ -478,6 +461,7 @@ function GetEJSData(raw, polylist, bone_data, joints) {
 
   data.num_vertices = data.vertices.length / 3;
   data.num_bones = data.bone_matrices.length;
+  data.bones_per_vertex = bone_data.bones_per_vertex;
   data.num_frames = data.bone_matrices[0].length;
 
   return data;
