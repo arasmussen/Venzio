@@ -152,8 +152,7 @@ define([
       },
 
       postDraw: function() {
-        // cleanup shader/camera
-        this.shader.postDraw();
+        // cleanup camera
         this.untransform();
       },
 

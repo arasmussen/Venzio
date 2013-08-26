@@ -1,6 +1,8 @@
 // Copyright (c) Venzio 2013 All Rights Reserved
 
 define(['basejs'], function(Base) {
+  var enabled_attributes = 0;
+
   return Base.extend({
     constructor: function(program) {
       this.program = program;
@@ -26,24 +28,20 @@ define(['basejs'], function(Base) {
     },
 
     enableAttributes: function() {
-      this.attributes.forEach(function(attribute) {
-        gl.enableVertexAttribArray(this.program[attribute]);
-      }, this);
-    },
-
-    disableAttributes: function() {
-      this.attributes.forEach(function(attribute) {
-        gl.disableVertexAttribArray(this.program[attribute]);
-      }, this);
+      if (enabled_attributes < this.attributes.length) {
+        while (enabled_attributes < this.attributes.length) {
+          gl.enableVertexAttribArray(enabled_attributes++);
+        }
+      } else if (enabled_attributes > this.attributes.length) {
+        while (enabled_attributes > this.attributes.length) {
+          gl.disableVertexAttribArray(--enabled_attributes);
+        }
+      }
     },
 
     preDraw: function() {
       this.use();
       this.enableAttributes();
-    },
-
-    postDraw: function() {
-      this.disableAttributes();
     },
 
     addAttributes: function(attributes) {
