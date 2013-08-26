@@ -155,6 +155,8 @@ define([
 
         var lastFrameTime = new Date();
         var baseLoop = function() {
+          window.requestAnimFrame(baseLoop, canvas);
+
           var currentTime = new Date();
           var tslf = (currentTime.getTime() - lastFrameTime.getTime()) / 1000;
           if (tslf > 0.1) {
@@ -163,7 +165,6 @@ define([
           lastFrameTime = currentTime;
 
           game.mainLoop(tslf);
-          window.requestAnimFrame(baseLoop, canvas);
         };
         baseLoop();
       }
