@@ -2,39 +2,148 @@
 
 define([
     'client/lib/Base64',
+    'client/Mesh',
+    'client/ShaderManager',
   ],
-  function(Base64) {
+  function(Base64, Mesh, ShaderManager) {
     return {
-      initLoadCount: 0,
-
       meshes: {},
 
-      initialMeshes: [
-        {name: 'goblin'}
-      ],
+      initialMeshes: {
+        'goblin': {scale: 0.55},
+        'zombie': {scale: 0.015},
+        'gangnam': {scale: 0.015},
+        'idle': {scale: 0.015},
+      },
+
+      newMesh: function(name) {
+        if (!this.meshes.hasOwnProperty(name)) {
+          console.error('tried to get mesh "' + name + '" which doesn\'t exist');
+          return;
+        }
+        return (new this.meshes[name]);
+      },
 
       initialize: function(callback) {
         this.initCallback = callback;
-        this.initLoadCount = this.initialMeshes.length;
-        for (var i in this.initialMeshes) {
-          this.getMesh(this.initialMeshes[i].name, this.initOnLoaded.bind(this));
+        this.initLoadCount = Object.keys(this.initialMeshes).length;
+        for (var name in this.initialMeshes) {
+          this.loadMesh(name, function() {
+            // after all meshes are loaded, callback
+            if (--this.initLoadCount == 0) {
+              callback();
+            }
+          }.bind(this));
         }
       },
 
-      initOnLoaded: function() {
-        if (--this.initLoadCount == 0) {
-          this.initCallback();
-        }
-      },
-
-      getMesh: function(name, callback) {
+      loadMesh: function(name, callback) {
         $.ajax({
           'url': '/meshes/' + name + '.mesh',
         }).done(function(response) {
           var binary = Base64.decodeToArray(response);
-          this.meshes[name] = this.parseBinaryData(binary);
+          var data = this.parseBinaryData(binary);
+          this.meshes[name] = this.createMeshClass(data, name);
           callback();
         }.bind(this));
+      },
+
+      createMeshClass: function(data, name) {
+        var shader_name = ShaderManager.newDynamicShader({
+          num_bones: data.num_bones,
+          bones_per_vertex: data.bones_per_vertex,
+          scale: this.initialMeshes[name].scale,
+        });
+
+        return Mesh.extend({
+          constructor: function() {
+            this.base();
+            this.position = {x: 0.0, y: 0.0, z: 0.0};
+
+            this.time = 0;
+            this.normalMatrix = mat4.create();
+            mat4.identity(this.normalMatrix);
+          },
+
+          initialize: function() {
+            Mesh.prototype.initialize.bind(this)();
+
+            this.setUniform('NormalMatrix', this.normalMatrix);
+            this.setUniform('BoneMatrices', this.getBoneMatrices());
+          },
+
+          update: function(tslf) {
+            this.time += tslf * 24;
+            this.setUniform('BoneMatrices', this.getBoneMatrices());
+          },
+
+          getBoneMatrices: function() {
+            var frames = data.num_frames;
+
+            if (this.time >= frames) {
+              this.time -= frames;
+            }
+
+            var frame1 = Math.floor(this.time);
+            var frame2 = (frame1 + 1) % frames;
+            var weight = this.time - Math.floor(this.time);
+
+            var result = [];
+            for (var i = 0; i < data.num_bones; i++) {
+              var matrix1 = data.bone_matrices[i][frame1];
+              var matrix2 = data.bone_matrices[i][frame2];
+              for (var j = 0; j < 16; j++) {
+                result[i * 16 + j] = matrix2[j] * weight + matrix1[j] * (1.0 - weight);
+              }
+            }
+
+            return new Float32Array(result);
+          },
+
+          getAttribData: function(attrib) {
+            if (attrib == 'Position') {
+              return new Float32Array(data.vertices);
+            } else if (attrib == 'Normal') {
+              return new Float32Array(data.normals);
+            } else if (attrib == 'TextureCoord') {
+              return new Float32Array(data.texcoords);
+            } else if (attrib.indexOf('Bone') !== -1) {
+              if (attrib.indexOf('Index') !== -1) {
+                var index = parseInt(attrib.substr(attrib.indexOf('Index') + 5)) - 1;
+                return new Float32Array(data.bone_indices[index]);
+              } else if (attrib.indexOf('Weight') !== -1) {
+                var index = parseInt(attrib.substr(attrib.indexOf('Weight') + 6)) - 1;
+                return new Float32Array(data.bone_weights[index]);
+              } else {
+                console.log('unknown attrib');
+              }
+            } else {
+              console.error('unknown attrib');
+            }
+          },
+
+          getNumItems: function() {
+            return data.num_vertices;
+          },
+
+          setPosition: function(position) {
+            this.position.x = position.x;
+            this.position.y = position.y;
+            this.position.z = position.z;
+          },
+
+          getPosition: function() {
+            return this.position;
+          },
+
+          getRotation: function() {
+            return {pitch: 0.0, yaw: 0.0};
+          },
+
+          getShaderName: function() {
+            return shader_name;
+          }
+        });
       },
 
       parseBinaryData: function(binary) {
@@ -67,6 +176,7 @@ define([
 
         data.num_vertices = ReadShort();
         data.num_bones = ReadByte();
+        data.bones_per_vertex = ReadByte();
         data.num_frames = ReadShort();
 
         data.vertices = [];
@@ -90,7 +200,7 @@ define([
         }
 
         data.bone_indices = [];
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < data.bones_per_vertex; i++) {
           data.bone_indices[i] = [];
           for (var j = 0; j < data.num_vertices; j++) {
             data.bone_indices[i][j] = ReadByte();
@@ -98,7 +208,7 @@ define([
         }
 
         data.bone_weights = [];
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < data.bones_per_vertex; i++) {
           data.bone_weights[i] = [];
           for (var j = 0; j < data.num_vertices; j++) {
             data.bone_weights[i][j] = ReadFloat();
