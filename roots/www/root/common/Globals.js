@@ -7,7 +7,7 @@ define(function() {
     multiplayer: false,
 
     terrainLength: 32, // must be even and divisible by terrainQuality
-    terrainOffset: 6,
+    terrainOffset: 4,
     terrainQuality: 8,
 
     // walls
