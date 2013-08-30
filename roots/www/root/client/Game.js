@@ -25,18 +25,12 @@ define([
         this.networkManager = networkManager;
         InputManager.networkManager = this.networkManager;
 
-        this.goblin = MeshManager.newMesh('goblin');
-        this.goblin.setPosition({x: -1.0, y: 1.75, z: -5.0});
-        this.goblin.initialize();
-        this.zombie = MeshManager.newMesh('zombie');
-        this.zombie.setPosition({x: 1.0, y: 1.75, z: -5.0});
-        this.zombie.initialize();
-        this.man = MeshManager.newMesh('idle');
-        this.man.setPosition({x: -1.0, y: 1.75, z: -7.0});
+        this.man = MeshManager.newMesh('man');
+        this.man.setPosition({x: -1.0, y: 1.75, z: -5.0});
         this.man.initialize();
-        this.gangnam = MeshManager.newMesh('gangnam');
-        this.gangnam.setPosition({x: 1.0, y: 1.75, z: -7.0});
-        this.gangnam.initialize();
+        this.goblin = MeshManager.newMesh('goblin');
+        this.goblin.setPosition({x: 1.0, y: 1.75, z: -5.0});
+        this.goblin.initialize();
 
         this.framerate = new Framerate('framerate');
         this.cursor = new Cursor('cursor');
@@ -69,9 +63,7 @@ define([
         this.terrainManager.update(this.player.position);
 
         this.goblin.update(tslf);
-        this.zombie.update(tslf);
         this.man.update(tslf);
-        this.gangnam.update(tslf);
 
         this.physicsManager.movePlayer(this.player, tslf);
         if (Globals.multiplayer) {
@@ -92,9 +84,7 @@ define([
         this.terrainManager.draw(this.player.position);
 
         this.goblin.draw();
-        this.zombie.draw();
         this.man.draw();
-        this.gangnam.draw();
 
         if (Globals.multiplayer) {
           this.networkManager.drawPeers();

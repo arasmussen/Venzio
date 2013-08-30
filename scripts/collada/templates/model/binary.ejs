@@ -1,0 +1,70 @@
+<%
+  var buffer_length = 0;
+  buffer_length += 2; // 2 bytes for num_vertices
+  buffer_length += 1; // 1 byte for num_bones
+  buffer_length += 1; // 1 byte for bones_per_vertex
+  buffer_length += num_vertices * 3 * 4; // 12 bytes for each vertex
+  buffer_length += num_vertices * 3 * 4; // 12 bytes for each normal
+  buffer_length += num_vertices * 2 * 4; // 8 bytes for each texcoord
+  buffer_length += num_vertices * bones_per_vertex * 1; // 1 byte for each bone index
+  buffer_length += num_vertices * bones_per_vertex * 4; // 4 bytes for each bone weight
+
+  var buffer = new Buffer(buffer_length);
+  var buffer_index = 0; // in bytes
+
+  var array_buffer = new ArrayBuffer(4);
+  var byte_view = new Uint8Array(array_buffer);
+  var short_view = new Uint16Array(array_buffer);
+  var float_view = new Float32Array(array_buffer);
+
+  function WriteByte(value) {
+    buffer[buffer_index++] = value;
+  }
+
+  function WriteShort(value) {
+    short_view[0] = value;
+    buffer[buffer_index++] = byte_view[0];
+    buffer[buffer_index++] = byte_view[1];
+  }
+
+  function WriteFloat(value) {
+    float_view[0] = value;
+    buffer[buffer_index++] = byte_view[0];
+    buffer[buffer_index++] = byte_view[1];
+    buffer[buffer_index++] = byte_view[2];
+    buffer[buffer_index++] = byte_view[3];
+  }
+
+  WriteShort(num_vertices);
+  WriteByte(num_bones);
+  WriteByte(bones_per_vertex);
+
+  for (var i = 0; i < num_vertices; i++) {
+    WriteFloat(vertices[3 * i + 0]);
+    WriteFloat(vertices[3 * i + 1]);
+    WriteFloat(vertices[3 * i + 2]);
+  }
+
+  for (var i = 0; i < num_vertices; i++) {
+    WriteFloat(normals[3 * i + 0]);
+    WriteFloat(normals[3 * i + 1]);
+    WriteFloat(normals[3 * i + 2]);
+  }
+
+  for (var i = 0; i < num_vertices; i++) {
+    WriteFloat(texcoords[2 * i + 0]);
+    WriteFloat(texcoords[2 * i + 1]);
+  }
+
+  for (var i = 0; i < bones_per_vertex; i++) {
+    for (var j = 0; j < num_vertices; j++) {
+      WriteByte(bone_indices[i][j]);
+    }
+  }
+
+  for (var i = 0; i < bones_per_vertex; i++) {
+    for (var j = 0; j < num_vertices; j++) {
+      WriteFloat(bone_weights[i][j]);
+    }
+  }
+%><%= buffer.toString('base64') %>

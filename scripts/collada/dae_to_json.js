@@ -5,48 +5,79 @@ var fs = require('fs');
 require('sylvester');
 var zlib = require('zlib');
 
+// get model name
+var model_name = process.argv[2];
+var model_dir = __dirname + '/../../art/anims/' + model_name;
 
-// get input file
+function DirectoryExists(dir) {
+  if (!fs.existsSync(dir)) {
+    return false;
+  } else if (!fs.statSync(dir).isDirectory()) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
-var input = __dirname + '/../../art/models/' + process.argv[2] + '.dae';
-if (!input || !fs.existsSync(input)) {
-  console.log('bad input file');
+if (!DirectoryExists(model_dir)) {
+  console.error('model dir ' + model_name + ' doesnt exist or isnt a directory');
   return;
 }
-var contents = fs.readFileSync(input, 'utf8');
 
+var anim_files = fs.readdirSync(model_dir);
+if (anim_files.length === 0) {
+  console.error('no anim files in model dir');
+  return;
+}
 
-// load data
+var mkdirs = [
+  __dirname + '/../../art/raw/' + model_name,
+  __dirname + '/../../art/binary/' + model_name,
+  __dirname + '/../../art/compressed/' + model_name,
+  __dirname + '/../../roots/www/root/meshes/' + model_name
+];
+for (var i = 0; i < mkdirs.length; i++) {
+  if (!DirectoryExists(mkdirs[i])) {
+    fs.mkdirSync(mkdirs[i]);
+  }
+}
 
-var raw = {
-  vertices: ArrayToFloat(GetRawData('POSITION')), // a list of vertex data
-  normals: ArrayToFloat(GetRawData('NORMAL')), // a list of normals
-  texcoords: ArrayToFloat(GetRawData('TEXCOORD')), // a list of texcoords
-  weights: ArrayToFloat(GetRawData('WEIGHT')), // a list of weights
-  joints: GetRawData('JOINT') // a list of joints
-};
+for (var i = 0; i < anim_files.length; i++) {
+  var anim_file = model_dir + '/' + anim_files[i];
+  var contents = fs.readFileSync(anim_file, 'utf8');
+  var ejs_data = GetData();
+  var anim_name = GetOutputFilename(anim_file);
+  OutputAnimData(model_name, anim_name, ejs_data);
+}
 
-var bsm = GetBindShapeMatrix();
-// PremultiplyBSM(raw.vertices, raw.normals, bsm);
+OutputModelData(model_name, ejs_data);
 
-var polylist = GetPolylist(); // matches vertices with normals and texcoords
-var bone_data = GetBoneWeightsAndIndices(raw.weights); // matches vertices with bone weights/influences
-var inverse_bind_matrices = GetInverseBindMatrices(); // gets inverse bind matrices
-var joints_tree = GetHierarchy(raw.joints); // gets hierarchy, bind pose matrices, and world matrices
-var joints = FlattenHierarchy(joints_tree); // flattens into [index] = node
+function GetData() {
+  var raw = {
+    vertices: ArrayToFloat(GetRawData('POSITION')), // a list of vertex data
+    normals: ArrayToFloat(GetRawData('NORMAL')), // a list of normals
+    texcoords: ArrayToFloat(GetRawData('TEXCOORD')), // a list of texcoords
+    weights: ArrayToFloat(GetRawData('WEIGHT')), // a list of weights
+    joints: GetRawData('JOINT') // a list of joints
+  };
 
-var frames = AddAnimationData(joints); // animation matrices for each frame for each bone
-RemoveBadBones(joints, bone_data);
-AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames, bsm); // calculates skinning matrices
+  var bsm = GetBindShapeMatrix();
+  var polylist = GetPolylist(); // matches vertices with normals and texcoords
+  var bone_data = GetBoneWeightsAndIndices(raw.weights); // matches vertices with bone weights/influences
+  var inverse_bind_matrices = GetInverseBindMatrices(); // gets inverse bind matrices
+  var joints_tree = GetHierarchy(raw.joints); // gets hierarchy, bind pose matrices, and world matrices
+  var joints = FlattenHierarchy(joints_tree); // flattens into [index] = node
 
-var ejs_data = GetEJSData(raw, polylist, bone_data, joints); // puts everything together
-var filename = GetOutputFilename(input);
-PrintOutput(filename, ejs_data);
+  var frames = AddAnimationData(joints); // animation matrices for each frame for each bone
+  RemoveBadBones(joints, bone_data);
+  AddSkinningMatrices(joints_tree, inverse_bind_matrices, frames, bsm); // calculates skinning matrices
 
+  return GetEJSData(raw, polylist, bone_data, joints); // puts everything together
+}
 
 // functions
 
-// "../../art/models/gangnam.dae" => "gangnam"
+// "../../art/anims/man/gangnam.dae" => "gangnam"
 function GetOutputFilename(input) {
   var start = input.lastIndexOf('/') == -1 ? 0 : input.lastIndexOf('/') + 1;
   var end = input.lastIndexOf('.');
@@ -467,24 +498,48 @@ function GetEJSData(raw, polylist, bone_data, joints) {
   return data;
 }
 
-function PrintOutput(filename, ejs_data) {
-  var raw_template = fs.readFileSync(__dirname + '/raw_template.ejs', 'utf8');
-  var raw_path = __dirname + '/../../art/raw/' + filename + '.json';
+function OutputAnimData(model_name, anim_name, ejs_data) {
+  var raw_template = fs.readFileSync(__dirname + '/templates/anim/raw.ejs', 'utf8');
+  var raw_path = __dirname + '/../../art/raw/' + model_name + '/' + anim_name + '.anim.json';
   var raw_data = ejs.render(raw_template, ejs_data);
   fs.writeFileSync(raw_path, raw_data);
 
-  var binary_template = fs.readFileSync(__dirname + '/binary_template.ejs', 'utf8');
-  var binary_path = __dirname + '/../../art/binary/' + filename + '.data';
+  var binary_template = fs.readFileSync(__dirname + '/templates/anim/binary.ejs', 'utf8');
+  var binary_path = __dirname + '/../../art/binary/' + model_name + '/' + anim_name + '.anim.data';
   var binary_data = ejs.render(binary_template, ejs_data);
   fs.writeFileSync(binary_path, binary_data);
 
-  var compressed_path = __dirname + '/../../art/compressed/' + filename + '.tgz';
+  var compressed_path = __dirname + '/../../art/compressed/' + model_name + '/' + anim_name + '.anim.tgz';
   var c_gzip = zlib.createGzip();
   var c_in_stream = fs.createReadStream(binary_path);
   var c_out_stream = fs.createWriteStream(compressed_path);
   c_in_stream.pipe(c_gzip).pipe(c_out_stream);
 
-  var live_path = __dirname + '/../../roots/www/root/meshes/' + filename + '.mesh';
+  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/' + anim_name + '.anim.tgz';
+  var l_gzip = zlib.createGzip();
+  var l_in_stream = fs.createReadStream(binary_path);
+  var l_out_stream = fs.createWriteStream(live_path);
+  l_in_stream.pipe(l_gzip).pipe(l_out_stream);
+}
+
+function OutputModelData(model_name, ejs_data) {
+  var raw_template = fs.readFileSync(__dirname + '/templates/model/raw.ejs', 'utf8');
+  var raw_path = __dirname + '/../../art/raw/' + model_name + '/' + model_name + '.model.json';
+  var raw_data = ejs.render(raw_template, ejs_data);
+  fs.writeFileSync(raw_path, raw_data);
+
+  var binary_template = fs.readFileSync(__dirname + '/templates/model/binary.ejs', 'utf8');
+  var binary_path = __dirname + '/../../art/binary/' + model_name + '/' + model_name + '.model.data';
+  var binary_data = ejs.render(binary_template, ejs_data);
+  fs.writeFileSync(binary_path, binary_data);
+
+  var compressed_path = __dirname + '/../../art/compressed/' + model_name + '/' + model_name + 'model.tgz';
+  var c_gzip = zlib.createGzip();
+  var c_in_stream = fs.createReadStream(binary_path);
+  var c_out_stream = fs.createWriteStream(compressed_path);
+  c_in_stream.pipe(c_gzip).pipe(c_out_stream);
+
+  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/' + model_name + '.model.tgz';
   var l_gzip = zlib.createGzip();
   var l_in_stream = fs.createReadStream(binary_path);
   var l_out_stream = fs.createWriteStream(live_path);

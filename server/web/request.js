@@ -25,7 +25,7 @@ define([
       'jpg': {contentType: 'image/jpeg', encoding: 'binary'},
       'png': {contentType: 'image/png', encoding: 'binary'},
       'ico': {contentType: 'image/x-icon', encoding: 'binary'},
-      'mesh': {contentType: 'text/plain', encoding: 'binary', gzip: true},
+      'tgz': {contentType: 'text/plain', encoding: 'binary', gzip: true},
       'other': {contentType: 'text/plain', encoding: 'utf8'}
     };
 
