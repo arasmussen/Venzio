@@ -32,9 +32,11 @@ if (anim_files.length === 0) {
 
 var mkdirs = [
   __dirname + '/../../art/raw/' + model_name,
+  __dirname + '/../../art/raw/' + model_name + '/anims',
   __dirname + '/../../art/binary/' + model_name,
-  __dirname + '/../../art/compressed/' + model_name,
-  __dirname + '/../../roots/www/root/meshes/' + model_name
+  __dirname + '/../../art/binary/' + model_name + '/anims',
+  __dirname + '/../../roots/www/root/meshes/' + model_name,
+  __dirname + '/../../roots/www/root/meshes/' + model_name + '/anims',
 ];
 for (var i = 0; i < mkdirs.length; i++) {
   if (!DirectoryExists(mkdirs[i])) {
@@ -499,23 +501,18 @@ function GetEJSData(raw, polylist, bone_data, joints) {
 }
 
 function OutputAnimData(model_name, anim_name, ejs_data) {
-  var raw_template = fs.readFileSync(__dirname + '/templates/anim/raw.ejs', 'utf8');
-  var raw_path = __dirname + '/../../art/raw/' + model_name + '/' + anim_name + '.anim.json';
-  var raw_data = ejs.render(raw_template, ejs_data);
-  fs.writeFileSync(raw_path, raw_data);
+  // useful for debug
+  // var raw_template = fs.readFileSync(__dirname + '/templates/anim/raw.ejs', 'utf8');
+  // var raw_path = __dirname + '/../../art/raw/' + model_name + '/anims/' + anim_name + '.json';
+  // var raw_data = ejs.render(raw_template, ejs_data);
+  // fs.writeFileSync(raw_path, raw_data);
 
   var binary_template = fs.readFileSync(__dirname + '/templates/anim/binary.ejs', 'utf8');
-  var binary_path = __dirname + '/../../art/binary/' + model_name + '/' + anim_name + '.anim.data';
+  var binary_path = __dirname + '/../../art/binary/' + model_name + '/anims/' + anim_name + '.data';
   var binary_data = ejs.render(binary_template, ejs_data);
   fs.writeFileSync(binary_path, binary_data);
 
-  var compressed_path = __dirname + '/../../art/compressed/' + model_name + '/' + anim_name + '.anim.tgz';
-  var c_gzip = zlib.createGzip();
-  var c_in_stream = fs.createReadStream(binary_path);
-  var c_out_stream = fs.createWriteStream(compressed_path);
-  c_in_stream.pipe(c_gzip).pipe(c_out_stream);
-
-  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/' + anim_name + '.anim.tgz';
+  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/anims/' + anim_name + '.tgz';
   var l_gzip = zlib.createGzip();
   var l_in_stream = fs.createReadStream(binary_path);
   var l_out_stream = fs.createWriteStream(live_path);
@@ -523,23 +520,18 @@ function OutputAnimData(model_name, anim_name, ejs_data) {
 }
 
 function OutputModelData(model_name, ejs_data) {
-  var raw_template = fs.readFileSync(__dirname + '/templates/model/raw.ejs', 'utf8');
-  var raw_path = __dirname + '/../../art/raw/' + model_name + '/' + model_name + '.model.json';
-  var raw_data = ejs.render(raw_template, ejs_data);
-  fs.writeFileSync(raw_path, raw_data);
+  // useful for debug
+  // var raw_template = fs.readFileSync(__dirname + '/templates/model/raw.ejs', 'utf8');
+  // var raw_path = __dirname + '/../../art/raw/' + model_name + '/' + model_name + '.json';
+  // var raw_data = ejs.render(raw_template, ejs_data);
+  // fs.writeFileSync(raw_path, raw_data);
 
   var binary_template = fs.readFileSync(__dirname + '/templates/model/binary.ejs', 'utf8');
-  var binary_path = __dirname + '/../../art/binary/' + model_name + '/' + model_name + '.model.data';
+  var binary_path = __dirname + '/../../art/binary/' + model_name + '/' + model_name + '.data';
   var binary_data = ejs.render(binary_template, ejs_data);
   fs.writeFileSync(binary_path, binary_data);
 
-  var compressed_path = __dirname + '/../../art/compressed/' + model_name + '/' + model_name + 'model.tgz';
-  var c_gzip = zlib.createGzip();
-  var c_in_stream = fs.createReadStream(binary_path);
-  var c_out_stream = fs.createWriteStream(compressed_path);
-  c_in_stream.pipe(c_gzip).pipe(c_out_stream);
-
-  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/' + model_name + '.model.tgz';
+  var live_path = __dirname + '/../../roots/www/root/meshes/' + model_name + '/' + model_name + '.tgz';
   var l_gzip = zlib.createGzip();
   var l_in_stream = fs.createReadStream(binary_path);
   var l_out_stream = fs.createWriteStream(live_path);

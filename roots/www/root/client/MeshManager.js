@@ -76,7 +76,7 @@ define([
 
       loadMesh: function(model_name, callback) {
         $.ajax({
-          'url': '/meshes/' + model_name + '/' + model_name + '.model.tgz',
+          'url': '/meshes/' + model_name + '/' + model_name + '.tgz',
         }).done(function(response) {
           var binary = Base64.decodeToArray(response);
           this.mesh_data[model_name] = this.parseModelData(binary);
@@ -86,7 +86,7 @@ define([
 
       loadAnim: function(model_name, anim_name, callback) {
         $.ajax({
-          'url': '/meshes/' + model_name + '/' + anim_name + '.anim.tgz',
+          'url': '/meshes/' + model_name + '/anims/' + anim_name + '.tgz',
         }).done(function(response) {
           var binary = Base64.decodeToArray(response);
           this.anim_data[model_name][anim_name] = this.parseAnimData(binary);
